@@ -23,4 +23,12 @@ public class MinjaeService implements InterMinjaeServie {
 		return teamList;
 	}*/
 	
+	@Override
+	public List<String> getTeamList(String userid) {
+		
+		List<String> teamList = dao.getTeamList(userid);
+		
+		return teamList;
+	}
+	
 }

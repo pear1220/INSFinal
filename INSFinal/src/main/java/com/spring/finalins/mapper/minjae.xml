@@ -16,5 +16,17 @@
 		on A.team_idx = B.fk_team_idx
 		where B.team_userid = #{loginuser}
 	</select>  -->
+	
+	<resultMap type="String" id="getTeamListMap">
+		<result property="TEAM_NAME" column="team_name" javaType="String" />
+	</resultMap> 
+	
+	<select id="getTeamList" parameterType="String" resultMap="getTeamListMap">
+		select team_name
+		from ins_team A join ins_team_member B
+		on A.team_idx = B.fk_team_idx
+		where B.team_userid = #{userid}
+	</select>
+	
 </mapper>
  

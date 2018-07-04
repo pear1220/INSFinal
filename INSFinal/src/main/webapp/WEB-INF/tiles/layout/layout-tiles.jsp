@@ -53,7 +53,7 @@
  
 	#mycontent		{margin-right:10%; min-height:800px; padding-top: 40px; border: 0px red solid;}
 
-	#myfooter		{ background-color:#555555; clear:both; height:100px; }
+/* 	#myfooter		{ background-color:#555555; clear:both; height:100px; } */
 
 	.avatar {
 	    vertical-align: middle;
@@ -77,9 +77,9 @@
 		</div>
 
 	
-		<div id="myfooter">
+<%-- 		<div id="myfooter">
 			<tiles:insertAttribute name="footer" />
-		</div>
+		</div> --%>
 	</div>
 </body>
 </html>

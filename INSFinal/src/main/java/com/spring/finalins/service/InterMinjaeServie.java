@@ -9,4 +9,5 @@ public interface InterMinjaeServie {
 
 	/*List<String> getTeamList(MemberVO loginuser);*/ // 로그인한 userid의 팀의 리스트를 얻음
 
+	List<String> getTeamList(String userid); 
 }

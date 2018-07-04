@@ -13,6 +13,13 @@ public class MinjaeDAO implements InterMinjaeDAO {
 	@Autowired
 	private SqlSessionTemplate sqlsession;
 
+	@Override
+	public List<String> getTeamList(String userid) {
+List<String> teamList = sqlsession.selectList("mj.getTeamList", userid);
+		
+		return teamList;
+	}
+
 	/*@Override
 	public List<String> getTeamList(MemberVO loginuser) {
 		

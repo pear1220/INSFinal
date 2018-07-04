@@ -31,21 +31,24 @@ public class MINJAEController {
 				
 	}
 	
-	/*@RequestMapping(value="/list.action", method= {RequestMethod.GET})
-	public void header(HttpServletRequest req,  HttpServletResponse res) {
+	@RequestMapping(value="/list.action", method= {RequestMethod.GET})
+	public String header(HttpServletRequest req,  HttpServletResponse res) {
 		
+		/*System.out.println("list.action 확인>>>>>>>>>>>>>>>>");
 		HttpSession session = req.getSession();
-		MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
+		MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");*/
 		
 		// 로그인한 userid의 팀의 목록을 갖고 옴
-		List<String> teamList = service.getTeamList(loginuser);
+		List<String> teamList = service.getTeamList("leess");
 		
 		// 해당하는 팀의 프로젝트 목록을 갖고 옴
-		List<HashMap<String, String>> projectList = service.getProjectInTeam();
+		/*List<HashMap<String, String>> projectList = service.getProjectInTeam();*/
 		
 		req.setAttribute("teamList", teamList);
+		
+		return "list.notiles";
 				
-	}*/
+	}
 	
 
 }
