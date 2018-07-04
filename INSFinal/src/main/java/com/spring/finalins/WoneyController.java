@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 @Component
-public class woneyController {
+public class WoneyController {
 	
 	@RequestMapping(value="/index.action", method= {RequestMethod.GET})
 	public String index(HttpServletRequest req) {
