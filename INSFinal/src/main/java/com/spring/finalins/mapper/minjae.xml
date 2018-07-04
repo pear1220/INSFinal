@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ==== #26. mapper 기본설정 ==== -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+
+<!-- ==== #27. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
+<mapper namespace="mj">
+	
+	<!-- <resultMap type="String" id="getTeamListMap">
+		<result property="TEAM_NAME" column="team_name" javaType="String" />
+	</resultMap> 
+	
+	<select id="getTeamList" parameterType="com.spring.finalins.model.MemberVO" resultMap="getTeamListMap">
+		select team_name
+		from ins_team A join ins_team_member B
+		on A.team_idx = B.fk_team_idx
+		where B.team_userid = #{loginuser}
+	</select>  -->
+</mapper>
+ 
