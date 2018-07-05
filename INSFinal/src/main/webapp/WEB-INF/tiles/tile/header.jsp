@@ -6,47 +6,16 @@
 <!DOCTYPE html>
 <html lang="en">
 
- <%-- 
- <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Creative - Bootstrap 3 Responsive Admin Template">
-  <meta name="author" content="GeeksLabs">
-  <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
- <link rel="shortcut icon" href="img/favicon.png">
 
-  <title>Creative - Bootstrap Admin Template</title>
+<style type="text/css">
 
-  <!-- Bootstrap CSS -->
-  <link href="<%=request.getContextPath() %>/resources/css/bootstrap.min.css" rel="stylesheet">
-  <!-- bootstrap theme -->
-  <link href="<%=request.getContextPath() %>/resources/css/bootstrap-theme.css" rel="stylesheet">
-  <!--external css-->
-  <!-- font icon -->
-  <link href="<%=request.getContextPath() %>/resources/css/elegant-icons-style.css" rel="stylesheet" />
-  <link href="<%=request.getContextPath() %>/resources/css/font-awesome.min.css" rel="stylesheet" />
-  <!-- full calendar css-->
-  <link href="<%=request.getContextPath() %>/resources/assets/fullcalendar/fullcalendar/bootstrap-fullcalendar.css" rel="stylesheet" />
-  <link href="<%=request.getContextPath() %>/resources/assets/fullcalendar/fullcalendar/fullcalendar.css" rel="stylesheet" />
-  <!-- easy pie chart-->
-  <link href="<%=request.getContextPath() %>/resources/assets/jquery-easy-pie-chart/jquery.easy-pie-chart.css" rel="stylesheet" type="text/css" media="screen" />
-  <!-- owl carousel -->
-  <link rel="stylesheet" href="<%=request.getContextPath() %>/resources/css/owl.carousel.css" type="text/css">
-  <link href="<%=request.getContextPath() %>/resources/css/jquery-jvectormap-1.2.2.css" rel="stylesheet">
-  <!-- Custom styles -->
-  <link rel="stylesheet" href="<%=request.getContextPath() %>/resources/css/fullcalendar.css">
-  <link href="<%=request.getContextPath() %>/resources/css/widgets.css" rel="stylesheet">
-  <link href="<%=request.getContextPath() %>/resources/css/style.css" rel="stylesheet">
-  <link href="<%=request.getContextPath() %>/resources/css/style-responsive.css" rel="stylesheet" />
-  <link href="<%=request.getContextPath() %>/resources/css/xcharts.min.css" rel=" stylesheet">
-  <link href="<%=request.getContextPath() %>/resources/css/jquery-ui-1.10.4.min.css" rel="stylesheet">
-  <!-- =======================================================
-    Theme Name: NiceAdmin
-    Theme URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
-    Author: BootstrapMade
-    Author URL: https://bootstrapmade.com
-  ======================================================= -->
-</head> --%>
+	.teamname {
+		font-size: 15pt;
+		font-weight: bold;     
+	}
+
+</style>
+
 <%  
 	//==== #177. (웹채팅관련9) ====//
     // === 서버 IP 주소 알아오기 === //
@@ -57,6 +26,10 @@
 	String serverName = "http://"+serverIP+":"+portnumber;
 
 %>
+
+<script type="text/javascript">
+
+</script>
 
 
 <body>
@@ -79,34 +52,49 @@
 
  <c:if test="${sessionScope.loginuser != null }"> 
 
-    <header class="header dark-bg">
-      <!-- <div class="toggle-nav">
-        <div class="icon-reorder tooltips" data-original-title="Toggle Navigation" data-placement="bottom"><i class="icon_menu"></i></div>
-      </div> -->
-	  
-                                                 
-	   <div class="dropdown" style="width: 5%; padding-left:2px; padding-top: 14px; float: left;">      
-	    <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown" style=" background-color: black; margin-top:1px; color: black; border-color: black;"> 
-	    	<span class="icon_cloud-upload_alt logo" style="margin-right: 10px; font-size: 20pt; color: #ffc61a;"></span><span style="font-size: 16pt;" class="lite">Project</span>
-	    <!-- <span class="caret"></span> --></button>
-	    <ul class="dropdown-menu" role="menu" aria-labelledby="menu1" style="width: 500px;">
-	       <c:forEach var="team" items="${requestScope.teamList}">
-	       		<!-- <li role="presentation"><a role="menuitem" tabindex="-1" href="#">no project</a></li> -->
-	       		<li role="presentation"><a role="menuitem" tabindex="-1" href="#">${team}</a></li>
-	      		<%-- <c:forEach items="">             
-	      			<c:if test="${team != null}">
-	      				&nbsp;<li role="presentation"><a role="menuitem" tabindex="-1" href="#">project name</a></li>
-	      			</c:if test="${team == null}">
-	      			<c:if test="">
-	      				&nbsp;<li role="presentation"><a role="menuitem" tabindex="-1">no project</a></li>
-	      			</c:if>
-	      		</c:forEach> --%>
-			</c:forEach>
-	    </ul>
-	  </div>   
+    <header class="header dark-bg">      
+     
+	   <div class="container" style="border: 0px solid yellow; width: 150px; float: left;  padding-top: 2px; margin-bottom: "> 
+		                                   
+		  <div class="dropdown" style="border: 0px solid yellow;">
+		  	 
+		  	 <%-- <a href="<%=request.getContextPath() %>/list.action">project</a> --%>
+		  	 
+		     <button href="<%=request.getContextPath() %>/list.action" class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown" style=" background-color: black; margin-top:1px; color: black; border-color: black;"> 
+	    	 	<span class="icon_cloud-upload_alt logo" style="margin-right: 10px; font-size: 20pt; color: #ffc61a;"></span><span style="font-size: 16pt;" class="lite">Project</span>
+	   		 </button>     <input type="text" value="${sessionScope.teamList.team_name}" /> 
+		     <ul class="dropdown-menu" style="width: 300px;">   
+		    	<c:if test="${sessionScope.teamList == null }" >
+		    		<li><span style="color: #ff9900;">${sessionScope.loginuser.userid} 님의 가입한 팀이 없습니다.</span></li>
+		    	</c:if>
+		    	
+		    	<c:if test="${not empty sessionScope.teamList}"> 
+			    	<c:forEach var="teamvo" items="${sessionScope.teamList}"> 
+				      
+				      <li><span style="padding-left: 10px; color: yellow;"><a href="#">${teamvo.team_name}<span style="float: right; padding-right: 10px;">${teamvo.admin_userid}</span> </a></span></li>
+				      
+				     <%--  <c:if test="${sessionScope.projectList == null }">
+				      	 <li><span style="color: yellow;">${teamvo.team_name}에  프로젝트가 없습니다.</span></li>		      
+				      </c:if>
+				      
+				      <c:if test="${sessionScope.projectList != null && (teamvo.team_idx).equals(session.projectList.fk_team_idx)}">
+				      		<c:forEach var="projectvo" items="${sessionScope.projectList}">
+				      			<li>&nbsp;&deg;${projectvo.project_name}</li>
+				      		</c:forEach>
+				      </c:if> --%>
+				      
+				      <li class="divider"></li>
+				      		      
+			      	</c:forEach>
+		      	</c:if>
+		     </ul> 
+		  </div>
+		  
+		 </div>      
+	       
 	    
 	  <!--  search form start -->
-      <div class="nav search-row" id="top_menu" style="float: left; padding-top: 1px; padding-left: 20px; padding-bottom: 1px; width: 500px; border: 1px solid yellow; ">
+      <div class="nav search-row" id="top_menu" style="float: left; padding-top: 1px; padding-left: 1px; padding-bottom: 2px; width: 500px; border: 0px solid yellow; ">
         <!--  search form start -->
         <ul class="nav top-menu">
           <li>
@@ -121,7 +109,8 @@
 	  <div style="padding-left: 50%;">  
 	  <!--logo start--> 
       <a href="index.action" class="logo"> FINAL <span class="lite">INS</span></a>
-      <!--logo end-->	 
+      <!--logo end-->
+      <a href="mj_project.action" class="logo">mj_project</a>	 
 	  </div>	
 		
 	  <div class="top-nav notification-row">
@@ -252,13 +241,13 @@
           </li>                       
           <!-- alert notification end-->     
          
-          <!-- user login dropdown start-->
+          <!-- user login dropdown start-->         
           <li class="dropdown">
             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                             <span class="profile-ava">
                                 <img alt="" src="img/avatar1_small.jpg">
                             </span>
-                            <span class="username">username</span> 
+                            <span class="username">${sessionScope.loginuser.userid}</span> 
                             <b class="caret"></b>
             </a>
             <ul class="dropdown-menu extended logout">

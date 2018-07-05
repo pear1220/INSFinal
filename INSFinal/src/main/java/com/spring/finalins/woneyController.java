@@ -7,13 +7,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+
+
 @Controller
 @Component
 public class woneyController {
 	
 	@RequestMapping(value="/index.action", method= {RequestMethod.GET})
-	public String index(HttpServletRequest req) {
-
+	public String index() {
+	
 		return "main/index.tiles";
 	}
 	

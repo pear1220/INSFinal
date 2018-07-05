@@ -63,7 +63,7 @@ public class LoginCheck {
 			if(session.getAttribute("loginuser") == null) {
 				try { //dispatcher 예외처리를 위한 try-catch
 					String msg = "로그인이 필요한 메뉴입니다.";
-					String loc = "/board/login.action"; //로그인하지 않은 상태에서 메뉴접근하는 경우 메세지를 띄운 후 로그인 페이지로 이동시킬 예정
+					String loc = "/finalins/index.action"; //로그인하지 않은 상태에서 메뉴접근하는 경우 메세지를 띄운 후 로그인 페이지로 이동시킬 예정
 					
 					request.setAttribute("msg", msg);
 					request.setAttribute("loc", loc);

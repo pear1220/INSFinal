@@ -14,17 +14,20 @@ public class MinjaeDAO implements InterMinjaeDAO {
 	private SqlSessionTemplate sqlsession;
 
 	@Override
-	public List<String> getTeamList(String userid) {
-List<String> teamList = sqlsession.selectList("mj.getTeamList", userid);
+	public List<TeamVO> getTeamList(String userid) {
+		
+		List<TeamVO> teamList = sqlsession.selectList("mj.getTeamList", userid);
+		
+		System.out.println("DAO teamList" + teamList);
 		
 		return teamList;
 	}
 
-	/*@Override
-	public List<String> getTeamList(MemberVO loginuser) {
+/*	@Override
+	public List<ProjectVO> getProjectInTeam(HashMap<String, String> map) {
 		
-		List<String> teamList = sqlsession.selectList("mj.getTeamList", loginuser);
+		List<ProjectVO> projectList = sqlsession.selectList("mj.getProjectInTeam", map);
 		
-		return teamList;
+		return projectList;
 	}*/
 }

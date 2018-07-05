@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import com.spring.finalins.model.InterMinjaeDAO;
 import com.spring.finalins.model.MemberVO;
+import com.spring.finalins.model.ProjectVO;
+import com.spring.finalins.model.TeamVO;
 
 @Service
 public class MinjaeService implements InterMinjaeServie {
@@ -15,20 +17,24 @@ public class MinjaeService implements InterMinjaeServie {
 	@Autowired
 	private InterMinjaeDAO dao;
 
-	/*@Override
-	public List<String> getTeamList(MemberVO loginuser) {
-		
-		List<String> teamList = dao.getTeamList(loginuser);
-		
-		return teamList;
-	}*/
-	
+	// header : 로그인한 userid의 팀의 리스트를 얻음
 	@Override
-	public List<String> getTeamList(String userid) {
+	public List<TeamVO> getTeamList(String userid) {
 		
-		List<String> teamList = dao.getTeamList(userid);
+		List<TeamVO> teamList = dao.getTeamList(userid);
+		
+		System.out.println("service teamList" + teamList);
 		
 		return teamList;
 	}
+	
+	// header : 해당 user의 팀에 해당하는 프로젝트 리스트를 얻음
+	/*@Override
+	public List<ProjectVO> getProjectInTeam(HashMap<String, String> map) {
+		
+		List<ProjectVO> projectList = dao.getProjectInTeam(map);
+		
+		return projectList;
+	}*/
 	
 }
