@@ -23,7 +23,7 @@
 	<!-- 먼저 위의 #16. myBatis(JDBC) 설정 연결 문자열 설정하기를 주석처리 한 이후에 아래와 같이 한다. -->
 	<bean id="dataSourceSpied" class="org.apache.commons.dbcp.BasicDataSource">
 		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
-		<property name="url" value="jdbc:oracle:thin:@192.168.50.38:1521:xe" />
+		<property name="url" value="jdbc:oracle:thin:@127.0.0.1:1521:xe" />
 		<property name="username" value="finald" />
 		<property name="password" value="eclass" />
 	</bean>

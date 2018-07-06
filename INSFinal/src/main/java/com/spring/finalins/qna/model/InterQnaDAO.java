@@ -10,10 +10,10 @@ public interface InterQnaDAO {
 
 	List<String> getImgfilenameList(); // 이미지 파일명 가져 오기
 
-	MemberVO getLoginMember(HashMap<String, String> map); // 로그인 여부 알아오기
+	
 
 	int add(QnaVO qnavo); // 글쓰기(파일첨부가 없는 글쓰기)
-
+/*
 	List<QnaVO> boardList(); // 글목록 보기 페이지 요청(검색어가 없는 전체 글목록 보여주기)
 
 	QnaVO getView(String seq); // 글 1개를 보여주기
@@ -27,13 +27,13 @@ public interface InterQnaDAO {
 	int deleteContent(HashMap<String, String> map); // 글 1개 삭제하기
 
 	
-	/*
+	
 	 qna에 댓글쓰기 기능이 없다.
 	 int addComment(CommentVO commentvo); // 댓글쓰기
 	int updateCommentCount(String parentSeq); // 댓글쓰기 이후에 댓글의 갯수(commentCount 컬럼) 1증가 시키기
 
 	List<CommentVO> listComment(String seq); // 댓글 내용 보여주기
-*/
+
 	boolean isExistsComment(HashMap<String, String> map); //원게시글에서 딸린 댓글이 있는지 없는지를 확인하기
 	int deleteComment(HashMap<String, String> map); //원게시글에 달린 댓글들 삭제하기
 
@@ -47,7 +47,7 @@ public interface InterQnaDAO {
 
 	int add_withFile(QnaVO qnavo); // 파일첨부가 있는 글쓰기(답변형 게시판)
 
-
+*/
 
 	
 

@@ -51,17 +51,7 @@ public class JihyeQnaController {
 		@Autowired
 		private FileManager fileManager;
 
-		// ====== #40. 메인페이지 요청
-		@RequestMapping(value = "/index.action", method = { RequestMethod.GET })
-		public String index(HttpServletRequest req) {
-
-			List<String> imgfilenameList = service.getImgfilenameList();
-
-			req.setAttribute("imgfilenameList", imgfilenameList);
-
-			return "main/index.tiles";
-		}
-	
+		
 	
 	
 	
@@ -84,11 +74,11 @@ public class JihyeQnaController {
 
 			// ==== 답변글쓰기 추가 되었으므로 아래와 같이 한다(끝).
 
-			return "board/add.tiles2"; // sideinfo 가 없이 만든다.
+			return "qna/add.tiles2"; // sideinfo 가 없이 만든다.
 			// /Board/src/main/webapp/WEB-INF/views2/board/add.jsp 파일을 생성한다.
 		}
 
-		// ======= #53-2. 글쓰기 완료 요청 =======
+/*		// ======= #53-2. 글쓰기 완료 요청 =======
 		@RequestMapping(value = "/addEnd.action", method = { RequestMethod.POST })
 		// public String addEnd(QnaVO qnavo, HttpServletRequest req) {
 
@@ -104,10 +94,10 @@ public class JihyeQnaController {
 			if (!qnavo.getAttach().isEmpty()) {
 				// attach 가 비어있지 않다면 (즉, 청부파일이 있는 경우라면 )
 
-				/*
+				
 				 * 1. 사용자가 보낸 파일을 WAS(톰캣)의 특정 경로 폴더에 저장해 줘야 한다. >>>> 파일이 업로드 되어질 특정 경로(폴더)지정해주기
 				 * 우리는 WAS(톰캣)의 webapp/resources/files 라는 폴더로 지정해주겠다. // files 명은 바꿔도 된다.
-				 */
+				 
 
 				// WAS(톰캣)의 webapp 의 절대경로를 알아와야 한다.
 				String root = session.getServletContext().getRealPath("/"); // /는 첫번째 경로를 말한다. 확장자.java //
@@ -118,13 +108,13 @@ public class JihyeQnaController {
 				// ==> 운영체제가 UNIX, Linux 이라면 "/" 이다.
 
 				System.out.println("root >>" + root);
-				// C:\springworkspace\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\Board\
+				// C:\springworkspace\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\qna\
 				System.out.println("path>>" + path);
-				// C:\springworkspace\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\Board\resources\files
+				// C:\springworkspace\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\qna\resources\files
 
-				/*
+				
 				 * 2. 파일첨부를 위한 변수의 설정 및 값을 초기화한 후 파일 올리기
-				 */
+				 
 				String newFileName = "";
 				// WAS(톰캣) 디스크에 저장할 파일명.
 
@@ -187,7 +177,7 @@ public class JihyeQnaController {
 
 			req.setAttribute("n", n);
 
-			return "board/addEnd.tiles2"; // sideinfo 가 없이 만든다.
+			return "qna/addEnd.tiles2"; // sideinfo 가 없이 만든다.
 			// /Board/src/main/webapp/WEB-INF/views2/board/addEnd.jsp 파일을 생성한다.
 		}
 
@@ -223,7 +213,7 @@ public class JihyeQnaController {
 			map.put("search", search);
 
 			// 유효성 검사!
-			/*
+			
 			 * // 페이징 처리 안한것 if( (colname != null && search != null) &&
 			 * (!colname.equals("null") && !search.equals("null")) &&
 			 * (!colname.trim().isEmpty() && !search.trim().isEmpty()) ) // colname을 선택했고
@@ -233,7 +223,7 @@ public class JihyeQnaController {
 			 * 
 			 * req.setAttribute("boardList", boardList); req.setAttribute("colname",
 			 * colname); req.setAttribute("search", search);
-			 */
+			 
 
 			// ===== #110. 페이징 처리 하기 =====
 			String str_currentShowPageNo = req.getParameter("currentShowPageNo");
@@ -248,12 +238,12 @@ public class JihyeQnaController {
 
 			int blockSize = 10;// "페이지바" 에 보여줄 페이지의 갯수
 
-			/*
+			
 			 * ==== 총 페이지 수 구하기 ==== 검색 조건이 없을 때의 총 페이지 수와 검색 조건이 있을 때의 총 페이지 수를 구해야 한다.
 			 * 
 			 * 검색 조건이 없을 때의 총 페이지 수 ==> colname과 search가 null 인 것이고, 검색 조건이 있을 때의 총 페이지 수
 			 * ==> colname과 search가 null 이 아닌 것이다.
-			 */
+			 
 			// 먼저 총 게시물 건수를 구한다.
 			if ((colname != null && search != null) && (!colname.equals("null") && !search.equals("null"))
 					&& (!colname.trim().isEmpty() && !search.trim().isEmpty())) // colname을 선택했고 검색어를 입력했을 경우
@@ -291,12 +281,12 @@ public class JihyeQnaController {
 			}
 
 			// **** 가져올 게시글의 범위를 구한다.(공식임!!) ****
-			/*
+			
 			 * // 1페이지당 5개씩 보여준다고 가정한다면 currentShowPageNo startRno endRno
 			 * ------------------------------------------------ 1 page ==> 1 5 2 page ==> 6
 			 * 10 3 page ==> 11 15 4 page ==> 16 20 5 page ==> 21 25 6 page ==> 26 30 7 page
 			 * ==> 31 35
-			 */
+			 
 
 			// ****** 공식!공식!공식! *******
 			startRno = (currentShowPageNo - 1) * sizePerPage + 1;
@@ -383,9 +373,9 @@ public class JihyeQnaController {
 			req.setAttribute("qnavo", qnavo);
 
 			// ======= #91. 댓글내용 갖고 오기
-			/*List<CommentVO> commentList = service.listComment(seq); // #61. 에 있는 seq가져오기
+			List<CommentVO> commentList = service.listComment(seq); // #61. 에 있는 seq가져오기
 			req.setAttribute("commentList", commentList);
-   */
+   
 			return "board/view.tiles2"; // sideinfo 가 없이 만든다.
 			// /Board/src/main/webapp/WEB-INF/views2/board/view.jsp 파일을 생성한다.
 		}
@@ -442,9 +432,9 @@ public class JihyeQnaController {
 
 			String content = qnavo.getQna_content().replaceAll("\r\n", "<br/>");
 			qnavo.setQna_content(content);
-			/*
+			
 			 * 글 수정을 하려면 원본 글의 암호화 수정시 입력해주는 암호가 일치할 때만 글수정이 가능하도록 해야 한다.
-			 */
+			 
 			int n = service.edit(qnavo);
 			// n 이 1이면 update 성공
 			// n 이 0이면 update 실패(암호가 틀리므로)
@@ -509,10 +499,10 @@ public class JihyeQnaController {
 		@RequestMapping(value = "/delEnd.action", method = { RequestMethod.POST })
 		public String requiredLogin_delEnd(HttpServletRequest req, HttpServletResponse res) throws Throwable {
 
-			/*
+			
 			 * 글 삭제를 하려면 원본 글의 암호와 삭제시 입력된 암호가 일치할때만 삭제가 가능하도록 해야 한다. 서비스단에서 글삭제를 처리한 결과를
 			 * int타입으로 받아오겠다.
-			 */
+			 
 			String seq = req.getParameter("seq");
 			String pw = req.getParameter("pw");
 
@@ -531,7 +521,7 @@ public class JihyeQnaController {
 		}
 
 		// ====== #85. 댓글쓰기 =====
-	/*	@RequestMapping(value = "/addComment.action", method = { RequestMethod.POST })
+		@RequestMapping(value = "/addComment.action", method = { RequestMethod.POST })
 		public String requiredLogin_addComment(HttpServletRequest req, HttpServletResponse res, CommentVO commentvo)
 				throws Throwable {// 트랜잭션 처리를 할 수 있게 예외처리하는 것을 service단에 넘긴다.
 
@@ -583,7 +573,7 @@ public class JihyeQnaController {
 			// /Board/src/main/webapp/WEB-INF/viewsnotiles/addCommentEndJSON.jsp 파일을 생성한다.
 
 		}
-*/
+
 		// ==== #148. 첨부파일 다운로드 받기 =====
 		@RequestMapping(value = "/download.action", method = { RequestMethod.GET })
 		public void requiredLogin_download(HttpServletRequest req, HttpServletResponse res) {
@@ -646,10 +636,10 @@ public class JihyeQnaController {
 			if (!photovo.getFiledata().isEmpty()) {
 				// 파일이 존재한다라면
 
-				/*
+				
 				 * 1. 사용자가 보낸 파일을 WAS(톰캣)의 특정 폴더에 저장해주어야 한다. >>>> 파일이 업로드 되어질 특정 경로(폴더)지정해주기 우리는
 				 * WAS 의 webapp/resources/photo_upload 라는 폴더로 지정해준다.
-				 */
+				 
 
 				// WAS 의 webapp 의 절대경로를 알아와야 한다.
 				HttpSession session = req.getSession();
@@ -671,10 +661,10 @@ public class JihyeQnaController {
 				try {
 					bytes = photovo.getFiledata().getBytes();
 					// getBytes()는 첨부된 파일을 바이트단위로 파일을 다 읽어오는 것이다.
-					/*
+					
 					 * 2-1. 첨부된 파일을 읽어오는 것 첨부한 파일이 강아지.png 이라면 이파일을 WAS(톰캣) 디스크에 저장시키기 위해 byte[]
 					 * 타입으로 변경해서 받아들인다.
-					 */
+					 
 					// 2-2. 이제 파일올리기를 한다.
 					String original_name = photovo.getFiledata().getOriginalFilename();
 					// photovo.getFiledata().getOriginalFilename() 은 첨부된 파일의 실제 파일명(문자열)을 얻어오는 것이다.
@@ -711,10 +701,10 @@ public class JihyeQnaController {
 		@RequestMapping(value = "/image/multiplePhotoUpload.action", method = { RequestMethod.POST })
 		public void multiplePhotoUpload(HttpServletRequest req, HttpServletResponse res) {
 
-			/*
+			
 			 * 1. 사용자가 보낸 파일을 WAS(톰캣)의 특정 폴더에 저장해주어야 한다. >>>> 파일이 업로드 되어질 특정 경로(폴더)지정해주기 우리는
 			 * WAS 의 webapp/resources/photo_upload 라는 폴더로 지정해준다.
-			 */
+			 
 
 			// WAS 의 webapp 의 절대경로를 알아와야 한다.
 			HttpSession session = req.getSession();
@@ -740,14 +730,14 @@ public class JihyeQnaController {
 					// >>>> 확인용 filename ==> berkelekle%ED%8A%B8%EB%9E%9C%EB%94%9405.jpg
 
 					InputStream is = req.getInputStream();
-					/*
+					
 					 * 요청 헤더의 content-type이 application/json 이거나 multipart/form-data 형식일 때, 혹은 이름 없이
 					 * 값만 전달될 때 이 값은 요청 헤더가 아닌 바디를 통해 전달된다. 이러한 형태의 값을 'payload body'라고 하는데 요청 바디에
 					 * 직접 쓰여진다 하여 'request body post data'라고도 한다.
 					 * 
 					 * 서블릿에서 payload body는 Request.getParameter()가 아니라 Request.getInputStream() 혹은
 					 * Request.getReader()를 통해 body를 직접 읽는 방식으로 가져온다.
-					 */
+					 
 					String newFilename = fileManager.doFileUpload(is, filename, path);
 
 					int width = fileManager.getImageWidth(path + File.separator + newFilename);
@@ -786,7 +776,7 @@ public class JihyeQnaController {
 
 			return "xml/weatherXML"; // 점이 없다. 그렇다면 order가 1이 아닌 그 다음번인 order2로 간다. order2는 .jsp.. /weatherXML.jsp가
 										// 된다 파일을 만들때 jsp파일이지만 (xhtml)
-		}
+		}*/
 
 	}
 

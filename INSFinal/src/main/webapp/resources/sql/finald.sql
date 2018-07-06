@@ -1,89 +1,92 @@
 show user;
 
-
-
--- ë©¤ë²„í…Œì´ë¸” ìƒì„±
+-- ¸â¹öÅ×ÀÌºí »ı¼º
 create table ins_member 
-( userid       varchar2(20)  not null --íšŒì›ID
-, pwd          varchar2(50)  not null --ë¹„ë°€ë²ˆí˜¸
-, name         varchar2(50)  not null --ì´ë¦„
-, nickname     varchar2(50)  not null --ë‹‰ë„¤ì„
-, email        varchar2(50)  not null --ì´ë©”ì¼
-, tel1         number        not null --ì „í™”ë²ˆí˜¸1
-, tel2         number        not null --ì „í™”ë²ˆí˜¸2
-, tel3         number        not null --ì „í™”ë²ˆí˜¸3
-, leave_status number default 0 not null --0:íƒˆí‡´x 1:íƒˆí‡´
-, job          varchar2(20) not null --ì§ì—…êµ°
-, birthday     date         not null --ìƒì¼
-, profilejpg   varchar2(100) not null --í”„ë¡œí•„ì‚¬ì§„ 
+( userid       varchar2(20)  not null --È¸¿øID
+, pwd          varchar2(50)  not null --ºñ¹Ğ¹øÈ£
+, name         varchar2(50)  not null --ÀÌ¸§
+, nickname     varchar2(50)  not null --´Ğ³×ÀÓ
+, email        varchar2(50)  not null --ÀÌ¸ŞÀÏ
+, tel1         number        not null --ÀüÈ­¹øÈ£1
+, tel2         number        not null --ÀüÈ­¹øÈ£2
+, tel3         number        not null --ÀüÈ­¹øÈ£3
+, leave_status number default 0 not null --0:Å»Åğx 1:Å»Åğ
+, job          varchar2(20) not null --Á÷¾÷±º
+, birthday     date         not null --»ıÀÏ
+, profilejpg   varchar2(100) not null --ÇÁ·ÎÇÊ»çÁø 
 , constraint PK_Member_userid primary key(userid)
 );
 
-alter table ins_member add(profilejpg varchar2(100) default 'memberprofile_basic.jsp'); --ë©¤ë²„í…Œì´ë¸” í”„ë¡œí•„ì‚¬ì§„ ì»¬ëŸ¼ defaultì¶”ê°€
-alter table ins_member add constraint CK_leave_status check(leave_status in(0,1)); --ë©¤ë²„í…Œì´ë¸” leave_statusì»¬ëŸ¼ ì²´í¬ì œì•½ ì¶”ê°€
+alter table ins_member add(profilejpg varchar2(100) default 'memberprofile_basic.jsp'); --¸â¹öÅ×ÀÌºí ÇÁ·ÎÇÊ»çÁø ÄÃ·³ defaultÃß°¡
+alter table ins_member add constraint CK_leave_status check(leave_status in(0,1)); --¸â¹öÅ×ÀÌºí leave_statusÄÃ·³ Ã¼Å©Á¦¾à Ãß°¡
 
---2018.07.02 ìˆ˜ì •
+--2018.07.04 ¼öÁ¤
+alter table ins_member drop column tel1;
+alter table ins_member drop column tel2;
+alter table ins_member drop column tel3; --¸â¹öÅ×ÀÌºíÀÇ ±âÁ¸ ÀüÈ­¹øÈ£ ÄÃ·³ »èÁ¦
+alter table ins_member add tel1 varchar2(5);
+alter table ins_member add tel2 varchar2(5);
+alter table ins_member add tel3 varchar2(5); --varchar2·Î Å¸ÀÔ ¹Ù²ã¼­ ÀüÈ­¹øÈ£ ÄÃ·³ Àç»ı¼º
+
+update ins_member set tel1=010, tel2=1234, tel3=5678;
+alter table ins_member modify tel1 not null;
+alter table ins_member modify tel2 not null;
+alter table ins_member modify tel3 not null; --ÀüÈ­¹øÈ£ÄÃ·³¿¡ not nullÁ¦¾àÁ¶°Ç Ãß°¡
+
+desc ins_member;
+--2018.07.02 ¼öÁ¤
 insert into ins_member(userid, pwd, name, nickname, email, tel1, tel2, tel3, leave_status, job, birthday, profilejpg, ins_personal_alarm)
-values('ddcat', 'qwer1234$', 'ë””ë””ê³ ì–‘ì´', 'ë‘”ë‘”ì´', 'ddcat@gmail.com', 010, 1234, 5678, default, 'IT', to_date('20170101', 'yyyy-mm-dd'), default, default);
-
-
-
-
+values('ddcat', 'qwer1234$', 'µğµğ°í¾çÀÌ', 'µĞµĞÀÌ', 'ddcat@gmail.com', 010, 1234, 5678, default, 'IT', to_date('20170101', 'yyyy-mm-dd'), default, default);
 select * from ins_member;
+
 commit;
-
--- ë¡œê·¸ì¸í•œ ìœ ì €ì˜ ê°œì¸ì •ë³´ ë¶ˆëŸ¬ì˜¤ê¸° 
-select userid, pwd, name, nickname, email, tel1, tel2, tel3, leave_status, job, , profilejpg, ins_personal_alarm
-from ins_member
-where userid = ''
-
 
 select *
 from ins_member
 where userid = 'ddcat' and pwd = 'qwer1234$';
 
---ì»¬ëŸ¼ ì‚­ì œí•˜ê¸°â˜…â˜… alter table í…Œì´ë¸”ëª… drop column ì‚­ì œí• ì»¬ëŸ¼ëª…;â˜…â˜…
---ì»¬ëŸ¼ ì¶”ê°€í•˜ê¸°â˜…â˜… alter table í…Œì´ë¸”ëª… add ì¶”ê°€í• ì»¬ëŸ¼ëª… ë°ì´í„°íƒ€ì…; â˜…â˜…
-alter table ins_personal_alarm drop column personal_alarm_setting_status; --ê°œì¸ì•ŒëŒ í…Œì´ë¸”ì—ì„œ ì•ŒëŒí™•ì¸ìš©ì»¬ëŸ¼ ì‚­ì œ
-alter table ins_member add ins_personal_alarm number default 0; --ë©¤ë²„í…Œì´ë¸”ì— ê°œì¸ì•ŒëŒí™•ì¸ìš©ì»¬ëŸ¼ ì¶”ê°€
+--ÄÃ·³ »èÁ¦ÇÏ±â¡Ú¡Ú alter table Å×ÀÌºí¸í drop column »èÁ¦ÇÒÄÃ·³¸í;¡Ú¡Ú
+--ÄÃ·³ Ãß°¡ÇÏ±â¡Ú¡Ú alter table Å×ÀÌºí¸í add Ãß°¡ÇÒÄÃ·³¸í µ¥ÀÌÅÍÅ¸ÀÔ; ¡Ú¡Ú
+alter table ins_personal_alarm drop column personal_alarm_setting_status; --°³ÀÎ¾Ë¶÷ Å×ÀÌºí¿¡¼­ ¾Ë¶÷È®ÀÎ¿ëÄÃ·³ »èÁ¦
+alter table ins_member add ins_personal_alarm number default 0; --¸â¹öÅ×ÀÌºí¿¡ °³ÀÎ¾Ë¶÷È®ÀÎ¿ëÄÃ·³ Ãß°¡
 alter table ins_member modify ins_personal_alarm not null;
-alter table ins_member add constraint CK_personal_alarm check(ins_personal_alarm in(0,1)); --ë©¤ë²„í…Œì´ë¸”ì— ê°œì¸ì•ŒëŒí™•ì¸ìš©ì»¬ëŸ¼ ì²´í¬ì œì•½ì¡°ê±´ ì¶”ê°€
+alter table ins_member add constraint CK_personal_alarm check(ins_personal_alarm in(0,1)); --¸â¹öÅ×ÀÌºí¿¡ °³ÀÎ¾Ë¶÷È®ÀÎ¿ëÄÃ·³ Ã¼Å©Á¦¾àÁ¶°Ç Ãß°¡
 desc ins_member;
 
---â˜…â˜…â˜… alter table í…Œì´ë¸”ëª… drop constraint ì œì•½ì¡°ê±´ëª…; â˜…â˜…â˜…
-alter table ins_project_record drop constraint FK_recode_card_idx; --ê¸°ë¡í…Œì´ë¸”ì— ì¹´ë“œidxì™¸ë˜í‚¤ ì‚­ì œ
+--¡Ú¡Ú¡Ú alter table Å×ÀÌºí¸í drop constraint Á¦¾àÁ¶°Ç¸í; ¡Ú¡Ú¡Ú
+alter table ins_project_record drop constraint FK_recode_card_idx; --±â·ÏÅ×ÀÌºí¿¡ Ä«µåidx¿Ü·¡Å° »èÁ¦
 alter table ins_project_record drop column FK_CARD_IDX;
 alter table ins_project_record add fk_card_idx number;
 desc ins_project_record;
 
-alter table ins_project_record add record_dml_status number default 0; --ê¸°ë¡í…Œì´ë¸”ì— dmlêµ¬ë¶„ìš© ì»¬ëŸ¼ ì¶”ê°€ 
-alter table ins_project_record add constraint CK_record_dml_status check(record_dml_status in(0,1,2)); --ê¸°ë¡í…Œì´ë¸”dmlì»¬ëŸ¼ì— ì²´í¬ì œì•½ ì¶”ê°€
-alter table ins_project_record add fk_list_idx number; --ê¸°ë¡í…Œì´ë¸”ì— ë¦¬ìŠ¤íŠ¸idxì»¬ëŸ¼ ì¶”ê°€
-alter table ins_project_record modify fk_list_idx not null; --ê¸°ë¡í…Œì´ë¸” ë¦¬ìŠ¤íŠ¸ì»¬ëŸ¼ì— not nullì¡°ê±´ ì¶”ê°€
+alter table ins_project_record add record_dml_status number default 0; --±â·ÏÅ×ÀÌºí¿¡ dml±¸ºĞ¿ë ÄÃ·³ Ãß°¡ 
+alter table ins_project_record add constraint CK_record_dml_status check(record_dml_status in(0,1,2)); --±â·ÏÅ×ÀÌºídmlÄÃ·³¿¡ Ã¼Å©Á¦¾à Ãß°¡
+alter table ins_project_record add fk_list_idx number; --±â·ÏÅ×ÀÌºí¿¡ ¸®½ºÆ®idxÄÃ·³ Ãß°¡
+alter table ins_project_record modify fk_list_idx not null; --±â·ÏÅ×ÀÌºí ¸®½ºÆ®ÄÃ·³¿¡ not nullÁ¶°Ç Ãß°¡
 alter table ins_project_record modify fk_card_idx not null;
 alter table ins_project_record modify record_dml_status not null;
 
---íŒ€ í…Œì´ë¸” ìƒì„±
+--ÆÀ Å×ÀÌºí »ı¼º
 create table ins_team
-( team_idx               number           not null --ì‹œí€€ìŠ¤ seq_team
-, admin_userid           varchar2(20)     not null --íŒ€ê´€ë¦¬ìID
-, team_name              varchar2(25)     not null --íŒ€ëª…
-, team_delete_status     number default 1 not null --0:íŒ€ì‚­ì œ 1:íŒ€ìƒì„±(ê¸°ë³¸) 
+( team_idx               number           not null --½ÃÄö½º seq_team
+, admin_userid           varchar2(20)     not null --ÆÀ°ü¸®ÀÚID
+, team_name              varchar2(25)     not null --ÆÀ¸í
+, team_delete_status     number default 1 not null --0:ÆÀ»èÁ¦ 1:ÆÀ»ı¼º(±âº») 
 , team_visibility_status number default 0 not null --0: private 1:public 
-, team_image             varchar2(100) default 'basic.jsp' not null --íŒ€í”„ë¡œí•„ì´ë¯¸ì§€
+, team_image             varchar2(100) default 'basic.jsp' not null --ÆÀÇÁ·ÎÇÊÀÌ¹ÌÁö
 , constraint PK_team_team_idx primary key(team_idx)
 , constraint FK_team_admin_userid foreign key(admin_userid)
              references ins_member(userid)             
 );
-alter table ins_team add constraint CK_team_delete_status check(team_delete_status in(0,1)); --íŒ€í…Œì´ë¸” team_delete_statusì»¬ëŸ¼ ì²´í¬ì œì•½ ì¶”ê°€
-alter table ins_team add constraint CK_team_visibility_status check(team_visibility_status in(0,1)); --íŒ€í…Œì´ë¸” team_visibility_statusì»¬ëŸ¼ ì²´í¬ì œì•½ ì¶”ê°€
+alter table ins_team add constraint CK_team_delete_status check(team_delete_status in(0,1)); --ÆÀÅ×ÀÌºí team_delete_statusÄÃ·³ Ã¼Å©Á¦¾à Ãß°¡
+alter table ins_team add constraint CK_team_visibility_status check(team_visibility_status in(0,1)); --ÆÀÅ×ÀÌºí team_visibility_statusÄÃ·³ Ã¼Å©Á¦¾à Ãß°¡
 
 select * from ins_team;
 insert into ins_team(team_idx, admin_userid, team_name, team_delete_status, team_visibility_status, team_image)
-values(seq_team.nextval, 'ddcat', 'í¬ë¦¼íˆì–´ë¡œì¦ˆ!', default, 0, default);
+values(seq_team.nextval, 'ddcat', 'Å©¸²È÷¾î·ÎÁî!', default, 0, default);
 update ins_team set team_visibility_status = 1 where team_idx = 2;
 commit;
---íŒ€idxìš© ì‹œí€€ìŠ¤ ìƒì„±
+--ÆÀidx¿ë ½ÃÄö½º »ı¼º
 create sequence seq_team
 start with 1
 increment by 1
@@ -92,20 +95,20 @@ nominvalue
 nocycle
 nocache;
 
---íŒ€ë©¤ë²„ í…Œì´ë¸” ìƒì„±
+--ÆÀ¸â¹ö Å×ÀÌºí »ı¼º
 create table ins_team_member
-( team_member_idx          number not null --ì‹œí€€ìŠ¤ seq_team_member
-, fk_team_idx              number not null --íŒ€ë²ˆí˜¸
-, team_userid              varchar2(20) not null --íŒ€ë©¤ë²„ID
-, team_member_admin_status number default 2 not null --0:ì¼ë°˜ìœ ì € 1:ë¶€ê´€ë¦¬ì 2:ê´€ë¦¬ì --ì²´í¬ì œì•½ì¡°ê±´ ì¶”ê°€í•´ì•¼í•¨
+( team_member_idx          number not null --½ÃÄö½º seq_team_member
+, fk_team_idx              number not null --ÆÀ¹øÈ£
+, team_userid              varchar2(20) not null --ÆÀ¸â¹öID
+, team_member_admin_status number default 2 not null --0:ÀÏ¹İÀ¯Àú 1:ºÎ°ü¸®ÀÚ 2:°ü¸®ÀÚ --Ã¼Å©Á¦¾àÁ¶°Ç Ãß°¡ÇØ¾ßÇÔ
 , constraint PK_team_member_idx primary key(team_member_idx)
 , constraint FK_fk_team_idx foreign key(fk_team_idx)
              references ins_team(team_idx)
 ); 
-alter table ins_team_member add constraint CK_team_member_admin_status check(team_member_admin_status in(0,1,2)); --íŒ€ë©¤ë²„í…Œì´ë¸” team_member_admin_statusì»¬ëŸ¼ ì²´í¬ì œì•½ ì¶”ê°€
+alter table ins_team_member add constraint CK_team_member_admin_status check(team_member_admin_status in(0,1,2)); --ÆÀ¸â¹öÅ×ÀÌºí team_member_admin_statusÄÃ·³ Ã¼Å©Á¦¾à Ãß°¡
 
 
---íŒ€ë©¤ë²„idxìš© ì‹œí€€ìŠ¤ ìƒì„±
+--ÆÀ¸â¹öidx¿ë ½ÃÄö½º »ı¼º
 create sequence seq_team_member
 start with 1
 increment by 1
@@ -114,33 +117,33 @@ nominvalue
 nocycle
 nocache;
 
---QnAì¹´í…Œê³ ë¦¬ í…Œì´ë¸” ìƒì„±
+--QnAÄ«Å×°í¸® Å×ÀÌºí »ı¼º
 create table ins_QnA_category
-( qna_category_idx number       not null --ì‹œí€€ìŠ¤seq_qna_category
-, qna_category     varchar2(20) not null --QnAì¹´í…Œê³ ë¦¬
+( qna_category_idx number       not null --½ÃÄö½ºseq_qna_category
+, qna_category     varchar2(20) not null --QnAÄ«Å×°í¸®
 , constraint PK_qna_category_idx primary key(qna_category_idx)
 );
 
---QnA í…Œì´ë¸” ìƒì„±
+--QnA Å×ÀÌºí »ı¼º
 create table ins_QnA
-( qna_idx             number        not null --ì‹œí€€ìŠ¤ seq_qna
-, fk_userid           varchar2(20)  not null --QnAì‘ì„±ìID
-, fk_qna_category_idx number        not null --ì¹´í…Œê³ ë¦¬idx
-, qna_title           varchar2(100) not null --ë¬¸ì˜ì œëª©
-, qna_content         CLOB not null          --ë¬¸ì˜ë‚´ìš©
-, qna_date            date default sysdate not null --ë¬¸ì˜ì‘ì„±ì¼
-, qna_fk_idx          number default 0 not null --ì›ê¸€ë²ˆí˜¸
-, qna_depthno         number default 0 not null --ë‹µê¸€ì—¬ë¶€
-, qna_groupno         number default 0 not null --ê·¸ë£¹ë²ˆí˜¸
-, qna_filename        varchar2(255)          --ì²¨ë¶€íŒŒì¼ëª…
-, qna_orgfilename     varchar2(255)          --ì²¨ë¶€íŒŒì¼ì›ë³¸ëª…
-, qna_byte            number                 --ì²¨ë¶€íŒŒì¼ì‚¬ì´ì¦ˆ
+( qna_idx             number        not null --½ÃÄö½º seq_qna
+, fk_userid           varchar2(20)  not null --QnAÀÛ¼ºÀÚID
+, fk_qna_category_idx number        not null --Ä«Å×°í¸®idx
+, qna_title           varchar2(100) not null --¹®ÀÇÁ¦¸ñ
+, qna_content         CLOB not null          --¹®ÀÇ³»¿ë
+, qna_date            date default sysdate not null --¹®ÀÇÀÛ¼ºÀÏ
+, qna_fk_idx          number default 0 not null --¿ø±Û¹øÈ£
+, qna_depthno         number default 0 not null --´ä±Û¿©ºÎ
+, qna_groupno         number default 0 not null --±×·ì¹øÈ£
+, qna_filename        varchar2(255)          --Ã·ºÎÆÄÀÏ¸í
+, qna_orgfilename     varchar2(255)          --Ã·ºÎÆÄÀÏ¿øº»¸í
+, qna_byte            number                 --Ã·ºÎÆÄÀÏ»çÀÌÁî
 , constraint PK_qna_idx primary key(qna_idx)
 , constraint FK_fk_userid foreign key(fk_userid)
              references ins_member(userid)
 );
 
---QnA idxìš© ì‹œí€€ìŠ¤ ìƒì„±
+--QnA idx¿ë ½ÃÄö½º »ı¼º
 create sequence seq_qna
 start with 1
 increment by 1
@@ -149,14 +152,14 @@ nominvalue
 nocycle
 nocache;
 
---í”„ë¡œì íŠ¸ í…Œì´ë¸” ìƒì„±
+--ÇÁ·ÎÁ§Æ® Å×ÀÌºí »ı¼º
 create table ins_project
-( project_idx             number       not null --ì‹œí€€ìŠ¤ seq_project
-, fk_team_idx             number       not null --íŒ€ë²ˆí˜¸
-, project_name            varchar2(50) not null --í”„ë¡œì íŠ¸ëª…
+( project_idx             number       not null --½ÃÄö½º seq_project
+, fk_team_idx             number       not null --ÆÀ¹øÈ£
+, project_name            varchar2(50) not null --ÇÁ·ÎÁ§Æ®¸í
 , project_visibility_st   number default 0 not null --0:team 1:private 2:public
-, project_delete_status   number default 1 not null --0:í”„ë¡œì íŠ¸ì‚­ì œ 1:í”„ë¡œì íŠ¸ì‚¬ìš©
-, project_favorite_status number default 0 not null --0:ì¦ê²¨ì°¾ê¸°x 1:ì¦ê²¨ì°¾ê¸°ì„¤ì •
+, project_delete_status   number default 1 not null --0:ÇÁ·ÎÁ§Æ®»èÁ¦ 1:ÇÁ·ÎÁ§Æ®»ç¿ë
+, project_favorite_status number default 0 not null --0:Áñ°ÜÃ£±âx 1:Áñ°ÜÃ£±â¼³Á¤
 , constraint PK_ins_project_idx primary key(project_idx)
 , constraint FK_project_team_idx foreign key(fk_team_idx)
              references ins_team(team_idx)
@@ -165,10 +168,10 @@ create table ins_project
 , constraint CK_project_favorite_status check(project_favorite_status in(0,1))
 );
 
-alter table ins_project add(project_profilejpg varchar2(100) default 'project_profilejpg_basic.jsp'); --í”„ë¡œì íŠ¸í…Œì´ë¸”ì— í”„ë¡œì íŠ¸ë°°ê²½ì‚¬ì§„ ì»¬ëŸ¼ ì¶”ê°€
+alter table ins_project add(project_profilejpg varchar2(100) default 'project_profilejpg_basic.jsp'); --ÇÁ·ÎÁ§Æ®Å×ÀÌºí¿¡ ÇÁ·ÎÁ§Æ®¹è°æ»çÁø ÄÃ·³ Ãß°¡
 select * from ins_project;
 
---í”„ë¡œì íŠ¸idxìš© ì‹œí€€ìŠ¤ ìƒì„±
+--ÇÁ·ÎÁ§Æ®idx¿ë ½ÃÄö½º »ı¼º
 create sequence seq_project
 start with 1
 increment by 1
@@ -177,13 +180,13 @@ nominvalue
 nocycle
 nocache;
 
---í”„ë¡œì íŠ¸ë©¤ë²„ í…Œì´ë¸” ìƒì„±
+--ÇÁ·ÎÁ§Æ®¸â¹ö Å×ÀÌºí »ı¼º
 create table ins_project_member
-( project_member_idx          number       not null --ì‹œí€€ìŠ¤ seq_project_member
-, fk_project_idx              number       not null --í”„ë¡œì íŠ¸ë²ˆí˜¸
-, project_member_userid       varchar2(20) not null --í”„ë¡œì íŠ¸ë©¤ë²„ID
-, project_member_status       number default 0 not null --0:íƒˆí‡´x 1:íƒˆí‡´
-, project_member_admin_status number default 0 not null --0:ì¼ë°˜ìœ ì € 1:í”„ë¡œì íŠ¸ê´€ë¦¬ì
+( project_member_idx          number       not null --½ÃÄö½º seq_project_member
+, fk_project_idx              number       not null --ÇÁ·ÎÁ§Æ®¹øÈ£
+, project_member_userid       varchar2(20) not null --ÇÁ·ÎÁ§Æ®¸â¹öID
+, project_member_status       number default 0 not null --0:Å»Åğx 1:Å»Åğ
+, project_member_admin_status number default 0 not null --0:ÀÏ¹İÀ¯Àú 1:ÇÁ·ÎÁ§Æ®°ü¸®ÀÚ
 , constraint PK_project_member_idx primary key(project_member_idx)
 , constraint FK_fk_project_idx foreign key(fk_project_idx)
              references ins_project(project_idx)
@@ -191,7 +194,7 @@ create table ins_project_member
 , constraint CK_project_member_admin_status check(project_member_admin_status in(0,1))
 );
 
---í”„ë¡œì íŠ¸ë©¤ë²„idxìš© ì‹œí€€ìŠ¤ ìƒì„±
+--ÇÁ·ÎÁ§Æ®¸â¹öidx¿ë ½ÃÄö½º »ı¼º
 create sequence seq_project_member
 start with 1
 increment by 1
@@ -201,19 +204,19 @@ nocycle
 nocache;
 
 
---ë¦¬ìŠ¤íŠ¸ í…Œì´ë¸” ìƒì„±
+--¸®½ºÆ® Å×ÀÌºí »ı¼º
 create table ins_list
-( list_idx           number       not null --ì‹œí€€ìŠ¤ seq_list
-, fk_project_idx     number       not null --í”„ë¡œì íŠ¸ë²ˆí˜¸
-, list_name          varchar2(50) not null --ë¦¬ìŠ¤íŠ¸ëª…
-, list_delete_status number default 1 not null --0:ë¦¬ìŠ¤íŠ¸íœ´ì§€í†µ 1:ë¦¬ìŠ¤íŠ¸ì‚¬ìš©
+( list_idx           number       not null --½ÃÄö½º seq_list
+, fk_project_idx     number       not null --ÇÁ·ÎÁ§Æ®¹øÈ£
+, list_name          varchar2(50) not null --¸®½ºÆ®¸í
+, list_delete_status number default 1 not null --0:¸®½ºÆ®ÈŞÁöÅë 1:¸®½ºÆ®»ç¿ë
 , constraint PK_list_idx primary key(list_idx)
 , constraint FK_list_project_idx foreign key(fk_project_idx)
              references ins_project(project_idx)             
 , constraint CK_list_delete_status check(list_delete_status in(0,1))
 );
 
---ë¦¬ìŠ¤íŠ¸idxìš© ì‹œí€€ìŠ¤ ìƒì„±
+--¸®½ºÆ®idx¿ë ½ÃÄö½º »ı¼º
 create sequence seq_list
 start with 1
 increment by 1
@@ -222,18 +225,18 @@ nominvalue
 nocycle
 nocache;
 
---ë¦¬ìŠ¤íŠ¸íœ´ì§€í†µ í…Œì´ë¸” ìƒì„±
+--¸®½ºÆ®ÈŞÁöÅë Å×ÀÌºí »ı¼º
 create table ins_archive
-( archive_idx           number not null --ì‹œí€€ìŠ¤ seq_archive
-, fk_list_idx           number not null --ë¦¬ìŠ¤íŠ¸ë²ˆí˜¸
-, archive_insert_time   date default sysdate not null --íœ´ì§€í†µë“¤ì–´ì˜¨ ì‹œê°„
-, archive_delete_status number default 0 not null  --ë¦¬ìŠ¤íŠ¸ì‚­ì œì—¬ë¶€
+( archive_idx           number not null --½ÃÄö½º seq_archive
+, fk_list_idx           number not null --¸®½ºÆ®¹øÈ£
+, archive_insert_time   date default sysdate not null --ÈŞÁöÅëµé¾î¿Â ½Ã°£
+, archive_delete_status number default 0 not null  --¸®½ºÆ®»èÁ¦¿©ºÎ
 , constraint PK_archive_idx primary key(archive_idx)
 , constraint FK_archive_list_idx foreign key(fk_list_idx)
              references ins_list(list_idx)
 );              
 
---íœ´ì§€í†µidxìš© ì‹œí€€ìŠ¤
+--ÈŞÁöÅëidx¿ë ½ÃÄö½º
 create sequence seq_archive
 start with 1
 increment by 1
@@ -243,22 +246,22 @@ nocycle
 nocache;
 
 
---ì¹´ë“œ í…Œì´ë¸” ìƒì„±
+--Ä«µå Å×ÀÌºí »ı¼º
 create table ins_card
-( card_idx           number        not null --ì‹œí€€ìŠ¤ seq_card
-, fk_list_idx        number        not null --ë¦¬ìŠ¤íŠ¸ë²ˆí˜¸
-, card_userid        varchar2(20)  not null --ì¹´ë“œì‘ì„±ìœ ì €ID
-, card_title         varchar2(400) not null --ì¹´ë“œì œëª©
-, card_commentCount  number default 0 not null --ì¹´ë“œëŒ“ê¸€ìˆ˜
-, card_date          date   default sysdate not null --ì¹´ë“œì‘ì„±ì¼
-, card_delete_status number default 1 not null --0:ì¹´ë“œì‚­ì œ 1:ì¹´ë“œì‚¬ìš©
+( card_idx           number        not null --½ÃÄö½º seq_card
+, fk_list_idx        number        not null --¸®½ºÆ®¹øÈ£
+, card_userid        varchar2(20)  not null --Ä«µåÀÛ¼ºÀ¯ÀúID
+, card_title         varchar2(400) not null --Ä«µåÁ¦¸ñ
+, card_commentCount  number default 0 not null --Ä«µå´ñ±Û¼ö
+, card_date          date   default sysdate not null --Ä«µåÀÛ¼ºÀÏ
+, card_delete_status number default 1 not null --0:Ä«µå»èÁ¦ 1:Ä«µå»ç¿ë
 , constraint PK_card_idx primary key(card_idx)
 , constraint FK_card_list_idx foreign key(fk_list_idx)
              references ins_list(list_idx)
 , constraint CK_card_delete_status check(card_delete_status in(0,1))
 );
 
---ì¹´ë“œidx ìš© ì‹œí€€ìŠ¤ ìƒì„±
+--Ä«µåidx ¿ë ½ÃÄö½º »ı¼º
 create sequence seq_card
 start with 1
 increment by 1
@@ -267,13 +270,13 @@ nominvalue
 nocycle
 nocache;
 
---í”„ë¡œì íŠ¸ê¸°ë¡ í…Œì´ë¸” ìƒì„± 
+--ÇÁ·ÎÁ§Æ®±â·Ï Å×ÀÌºí »ı¼º 
 create table ins_project_record
-( project_record_idx  number       not null --ì‹œí€€ìŠ¤ seq_project_record
-, fk_project_idx      number       not null --í”„ë¡œì íŠ¸ë²ˆí˜¸
-, fk_card_idx         number       not null --ì¹´ë“œë²ˆí˜¸
-, record_userid       varchar2(20) not null --ìœ ì €ID
-, project_record_time date default sysdate not null --ê¸°ë¡ì‹œê°„
+( project_record_idx  number       not null --½ÃÄö½º seq_project_record
+, fk_project_idx      number       not null --ÇÁ·ÎÁ§Æ®¹øÈ£
+, fk_card_idx         number       not null --Ä«µå¹øÈ£
+, record_userid       varchar2(20) not null --À¯ÀúID
+, project_record_time date default sysdate not null --±â·Ï½Ã°£
 , constraint PK_project_record_idx primary key(project_record_idx)
 , constraint FK_recode_project_idx foreign key(fk_project_idx)
              references ins_project(project_idx)
@@ -281,7 +284,7 @@ create table ins_project_record
              references ins_card(card_idx) 
 );
 
---í”„ë¡œì íŠ¸ê¸°ë¡idx ìš© ì‹œí€€ìŠ¤ ìƒì„±
+--ÇÁ·ÎÁ§Æ®±â·Ïidx ¿ë ½ÃÄö½º »ı¼º
 create sequence seq_project_record
 start with 1
 increment by 1
@@ -291,12 +294,12 @@ nocycle
 nocache;
 
 
---ê°œì¸ì•ŒëŒ í…Œì´ë¸” ìƒì„±
+--°³ÀÎ¾Ë¶÷ Å×ÀÌºí »ı¼º
 create table ins_personal_alarm
-( personal_alarm_idx            number not null --ì‹œí€€ìŠ¤ seq_personal_alarm
-, fk_project_record_idx         number not null --í”„ë¡œì íŠ¸ ê¸°ë¡ë²ˆí˜¸
-, personal_alarm_read_status    number default 0 not null --0: ì½ì§€ì•ŠìŒ 1:ì½ìŒ
-, personal_alarm_setting_status number default 0 not null --0:ì•ŒëŒon 1:ì•ŒëŒoff
+( personal_alarm_idx            number not null --½ÃÄö½º seq_personal_alarm
+, fk_project_record_idx         number not null --ÇÁ·ÎÁ§Æ® ±â·Ï¹øÈ£
+, personal_alarm_read_status    number default 0 not null --0: ÀĞÁö¾ÊÀ½ 1:ÀĞÀ½
+, personal_alarm_setting_status number default 0 not null --0:¾Ë¶÷on 1:¾Ë¶÷off
 , constraint PK_personal_alarm_idx primary key(personal_alarm_idx)
 , constraint FK_alarm_record_idx foreign key(fk_project_record_idx)
              references ins_project_record(project_record_idx)
@@ -304,7 +307,7 @@ create table ins_personal_alarm
 , constraint CK_alarm_read_status check(personal_alarm_read_status in(0,1)) 
 );
 
---ê°œì¸ì•ŒëŒidx ìš© ì‹œí€€ìŠ¤ ìƒì„±
+--°³ÀÎ¾Ë¶÷idx ¿ë ½ÃÄö½º »ı¼º
 create sequence seq_personal_alarm
 start with 1
 increment by 1
@@ -313,14 +316,14 @@ nominvalue
 nocycle
 nocache;
 
---ì¹´ë“œì½”ë©˜íŠ¸ í…Œì´ë¸” ìƒì„±
+--Ä«µåÄÚ¸àÆ® Å×ÀÌºí »ı¼º
 create table ins_card_comment
-( card_comment_idx      number       not null --ì‹œí€€ìŠ¤ seq_card_comment
-, fk_card_idx           number       not null --ì¹´ë“œë²ˆí˜¸
-, fk_project_member_idx number       not null --í”„ë¡œì íŠ¸ë©¤ë²„ë²ˆí˜¸
-, card_comment_userid   varchar2(20) not null --ì½”ë©˜íŠ¸ì‘ì„±ìœ ì €ID
-, card_comment_content  CLOB         not null --ì½”ë©˜íŠ¸ ë‚´ìš©
-, card_comment_date     date default sysdate not null --ì½”ë©˜íŠ¸ ì‘ì„±ì‹œê°„
+( card_comment_idx      number       not null --½ÃÄö½º seq_card_comment
+, fk_card_idx           number       not null --Ä«µå¹øÈ£
+, fk_project_member_idx number       not null --ÇÁ·ÎÁ§Æ®¸â¹ö¹øÈ£
+, card_comment_userid   varchar2(20) not null --ÄÚ¸àÆ®ÀÛ¼ºÀ¯ÀúID
+, card_comment_content  CLOB         not null --ÄÚ¸àÆ® ³»¿ë
+, card_comment_date     date default sysdate not null --ÄÚ¸àÆ® ÀÛ¼º½Ã°£
 , constraint PK_card_comment_idx primary key(card_comment_idx)
 , constraint FK_comment_card_idx foreign key(fk_card_idx)
              references ins_card(card_idx)
@@ -328,7 +331,7 @@ create table ins_card_comment
              references ins_project_member(project_member_idx)  
 );
 
---ì¹´ë“œì½”ë©˜íŠ¸idx ìš© ì‹œí€€ìŠ¤ ìƒì„±
+--Ä«µåÄÚ¸àÆ®idx ¿ë ½ÃÄö½º »ı¼º
 create sequence seq_card_comment
 start with 1
 increment by 1
@@ -337,20 +340,20 @@ nominvalue
 nocycle
 nocache;
 
---ì¹´ë“œìƒì„¸ í…Œì´ë¸” ìƒì„±
+--Ä«µå»ó¼¼ Å×ÀÌºí »ı¼º
 create table ins_card_detail
-( card_detail_idx  number not null --ì‹œí€€ìŠ¤ seq_card_detail
-, fk_card_idx      number not null --ì¹´ë“œë²ˆí˜¸
-, card_description CLOB            --ì¹´ë“œìƒì„¸ë‚´ìš©
-, card_filename    varchar2(255)   --ì¹´ë“œì²¨ë¶€íŒŒì¼ì´ë¦„
-, card_orgfilename varchar2(255)   --ì²¨ë¶€íŒŒì¼ì›ë³¸ì´ë¦„
-, card_byte number                 --ì²¨ë¶€íŒŒì¼ ì‚¬ì´ì¦ˆ
+( card_detail_idx  number not null --½ÃÄö½º seq_card_detail
+, fk_card_idx      number not null --Ä«µå¹øÈ£
+, card_description CLOB            --Ä«µå»ó¼¼³»¿ë
+, card_filename    varchar2(255)   --Ä«µåÃ·ºÎÆÄÀÏÀÌ¸§
+, card_orgfilename varchar2(255)   --Ã·ºÎÆÄÀÏ¿øº»ÀÌ¸§
+, card_byte number                 --Ã·ºÎÆÄÀÏ »çÀÌÁî
 , constraint PK_card_detail_idx primary key(card_detail_idx)
 , constraint FK_fk_card_idx foreign key(fk_card_idx)
              references ins_card(card_idx)
 );   
 
---ì¹´ë“œìƒì„¸idx ìš© ì‹œí€€ìŠ¤ ìƒì„±
+--Ä«µå»ó¼¼idx ¿ë ½ÃÄö½º »ı¼º
 create sequence seq_card_detail
 start with 1
 increment by 1
@@ -360,17 +363,17 @@ nocycle
 nocache;
 
 
---ì¹´ë“œduedate í…Œì´ë¸” ìƒì„±
+--Ä«µåduedate Å×ÀÌºí »ı¼º
 create table ins_card_duedate
-( card_duedate_idx number not null --ì‹œí€€ìŠ¤ seq_card_duedate
-, fk_card_idx      number not null --ì¹´ë“œë²ˆí˜¸
-, card_duedate     date   not null --ì§€ì •ë‚ ì§œ   
+( card_duedate_idx number not null --½ÃÄö½º seq_card_duedate
+, fk_card_idx      number not null --Ä«µå¹øÈ£
+, card_duedate     date   not null --ÁöÁ¤³¯Â¥   
 , constraint PK_card_duedate_idx primary key(card_duedate_idx)
 , constraint FK_duedate_card_idx foreign key(fk_card_idx)
              references ins_card(card_idx)
 );             
 
---ì¹´ë“œduedate idxìš© ì‹œí€€ìŠ¤ ìƒì„±
+--Ä«µåduedate idx¿ë ½ÃÄö½º »ı¼º
 create sequence seq_card_duedate
 start with 1
 increment by 1
@@ -380,17 +383,17 @@ nocycle
 nocache;
 
 
---ì¹´ë“œë¼ë²¨ í…Œì´ë¸” ìƒì„±
+--Ä«µå¶óº§ Å×ÀÌºí »ı¼º
 create table ins_card_label
-( card_label_idx number not null --ì‹œí€€ìŠ¤ seq_card_label
-, fk_card_idx    number not null --ì¹´ë“œë²ˆí˜¸
-, card_label     number not null --ë¼ë²¨(ë²ˆí˜¸ë¡œ ìƒ‰ê¹”êµ¬ë¶„)
+( card_label_idx number not null --½ÃÄö½º seq_card_label
+, fk_card_idx    number not null --Ä«µå¹øÈ£
+, card_label     number not null --¶óº§(¹øÈ£·Î »ö±ò±¸ºĞ)
 , constraint PK_card_lable_idx primary key(card_label_idx)
 , constraint FK_label_card_idx foreign key(fk_card_idx)
              references ins_card(card_idx) 
 );             
 
---ì¹´ë“œë¼ë²¨idxìš© ì‹œí€€ìŠ¤ ìƒì„±
+--Ä«µå¶óº§idx¿ë ½ÃÄö½º »ı¼º
 create sequence seq_card_label
 start with 1
 increment by 1
@@ -400,17 +403,17 @@ nocycle
 nocache;
 
 
---ì¹´ë“œì²´í¬ë¦¬ìŠ¤íŠ¸ í…Œì´ë¸” ìƒì„±
+--Ä«µåÃ¼Å©¸®½ºÆ® Å×ÀÌºí »ı¼º
 create table ins_card_checklist
-( card_checklist_idx   number       not null --ì‹œí€€ìŠ¤ seq_card_checklist
-, fk_card_idx          number       not null --ì¹´ë“œë²ˆí˜¸
-, card_checklist_title varchar2(50) not null --ì²´í¬ë¦¬ìŠ¤íŠ¸ ì œëª©
+( card_checklist_idx   number       not null --½ÃÄö½º seq_card_checklist
+, fk_card_idx          number       not null --Ä«µå¹øÈ£
+, card_checklist_title varchar2(50) not null --Ã¼Å©¸®½ºÆ® Á¦¸ñ
 , constraint PK_card_checklist_idx primary key(card_checklist_idx)
 , constraint FK_checklist_card_idx foreign key(fk_card_idx)
              references ins_card(card_idx)
 );             
 
---ì¹´ë“œì²´í¬ë¦¬ìŠ¤íŠ¸idx ìš© ì‹œí€€ìŠ¤ ìƒì„±
+--Ä«µåÃ¼Å©¸®½ºÆ®idx ¿ë ½ÃÄö½º »ı¼º
 create sequence seq_card_checklist
 start with 1
 increment by 1
@@ -419,19 +422,19 @@ nominvalue
 nocycle
 nocache;
 
---ì¹´ë“œì²´í¬ë¦¬ìŠ¤íŠ¸ìƒì„¸ í…Œì´ë¸” ìƒì„±
+--Ä«µåÃ¼Å©¸®½ºÆ®»ó¼¼ Å×ÀÌºí »ı¼º
 create table ins_card_checklist_detail
-( card_checklist_detail_idx  number        not null --ì‹œí€€ìŠ¤ seq_checklist_detail
-, fk_card_checklist_idx      number        not null --ì²´í¬ë¦¬ìŠ¤íŠ¸ ë²ˆí˜¸
-, card_checklist_todo        varchar2(200) not null --ì²´í¬ë¦¬ìŠ¤íŠ¸ í• ì¼
-, card_checklist_todo_status number default 0 not null --0:ì²´í¬ì „ 1:ì²´í¬
+( card_checklist_detail_idx  number        not null --½ÃÄö½º seq_checklist_detail
+, fk_card_checklist_idx      number        not null --Ã¼Å©¸®½ºÆ® ¹øÈ£
+, card_checklist_todo        varchar2(200) not null --Ã¼Å©¸®½ºÆ® ÇÒÀÏ
+, card_checklist_todo_status number default 0 not null --0:Ã¼Å©Àü 1:Ã¼Å©
 , constraint PK_card_checklist_detail_idx primary key(card_checklist_detail_idx)
 , constraint FK_checklist_detail_idx foreign key(fk_card_checklist_idx)
              references ins_card_checklist(card_checklist_idx) on delete cascade
 , constraint CK_checklist_todo_status check(card_checklist_todo_status in(0,1))
 );
 
---ì¹´ë“œì²´í¬ë¦¬ìŠ¤íŠ¸ìƒì„¸idx ìš© ì‹œí€€ìŠ¤ ìƒì„±
+--Ä«µåÃ¼Å©¸®½ºÆ®»ó¼¼idx ¿ë ½ÃÄö½º »ı¼º
 create sequence seq_checklist_detail
 start with 1
 increment by 1
@@ -442,61 +445,25 @@ nocache;
 
 SELECT * FROM tab;
 
---2018.07.03 ìˆ˜ì •
+--2018.07.03 ¼öÁ¤
 
---í”„ë¡œì íŠ¸ ë°°ê²½ìš© ì´ë¯¸ì§€í…Œì´ë¸” ìƒì„±
+--ÇÁ·ÎÁ§Æ® ¹è°æ¿ë ÀÌ¹ÌÁöÅ×ÀÌºí »ı¼º
 create table ins_project_image
-( project_image_idx number not null --ì‹œí€€ìŠ¤ seq_project_image
+( project_image_idx number not null --½ÃÄö½º seq_project_image
 , proect_image_name varchar2(200) not null
 , constraint PK_project_image_idx primary key(project_image_idx)
 );
 
-alter table ins_project add(fk_project_image_idx number not null); ----í”„ë¡œì íŠ¸ í…Œì´ë¸”ì— ë°°ê²½ì´ë¯¸ì§€ì»¬ëŸ¼ ì¶”ê°€
+alter table ins_project add(fk_project_image_idx number not null); ----ÇÁ·ÎÁ§Æ® Å×ÀÌºí¿¡ ¹è°æÀÌ¹ÌÁöÄÃ·³ Ãß°¡
 alter table ins_project add constraint FK_project_image_idx foreign key(fk_project_image_idx)      
-                                  references ins_project_image(project_image_idx); --ë°°ê²½ì´ë¯¸ì§€ì»¬ëŸ¼ ì™¸ë˜í‚¤ ì œì•½ ì¶”ê°€
+                                  references ins_project_image(project_image_idx); --¹è°æÀÌ¹ÌÁöÄÃ·³ ¿Ü·¡Å° Á¦¾à Ãß°¡
                                   
-                                  
-select *                                                     
-from ins_member
-
-
-----------------------------------------------------------------------------------
-               ì•ˆì§€í˜œ  SQLë¬¸ ì‹œì‘
------------------------------------------------------------------------------------
-
--- ì•ˆì§€í˜œ ìƒì„±
-insert into ins_member(userid, pwd, name, nickname, email, tel1, tel2, tel3, leave_status, job, birthday, profilejpg, ins_personal_alarm)
-values('jihye', 'qwer1234$', 'ì•ˆì§€í˜œ', 'ì§€í˜œ', 'jihye86@gmail.com', 010, 5640, 6983, default, 'IT', to_date('19860301', 'yyyy-mm-dd'), default, default);
-
-
--- ê°œì¸ì •ë³´ ì—…ë°ì´íŠ¸
-update ins_member set pwd='asdf1234$', nickname='lgê·¸ë¨', tel1='010',tel2='1111', tel3='1111',job='ê¸°íƒ€'
-where userid = 'jihye'
-
-select *
-from ins_member
-where userid = 'jihye'
-
-commit;
-
--- íšŒì› íƒˆí‡´ì—¬ë¶€ì— ë”°ë¥¸ í˜ì´ì§€ ì ‘ê·¼ í™•ì¸ì„ ìœ„í•´ leave_statusê°’ ì—…ë°ì´íŠ¸í•˜ê¸°
-update ins_member set leave_status = 0
-where userid = 'jihye';
-
-commit;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ 
+ --ÇÁ·ÎÁ§Æ® ¹è°æ¿ë ½ÃÄö½º »ı¼º
+create sequence seq_project_image
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;

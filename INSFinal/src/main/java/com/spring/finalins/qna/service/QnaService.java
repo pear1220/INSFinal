@@ -27,23 +27,14 @@ public class QnaService implements InterQnaService {
 
 	
 	// ====== #41. 메인페이지용 이미지 파일이름을 가져오는 서비스단 getImgfilenameList() 메소드 생성하기 ======
-	@Override
+	/*@Override
 	public List<String> getImgfilenameList() {
 		
 		List<String> imgfilenameList = dao.getImgfilenameList();
 		
 		return imgfilenameList;
-	}
+	}*/
 
-
-	// ====== #46. 로그인 여부 알아오기 ======
-	@Override
-	public MemberVO getLoginMember(HashMap<String, String> map) {
-		
-		MemberVO loginuser = dao.getLoginMember(map);
-		
-		return loginuser;
-	}
 
 	// ====== #54. 글쓰기(파일첨부가 없는 글쓰기) ======
 	@Override
@@ -58,8 +49,8 @@ public class QnaService implements InterQnaService {
 		// 원글쓰기인, 답변글쓰기인지 구분하기
 		if(qnavo.getQna_fk_idx() == null ||qnavo.getQna_fk_idx().trim().isEmpty()) { // 원글을 쓸 경우!
 			// 원글쓰기인 경우
-		    int groupno = dao.getGroupMaxno()+1;  //(groupno는 max+1)	
-			qnavo.setQna_groupno(String.valueOf(groupno));// db에서 읽어와서 qnavo에 set을 해줬다. 그래서 board.xml에서 글쓰기 add를 할 때 qnavo에 있는 getGroupno를 넣어주면 된다.
+		   // int groupno = dao.getGroupMaxno()+1;  //(groupno는 max+1)	
+			//qnavo.setQna_groupno(String.valueOf(groupno));// db에서 읽어와서 qnavo에 set을 해줬다. 그래서 board.xml에서 글쓰기 add를 할 때 qnavo에 있는 getGroupno를 넣어주면 된다.
 		}
 
 		
@@ -68,7 +59,7 @@ public class QnaService implements InterQnaService {
 	}
 
 
-	// ======= #58. 글목록 보여주기(검색어가 없는 전체 글목록 보여주기)
+	/*// ======= #58. 글목록 보여주기(검색어가 없는 전체 글목록 보여주기)
 	@Override
 	public List<QnaVO> boardList() {
 		List<QnaVO> boardList = dao.boardList();
@@ -174,7 +165,7 @@ public class QnaService implements InterQnaService {
 	
 	
     // ===== #86. 댓글쓰기
-	/*
+	
 	  tblComment 테이블에 insert 된 다음에
 	  tblBoard 테이블에 commentCount 컬럼의 값이 1증가(update) 하도록 요청한다.
 	   즉, 2개 이상의 DML 처리를 해야 하므로 Transaction 처리를 해야 한다. 
@@ -185,8 +176,8 @@ public class QnaService implements InterQnaService {
 	     즉, 해당 메소드 실행시 발생하는 모든 error 및 exception 에 대해서 롤백을 하겠다.
 	     
 	   isolation=Isolation.READ_COMMITTED  커밋되어진다.
-    */
-	/*@Override
+    
+	@Override
 	@Transactional( propagation=Propagation.REQUIRED,  isolation=Isolation.READ_COMMITTED, rollbackFor= {Throwable.class})   // 트랜잭션 처리를 위해 @Transactional를 한다.
 	// 체크제약에 위배되면 throws throwable한다. 던져버린 것을 spring container가 처리하고 이것을 여기서...
 	public int addComment(CommentVO commentvo) throws Throwable {
@@ -214,7 +205,7 @@ public class QnaService implements InterQnaService {
 		List<CommentVO> list = dao.listComment(seq);
 		return list;
 	}
-*/
+
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // ===== #107. 글목록 보여주기(검색어가 없는 것) =====
@@ -275,7 +266,7 @@ public class QnaService implements InterQnaService {
 		return n;
 	}
 
-	
+	*/
 	
 	
 

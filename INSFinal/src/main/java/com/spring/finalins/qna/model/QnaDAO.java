@@ -7,7 +7,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.spring.finalins.model.MemberVO;
+
 
 // ===== #.28 DAO 선언
 @Repository
@@ -19,40 +19,38 @@ public class QnaDAO implements InterQnaDAO {
 	private SqlSessionTemplate sqlsession;
 	
 	// ====== #42. 메인페이지용 이미지 파일이름을 가져오는 모델단 getImgfilenameList() 메소드 생성하기 ======
-	@Override
+/*	@Override
 	public List<String> getImgfilenameList() {
 		
-		List<String> imgfilenameList = sqlsession.selectList("board.getImgfilenameList");
+		List<String> imgfilenameList = sqlsession.selectList("qna.getImgfilenameList");
 		
 		return imgfilenameList;
-	}
+	}*/
 
 	
-	// ====== #47. 로그인 여부 알아오기 ======
-	@Override
-	public MemberVO getLoginMember(HashMap<String, String> map) {
-		
-		MemberVO loginuser = sqlsession.selectOne("board.getLoginMember", map);
-		
-		return loginuser;
-	}
 
 
 	// ====== #55. 글쓰기(파일첨부가 없는 글쓰기) ====== 
 	@Override
 	public int add(QnaVO qnavo) {
 		//mybatis
-		int n = sqlsession.insert("board.add", qnavo);
+		int n = sqlsession.insert("qna.add", qnavo);
 		return n;
+	}
+
+	@Override
+	public List<String> getImgfilenameList() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 
 	// ======= #59. 글목록 보여주기(검색어가 없는 전체 글목록 보여주기) =====
-	@Override
-	public List<QnaVO> boardList() {
+/*	@Override
+	public List<QnaVO> qnaList() {
 		//mybatis
-		List<QnaVO> boardList = sqlsession.selectList("board.boardList");
-		return boardList ;
+		List<QnaVO> qnaList = sqlsession.selectList("qna.qnaList");
+		return qnaList ;
 	}
 
 	// ======= #63. 글 1개 보여주기 =====
@@ -62,7 +60,7 @@ public class QnaDAO implements InterQnaDAO {
 		System.out.println("seq:"+seq);
 		
 		//mybatis
-		QnaVO qnavo = sqlsession.selectOne("board.getView", seq);
+		QnaVO qnavo = sqlsession.selectOne("qna.getView", seq);
 		return qnavo;
 	}
 
@@ -70,14 +68,14 @@ public class QnaDAO implements InterQnaDAO {
 	@Override
 	public void setAddReadCount(String seq) {
 		//mybatis
-		sqlsession.update("board.setAddReadCount",seq);
+		sqlsession.update("qna.setAddReadCount",seq);
 	}
 
     // ====== #73. 글수정 및 글 삭제시 암호일치 여부 알아오기 ======
 	@Override
 	public boolean checkPw(HashMap<String,String> map) {
 		//mybatis
-		int n = sqlsession.selectOne("board.checkPw", map);
+		int n = sqlsession.selectOne("qna.checkPw", map);
 		boolean result = false;
 		
 		if(n ==1)
@@ -90,7 +88,7 @@ public class QnaDAO implements InterQnaDAO {
 	@Override
 	public int updateContent(QnaVO qnavo) {
 		//mybatis
-		int n = sqlsession.update("board.updateContent", qnavo);
+		int n = sqlsession.update("qna.updateContent", qnavo);
 	    return n;
 	}
 
@@ -99,7 +97,7 @@ public class QnaDAO implements InterQnaDAO {
 	@Override
 	public int deleteContent(HashMap<String, String> map) {
 		
-		int n = sqlsession.update("board.deleteContent", map);  // 부모글이 없어지면 자식글이 다 사라지기 때문에 delete가 아닌 update로 처리한다.
+		int n = sqlsession.update("qna.deleteContent", map);  // 부모글이 없어지면 자식글이 다 사라지기 때문에 delete가 아닌 update로 처리한다.
 		                                                               // 비방용 글을 삭제하면 나중에 조사할 때 어려울 수 있다는 가정하에 delete가 아닌 update처리로 글을 남겨둔다.
 		
 		return n;
@@ -108,9 +106,9 @@ public class QnaDAO implements InterQnaDAO {
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
 	// ====== #87. 댓글쓰기 ======
-/*	@Override
+	@Override
 	public int addComment(CommentVO commentvo) {
-	    int n = sqlsession.insert("board.addComment", commentvo);
+	    int n = sqlsession.insert("qna.addComment", commentvo);
 	    
 	   
 		return n;
@@ -120,7 +118,7 @@ public class QnaDAO implements InterQnaDAO {
 	// ====== #88. 댓글쓰기 이후에 댓글의 갯수(commentCount 컬럼) 1증가 시키기 ======
 	@Override
 	public int updateCommentCount(String parentSeq) {
-		 int n = sqlsession.update("board.updateCommentCount", parentSeq);
+		 int n = sqlsession.update("qna.updateCommentCount", parentSeq);
 		 return n;
 	}
     /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -129,7 +127,7 @@ public class QnaDAO implements InterQnaDAO {
 	// ===== #93. 댓글내용 보여주기
 	@Override
 	public List<CommentVO> listComment(String seq) {
-		List<CommentVO> list = sqlsession.selectList("board.listComment", seq);
+		List<CommentVO> list = sqlsession.selectList("qna.listComment", seq);
 		return list;
 	}
 
@@ -137,7 +135,7 @@ public class QnaDAO implements InterQnaDAO {
 	// ===== #99. 원게시글에서 딸린 댓글이 있는지 없는지를 확인하기
 	@Override
 	public boolean isExistsComment(HashMap<String, String> map) {
-		int count = sqlsession.selectOne("board.isExistsComment", map);
+		int count = sqlsession.selectOne("qna.isExistsComment", map);
 		if(count > 0) 
 			return true;
 		else
@@ -148,9 +146,9 @@ public class QnaDAO implements InterQnaDAO {
 	// ===== #100. 원게시글에 달린 댓글들 삭제하기
 	@Override
 	public int deleteComment(HashMap<String, String> map) {
-		int n= sqlsession.update("board.deleteComment", map);
+		int n= sqlsession.update("qna.deleteComment", map);
 		return n ;
-	}*/
+	}
 
     ///////////////////////////////////////////////////////////////////////////////////////
 	// 컬럼네임은 ${} 데이터는 #{}이다!!!!
@@ -158,16 +156,16 @@ public class QnaDAO implements InterQnaDAO {
 	
 	// ===== #108. 글목록 보여주기(검색어가 있는 것) =====
 	@Override
-	public List<QnaVO> boardList2(HashMap<String, String> map) {
-		List<QnaVO> boardList = sqlsession.selectList("board.boardList2", map);
-		return boardList ;
+	public List<QnaVO> qnaList2(HashMap<String, String> map) {
+		List<QnaVO> qnaList = sqlsession.selectList("qna.qnaList2", map);
+		return qnaList ;
 	}
 	
 	// ===== #108. 글목록 보여주기(검색어가 없는 것) =====
 	@Override
-	public List<QnaVO> boardList(HashMap<String, String> map) {
-		List<QnaVO> boardList = sqlsession.selectList("board.boardList", map);
-		return boardList ;
+	public List<QnaVO> qnaList(HashMap<String, String> map) {
+		List<QnaVO> qnaList = sqlsession.selectList("qna.qnaList", map);
+		return qnaList ;
 	}
     ///////////////////////////////////////////////////////////////////////////////////////
 
@@ -176,7 +174,7 @@ public class QnaDAO implements InterQnaDAO {
 	// ===== #115. 검색어가 있는 총 게시물 건수 =====
 	@Override
 	public int getTotalCount2(HashMap<String, String> map) {
-		int totalCount = sqlsession.selectOne("board.getTotalCount2", map);
+		int totalCount = sqlsession.selectOne("qna.getTotalCount2", map);
 		return totalCount;
 	}
 
@@ -184,17 +182,17 @@ public class QnaDAO implements InterQnaDAO {
 	// ===== #115. 검색어가 없는 총 게시물 건수 =====
 	@Override
 	public int getTotalCount() {
-		int totalCount = sqlsession.selectOne("board.getTotalCount");
+		int totalCount = sqlsession.selectOne("qna.getTotalCount");
 		return totalCount;
 	}
 	////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 	
-	// ===== #124. tblBoard 테이블의 groupno 의 max값 알아오기 ===== 
+	// ===== #124. tblqna 테이블의 groupno 의 max값 알아오기 ===== 
 	@Override
 	public int getGroupMaxno() {
-		int max = sqlsession.selectOne("board.getGroupMaxno");
+		int max = sqlsession.selectOne("qna.getGroupMaxno");
 		return max;
 	}
 
@@ -202,7 +200,7 @@ public class QnaDAO implements InterQnaDAO {
 	// ===== #140. 파일첨부가 있는 글쓰기(답변형 게시판) ===== 
 	@Override
 	public int add_withFile(QnaVO qnavo) {
-		int n = sqlsession.insert("board.add_withFile", qnavo);
+		int n = sqlsession.insert("qna.add_withFile", qnavo);
 		return n;
 	}
 
@@ -219,7 +217,7 @@ public class QnaDAO implements InterQnaDAO {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-
+*/
 
    
 	

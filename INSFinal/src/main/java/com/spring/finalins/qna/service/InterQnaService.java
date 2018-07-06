@@ -9,13 +9,13 @@ import com.spring.finalins.model.MemberVO;
 
 public interface InterQnaService {
 
-	List<String> getImgfilenameList(); // 이미지 파일명 가져 오기
+	//List<String> getImgfilenameList(); // 이미지 파일명 가져 오기
 
-	MemberVO getLoginMember(HashMap<String, String> map); // 로그인 여부 알아오기
+	
 
 	int add(QnaVO qnavo); // 글쓰기(파일첨부가 없는 글쓰기)
 
-	List<QnaVO> boardList(); // 글목록 보기 페이지 요청(검색어가 없는 전체 글목록 보여주기)
+	/*List<QnaVO> boardList(); // 글목록 보기 페이지 요청(검색어가 없는 전체 글목록 보여주기)
 
 	QnaVO getView(String seq, String userid);
 	// 조회수(readCount) 증가한 후에 글1개를 가져오는 것.
@@ -46,7 +46,7 @@ public interface InterQnaService {
 
 	int add_withFile(QnaVO qnavo); // 파일첨부가 있는 글쓰기(답변형 게시판)
 
-
+*/
 
 
 
