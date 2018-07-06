@@ -9,7 +9,7 @@
     /Board/src/main/webapp/resources/smarteditor/SmartEditor2_noframe.html 파일에서 아래 코드를 layout-tiles2.jsp에 삽입한다.
 
 <link href="css/smart_editor2.css" rel="stylesheet" type="text/css">
-<script type="text/javascript" src="./js/lib/jindo2.all.js" charset="utf-8"></script> //./js/lib/jindo2.all.js의 .은 자신의 경로를 입력한다.
+<script type="text/javascript" src="./js/lib/jindo2.all.js" charset="utf-8"></script>
 <script type="text/javascript" src="./js/lib/jindo_component.js" charset="utf-8"></script>
 <script type="text/javascript" src="./js/SE2M_Configuration.js" charset="utf-8"></script>	<!-- 설정 파일 -->
 <script type="text/javascript" src="./js/SE2BasicCreator.js" charset="utf-8"></script>
@@ -156,6 +156,8 @@ a.href=b+"/smart_editor2_in.css"; 이것을 a.href="../smarteditor/css/smart_edi
 }
 </script> 
 까지 삽입함.
+그런 다음에 var oEditor = createSEditor2(jindo.$("ir1")) 에 가서
+"ir1" 를 <textarea>  의 id값인 content
 
  ****  textarea 태그에서 required="required" 속성을 사용하면  스마트 에디터는 오류가 발생하므로 사용하면 안된다. ****
   <textarea id="content" rows="10" cols="100" style="width:95%; height:412px;">${boardvo.content}</textarea>
@@ -328,11 +330,13 @@ a.href=b+"/smart_editor2_in.css"; 이것을 a.href="../smarteditor/css/smart_edi
    **  메이븐을 사용하는 경우
     :  jai_codec.jar, jai_core.jar 파일 Maven dependency
 
+   -- pom.xml에서 25번째 줄에서 했다.
     <repository>
         <id>geotools</id>
         <url>http://download.osgeo.org/webdav/geotools/</url>
     </repository>
 
+  -- pom.xml에서 328번째 줄에서 했다.
     <dependency>
         <groupId>javax.media</groupId>
         <artifactId>jai_core</artifactId>

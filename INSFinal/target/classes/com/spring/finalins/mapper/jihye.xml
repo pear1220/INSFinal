@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ==== #26. mapper 기본설정 ==== -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+
+<!-- ==== #27. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
+<mapper namespace="jihye">
+
+  <!-- 개인정보 수정을 위한 로그인한 유저의 정보를 불러오기 -->
+  <select id="getMyProfile" parameterType="String"   resultType="com.spring.finalins.model.MemberVO">
+     select userid, pwd, name, nickname, email, tel1, tel2, tel3, leave_status, job, birthday, profilejpg, ins_personal_alarm
+     from ins_member
+     where userid = #{userid}
+  </select>
+  
+  
+  <!-- 회원정보수정 업데이트 하기 -->
+  <update id="updateMyProfile" parameterType="com.spring.finalins.model.MemberVO">
+     update ins_member set pwd=#{pwd}, nickname=#{nickname}, tel1=#{tel1},tel2=#{tel2}, tel3=#{tel3},job=#{job}
+     where userid = #{userid}
+   </update>
+   
+  
+   <!-- 회원탈퇴(leave_status 업데이트 하기) -->
+   <update id="deleteMyAccount" parameterType="String">
+     update ins_member set leave_status = 1
+     where userid = #{userid}
+   </update>
+	
+</mapper>

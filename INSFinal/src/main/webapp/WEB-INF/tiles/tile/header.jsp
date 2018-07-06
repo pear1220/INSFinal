@@ -4,7 +4,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
-<html lang="en">
+<html>
+<meta charset="UTF-8">
 
  <%-- 
  <head>
@@ -363,6 +364,12 @@
         </ul> 
         <!--  search form end -->
       </div>
+      
+      
+	  <button onclick="location.href='<%= request.getContextPath() %>/mypage.action'">지혜</button>
+	  
+	  
+	  
 	  
 	  <div style="padding-left: 50%;">  
 	  <!--logo start--> 

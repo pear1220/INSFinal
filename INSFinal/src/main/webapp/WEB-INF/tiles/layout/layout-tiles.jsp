@@ -13,15 +13,18 @@
   <meta name="author" content="GeeksLabs">
   <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
   <meta name="viewport" content="width=device-width, initial-scale=1">
- <link rel="shortcut icon" href="img/favicon.png">
+  <link rel="shortcut icon" href="img/favicon.png">
+ 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
+  
   <title>Final INS</title>
 
+
+
   <!-- Bootstrap CSS -->
-  <link href="<%=request.getContextPath() %>/resources/css/bootstrap.min.css" rel="stylesheet">
+<%--   <link href="<%=request.getContextPath() %>/resources/css/bootstrap.min.css" rel="stylesheet"> --%>
   <!-- bootstrap theme -->
   <link href="<%=request.getContextPath() %>/resources/css/bootstrap-theme.css" rel="stylesheet">
   <!--external css-->
@@ -43,6 +46,10 @@
   <link href="<%=request.getContextPath() %>/resources/css/style-responsive.css" rel="stylesheet" />
   <link href="<%=request.getContextPath() %>/resources/css/xcharts.min.css" rel=" stylesheet">
   <link href="<%=request.getContextPath() %>/resources/css/jquery-ui-1.10.4.min.css" rel="stylesheet">
+  
+ 
+  
+
   <!-- =======================================================
     Theme Name: NiceAdmin
     Theme URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
@@ -50,10 +57,19 @@
     Author URL: https://bootstrapmade.com
   ======================================================= -->
   <style type="text/css">
+/*   
+     추후에 모여서 수정하는 걸로 한다.
+     #myheader {border: 3px solid blue;} 
+     
+      #mycontainer {border: 3px solid yellow;}
+      */
+     
+     
+  
  
-	#mycontent		{margin-right:10%; min-height:800px; padding-top: 40px; border: 0px red solid;}
-
-	#myfooter		{ background-color:#555555; clear:both; height:100px; }
+	#mycontent		{ min-height: 800px;  padding-top: 90px; border: 0px red solid;} /*margin-right:10%;  */
+/* 
+	#myfooter		{ background-color:#555555; clear:both; height:100px; } */
 
 	 body {
 	    font-family: "Lato", sans-serif;
@@ -112,9 +128,9 @@
 		</div>
 
 	
-		<div id="myfooter">
+		<%-- <div id="myfooter">
 			<tiles:insertAttribute name="footer" />
-		</div>
+		</div> --%>
 	</div>
 </body>
 </html>

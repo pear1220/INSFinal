@@ -1,5 +1,7 @@
 package com.spring.finalins;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
+
 import java.io.IOException;
 
 import javax.servlet.RequestDispatcher;
@@ -15,6 +17,7 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
 import com.spring.finalins.common.MyUtil;
+import com.spring.finalins.model.MemberVO;
 
 
 /* === 주업무(<예:글쓰기, 글수정, 댓글쓰기 등등>를 실행하기 앞서 
@@ -58,13 +61,15 @@ public class LoginCheck {
 			HttpServletResponse response = (HttpServletResponse)joinPoint.getArgs()[1]; //dispatcher.forward를 위해 response 또한 파라미터로 지정해야 한다.
 			HttpSession session = request.getSession();
 			
+		
+			
 			//보조업무 구현
 			//	-> 해당 요청자가 인증받지 못한 상태라면 회원 전용 페이지에 접근할 수 없기에 다른페이지(/WEB-INF/viewsnotiles/msg.jsp)로 강제이동시킨다.
-			if(session.getAttribute("loginuser") == null) {
+			if(session.getAttribute("loginuser") == null ) {
 				try { //dispatcher 예외처리를 위한 try-catch
 					String msg = "로그인이 필요한 메뉴입니다.";
-					String loc = "/board/login.action"; //로그인하지 않은 상태에서 메뉴접근하는 경우 메세지를 띄운 후 로그인 페이지로 이동시킬 예정
-					
+					String loc = "/finalins/index.action"; //로그인하지 않은 상태에서 메뉴접근하는 경우 메세지를 띄운 후 로그인 페이지로 이동시킬 예정
+				
 					request.setAttribute("msg", msg);
 					request.setAttribute("loc", loc);
 					

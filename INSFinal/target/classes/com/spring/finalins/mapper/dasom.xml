@@ -9,7 +9,7 @@
 	<select id="getLogin" parameterType="HashMap" resultType="com.spring.finalins.model.MemberVO">
 		select userid, pwd, name, nickname, email, tel1, tel2, tel3, leave_status, job, birthday, profilejpg, ins_personal_alarm
 		  from ins_member
-		 where userid = #{userid} and pwd = #{pwd}
+		 where userid = #{userid} and pwd = #{pwd} and leave_status = 0
 	</select>
 
 </mapper>
