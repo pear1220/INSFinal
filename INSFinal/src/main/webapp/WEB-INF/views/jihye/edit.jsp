@@ -22,8 +22,7 @@ $(document).ready(function(){
 	
 	// 구글링: select 태그에서 기존 db에 저장된 job컬럼값을 기본값으로 주고 싶을 때 다음과 같이 하면 된다.
     job_val = $('#job').attr('data-type');
-	
-	console.log(job_val);
+
     $('#job option[value=' + job_val + ']').attr('selected', 'selected');
 
 	
@@ -358,7 +357,7 @@ function goDel()
 					</td>
 				</tr>
 				<tr>
-					<td style="width: 20%; font-weight: bold;">연락처</td>
+					<td style="width: 20%; font-weight: bold;">연락처<span class="star">*</span></td>
 					<td style="width: 80%; text-align: left;">
 					<div class="form-inline">
 					   <select name="tel1" id="tel1" class="form-control" style="width:30%;">
