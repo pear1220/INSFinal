@@ -20,4 +20,20 @@ public class ProjectService implements InterProjectService{
 		MemberVO mvo = dao.getLogin(map);
 		return mvo;
 	} // end of getLogin(HashMap<String, String> map)
+
+	
+	//회원가입 요청을 처리하는 메소드  
+	@Override
+	public int signupEnd(MemberVO mvo) {
+		int n = dao.signupEnd(mvo);
+		return n;
+	} // end of signupEnd(MemberVO mvo)
+
+
+	//아이디 중복체크를 하는 메소드
+	@Override
+	public int idcheck(String useridCheck) {
+		int n = dao.idcheck(useridCheck);
+		return n;
+	} // end of idcheck(String useridCheck)
 }

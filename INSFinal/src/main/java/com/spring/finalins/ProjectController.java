@@ -4,14 +4,17 @@ import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.google.gson.JsonObject;
 import com.spring.finalins.model.MemberVO;
 import com.spring.finalins.service.InterProjectService;
 
@@ -56,4 +59,57 @@ public class ProjectController {
 	} // end of logout(HttpServletRequest request)
 		
 	
+	//회원가입 폼을 띄우는 메소드
+	@RequestMapping(value="signup.action", method= {RequestMethod.GET})
+	public String signup() {
+		return "login/signup.tiles";
+	} // end of signup() 
+	
+	 
+	//회원가입 요청을 처리하는 메소드  
+	@RequestMapping(value="signupEnd.action", method= {RequestMethod.POST})
+	public String signupEnd(HttpServletRequest request, MemberVO mvo) {
+		/*String bday = mvo.getBirthday();
+		System.out.println("생일값 확인: " + bday);*/
+		
+		int n = service.signupEnd(mvo);
+		
+		request.setAttribute("n", n);
+		return "login/signupEnd.tiles";
+	} // end of signupEnd(HttpServletRequest request)
+	
+	
+	//아이디 중복체크하는 함수 
+	@RequestMapping(value="idcheck.action", method= {RequestMethod.GET})
+	public String idcheck(HttpServletRequest request) {
+		String useridCheck = request.getParameter("useridCheck");
+		
+		String msg = "";
+		int n = service.idcheck(useridCheck);
+		if(n != 0) {
+			msg = "*이미 사용중인 아이디입니다.";
+		}
+		else if(n == 0) {
+			msg = "*사용 가능한 아이디입니다.";
+		}
+		
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("msg", msg);
+		jsonObj.put("n", n);
+		jsonObj.put("useridCheck", useridCheck);
+		
+		String str_jsonObj = jsonObj.toString();
+		request.setAttribute("str_jsonObj", str_jsonObj);
+		request.setAttribute("n", n);
+		request.setAttribute("useridCheck", useridCheck);
+		System.out.println("확인용: " + str_jsonObj);
+		return "login/idcheckJSON";
+	} // end of idcheck(HttpServletRequest request)
+	
+	
+	//
+	public String requireLogin_getTeamList(HttpServletRequest request, HttpServletResponse respons) {
+		
+		return "";
+	}
 }

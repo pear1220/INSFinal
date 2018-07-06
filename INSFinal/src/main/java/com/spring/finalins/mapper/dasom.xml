@@ -6,10 +6,26 @@
 <!-- ==== #27. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
 <mapper namespace="dasom">
 
+	<!-- 로그인하기 위해 멤버테이블에서 유저정보 select -->
 	<select id="getLogin" parameterType="HashMap" resultType="com.spring.finalins.model.MemberVO">
 		select userid, pwd, name, nickname, email, tel1, tel2, tel3, leave_status, job, birthday, profilejpg, ins_personal_alarm
 		  from ins_member
-		 where userid = #{userid} and pwd = #{pwd}
+		 where userid = #{userid} and pwd = #{pwd} and leave_status = 0
+	</select>
+	
+	
+	<!-- 회원가입하기 위해 멤버테이블에 insert -->
+	<insert id="signupEnd" parameterType="com.spring.finalins.model.MemberVO">
+		insert into ins_member(userid, pwd, name, nickname, email, leave_status, job, birthday, profilejpg, ins_personal_alarm, tel1, tel2, tel3)
+		values(#{userid}, #{pwd}, #{name}, #{nickname}, #{email}, default, #{job}, to_date(#{birthday}, 'yyyy-mm-dd'), default, default, #{tel1}, #{tel2}, #{tel3})
+	</insert>
+	
+	
+	<!--  -->
+	<select id="idcheck" parameterType="String" resultType="Integer">
+		select count(*)
+		  from ins_member
+		 where userid = #{useridCheck}
 	</select>
 
 </mapper>
