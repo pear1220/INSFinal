@@ -51,7 +51,7 @@
   ======================================================= -->
   <style type="text/css">
  
-	#mycontent		{margin-right:10%; min-height:800px; padding-top: 40px; border: 0px red solid;}
+	#mycontent		{min-height:800px; padding-top: 40px; border: 0px red solid;}
 
 /* 	#myfooter		{ background-color:#555555; clear:both; height:100px; } */
 

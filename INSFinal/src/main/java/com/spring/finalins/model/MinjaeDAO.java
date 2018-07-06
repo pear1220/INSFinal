@@ -23,11 +23,15 @@ public class MinjaeDAO implements InterMinjaeDAO {
 		return teamList;
 	}
 
-/*	@Override
-	public List<ProjectVO> getProjectInTeam(HashMap<String, String> map) {
+	@Override
+	public List<ProjectVO> getProjectList(HashMap<String, String> map) {
 		
-		List<ProjectVO> projectList = sqlsession.selectList("mj.getProjectInTeam", map);
+		List<ProjectVO> projectList = sqlsession.selectList("mj.getProjectList", map);
+		
+		for(int i=0; i<projectList.size(); i++) {
+			System.out.println("dao projectlist >>>>>> " + projectList.get(i).getProject_name());
+		}
 		
 		return projectList;
-	}*/
+	}
 }

@@ -23,7 +23,7 @@
 	</select>
 	
 	
-	<!-- <resultMap type="com.spring.finalins.model.ProjectVO" id="getProjectInTeamMap">
+	<resultMap type="com.spring.finalins.model.ProjectVO" id="getProjectListMap">
 		<result property="project_idx" column="project_idx" javaType="String"/>
 		<result property="fk_team_idx" column="fk_team_idx" javaType="String"/>
 		<result property="project_name" column="project_name" javaType="String" />
@@ -34,13 +34,13 @@
 		<result property="fk_project_image_idx" column="fk_project_image_idx" javaType="String" />
 	</resultMap>
 		 
-	<select id="getProjectInTeam" parameterType="HashMap" resultMap="getProjectInTeamMap">
+	<select id="getProjectList" parameterType="HashMap" resultMap="getProjectListMap">
 		select project_idx, fk_team_idx, project_name, project_visibility_st, project_delete_status, project_favorite_status, project_profilejpg, fk_project_image_idx
 		from ins_project A join ins_project_member B
 		on A.project_idx = B.fk_project_idx
-		where B.project_member_userid = #{map.userid} and fk_team_idx = #{map.fk_team_idx}
+		where B.project_member_userid = #{userid} and fk_team_idx = #{fk_team_idx}
 	</select>
-	 -->
+	 
 
 </mapper>
  

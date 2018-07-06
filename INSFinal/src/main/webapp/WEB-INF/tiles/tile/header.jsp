@@ -7,6 +7,7 @@
 <html lang="en">
 
 
+
 <style type="text/css">
 
 	.teamname {
@@ -15,6 +16,10 @@
 	}
 
 </style>
+
+
+
+
 
 <%  
 	//==== #177. (웹채팅관련9) ====//
@@ -29,6 +34,103 @@
 
 <script type="text/javascript">
 
+	
+
+	$(document).ready(function(){
+		
+		 $("#menu1").click(function(){
+			
+			 teamlistButton();
+			
+		}); 
+		
+		
+	});
+
+	function teamlistButton(){
+		
+		$("#dropdown").empty();
+		
+		$.ajax({
+			url: "<%= request.getContextPath()%>/teamlist.action",
+			type: "get",
+			dataType: "json",
+			success: function(json){
+				
+				var html = "";
+				
+				if(json.length > 0){
+					
+					$.each(json, function(entryIndex, entry){
+												
+						html += "<li><span style='padding-left: 10px; color: yellow;'><a href='#'>"+entry.team_name+"<span style='float: right; padding-right: 10px;'>"+entry.admin_userid+"</span></a></span></li>";
+															
+						html += "<li id='teamlist"+entryIndex+"'></li>";
+					
+						var form_data = {"fk_team_idx": entry.team_idx}
+						
+						$.ajax({
+							
+							url: "<%= request.getContextPath() %>/projectlist.action",
+							type: "get",
+							data: form_data,
+							dataType: "json",
+							success: function(json){
+								
+								var html2 = "";
+								
+								if(json.length > 0){
+														
+									$.each(json, function(entryIndex2, entry){
+																				
+										html2 += "<ul><li><span style='color: blue;'>"+entry.project_name+"</span></li></ul>";
+																				
+										$("#teamlist"+entryIndex).html(html2);
+									});
+										
+								}
+								else{
+									html2 += "<li><span style='color: black;'>등록된 프로젝트가 없습니다.</span></li>";
+									
+									$("#teamlist"+entryIndex).html(html2);
+								}
+								
+							},
+							error: function(request, status, error){
+								alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
+							}
+							
+							
+							
+						}); // end of ajax({}) ----------------------------------------
+						
+						html += "<li class='divider'></li>";
+												
+					});
+									
+				}
+				else{
+					
+					html += "<li><span style='color: #ff9900; padding-left: 20%;'>가입한 팀이 없습니다.</span></li>";
+					$("#dropdown").html(html);
+				}
+								
+				$("#dropdown").html(html);		
+				$(".dropdown").show(html);
+				
+				
+			},
+			error: function(request, status, error){
+				alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
+			}
+			
+		});
+		
+		
+	}
+	
+
+ 
 </script>
 
 
@@ -54,17 +156,21 @@
 
     <header class="header dark-bg">      
      
-	   <div class="container" style="border: 0px solid yellow; width: 150px; float: left;  padding-top: 2px; margin-bottom: "> 
-		                                   
+	   <div class="container" style="border: 0px solid yellow; width: 150px; float: left;  padding-top: 2px; margin-bottom: ">                                  
 		  <div class="dropdown" style="border: 0px solid yellow;">
-		  	 
-		  	 <%-- <a href="<%=request.getContextPath() %>/list.action">project</a> --%>
-		  	 
-		     <button href="<%=request.getContextPath() %>/list.action" class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown" style=" background-color: black; margin-top:1px; color: black; border-color: black;"> 
+		  	 	  	 
+		     <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown" style=" background-color: black; margin-top:1px; color: black; border-color: black;"> 
 	    	 	<span class="icon_cloud-upload_alt logo" style="margin-right: 10px; font-size: 20pt; color: #ffc61a;"></span><span style="font-size: 16pt;" class="lite">Project</span>
-	   		 </button>     <input type="text" value="${sessionScope.teamList.team_name}" /> 
-		     <ul class="dropdown-menu" style="width: 300px;">   
-		    	<c:if test="${sessionScope.teamList == null }" >
+	   		 </button>  
+	   		    
+		     <ul class="dropdown-menu" id="dropdown" style="width: 300px;">
+		     
+		     </ul> 
+		     
+		  </div>
+	    </div>      
+	  
+	  	<%-- <c:if test="${sessionScope.teamList == null }" >
 		    		<li><span style="color: #ff9900;">${sessionScope.loginuser.userid} 님의 가입한 팀이 없습니다.</span></li>
 		    	</c:if>
 		    	
@@ -73,7 +179,7 @@
 				      
 				      <li><span style="padding-left: 10px; color: yellow;"><a href="#">${teamvo.team_name}<span style="float: right; padding-right: 10px;">${teamvo.admin_userid}</span> </a></span></li>
 				      
-				     <%--  <c:if test="${sessionScope.projectList == null }">
+				      <c:if test="${sessionScope.projectList == null }">
 				      	 <li><span style="color: yellow;">${teamvo.team_name}에  프로젝트가 없습니다.</span></li>		      
 				      </c:if>
 				      
@@ -81,16 +187,14 @@
 				      		<c:forEach var="projectvo" items="${sessionScope.projectList}">
 				      			<li>&nbsp;&deg;${projectvo.project_name}</li>
 				      		</c:forEach>
-				      </c:if> --%>
+				      </c:if>
 				      
 				      <li class="divider"></li>
 				      		      
 			      	</c:forEach>
-		      	</c:if>
-		     </ul> 
-		  </div>
-		  
-		 </div>      
+		      	</c:if> --%>
+	  
+	  
 	       
 	    
 	  <!--  search form start -->
