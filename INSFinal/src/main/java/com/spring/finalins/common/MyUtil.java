@@ -3,6 +3,9 @@ package com.spring.finalins.common;
 import java.text.DecimalFormat;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import com.spring.finalins.model.MemberVO;
 
 
 public class MyUtil {
@@ -149,5 +152,17 @@ public class MyUtil {
 		
 		return result;
 	} // getComma(long number)
+	
+/*	// loginuser의 userid 를 리턴시켜주는 메소드
+	public static String getLoginuser(HttpSession session) {
+		
+		MemberVO loginser = (MemberVO)session.getAttribute("loginuser");
+		
+		String userid = loginser.getUserid();
+		
+		return userid;
+		
+	}*/
+	
 
 }

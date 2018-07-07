@@ -15,6 +15,29 @@
 		font-weight: bold;     
 	}
 
+	#drop {
+		margin-left: 193px;
+		width: 500px;
+	}
+	
+	input[type=text] {
+    width: 130px;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: white;
+    background-image: url('searchicon.png');
+    background-position: 10px 10px; 
+    background-repeat: no-repeat;
+    padding: 12px 20px 12px 40px;
+    -webkit-transition: width 0.4s ease-in-out;
+    transition: width 0.4s ease-in-out;
+	}
+
+	input[type=text]:focus {
+	    width: 100%;
+	}
 </style>
 
 
@@ -38,18 +61,328 @@
 
 	$(document).ready(function(){
 		
-		 $("#menu1").click(function(){
+		 $("#project_button").click(function(){
 			
 			 teamlistButton();
 			
 		}); 
+		 
 		
+		 
+		 
+		  $("#search_input").keyup(function(){
 		
-	});
+			$("#drop").show();
+									
+			var html = "";
 
+			 var form_data = {search_input:$("#search_input").val()}
+			
+			 $.ajax({
+					
+				 url: "<%= request.getContextPath() %>/teamSearch.action",
+				 type: "get",
+				 data: form_data,
+				 dataType: "JSON",
+				 success: function(json){
+					
+					
+					 if(json.length > 0){
+										 
+						 $.each(json, function(entryIndex, entry){
+														
+							 var word = entry.team_name.trim();
+							 // "ajax 프로그래밍"
+								
+							 var index = word.toLowerCase().indexOf( $("#search_input").val().toLowerCase() ); // 해당 문자열을 전부 다 소문자로 바꾸는 자바스크립트 함수 (toUpperCase())
+							 
+							 
+							 var len = $("#search_input").val().length;
+														
+							 var str ="";
+							
+								 str += "<span class='first' style='color: blue;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: red; font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: blue;'>" + word.substr(index+len) + "</span>"; 
+								
+								 if(entryIndex == 0){
+									 html += "<span style='font-weight: bold; font-size: 15pt; color: blue;'>Team</span>"
+									 html += "<br/><a href='#'>"+str+"</a>";
+								 }
+								 else{
+									 html += "<br/><a href='#'>"+str+"</a>";	 
+								 }
+								 
+								 
+								 						 
+						 });
+						 
+						 html += "<li class='divider'></li>";
+							 
+						 $("#teamSearch").html(html);
+							 
+					 }
+					 else{
+						 
+						 html += "<span class='list-group-item'>검색결과가 없습니다.</span>";
+						 
+					 }
+					 
+					 $("#drop").html(html);
+					 
+					 
+				 },
+				 error: function(request, status, error){
+						alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
+				 }
+				 						 
+			 });
+			 
+			 $.ajax({
+					
+				 url: "<%= request.getContextPath() %>/projectSearch.action",
+				 type: "get",
+				 data: form_data,
+				 dataType: "JSON",
+				 success: function(json){
+					
+					
+					 if(json.length > 0){
+										 
+						 $.each(json, function(entryIndex, entry){
+														
+							 var word = entry.team_name.trim();
+							 // "ajax 프로그래밍"
+								
+							 var index = word.toLowerCase().indexOf( $("#search_input").val().toLowerCase() ); // 해당 문자열을 전부 다 소문자로 바꾸는 자바스크립트 함수 (toUpperCase())
+							 
+							 
+							 var len = $("#search_input").val().length;
+														
+							 var str ="";
+							
+								 str += "<span class='first' style='color: blue;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: red; font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: blue;'>" + word.substr(index+len) + "</span>"; 
+								
+								 if(entryIndex == 0){
+									 html += "<span style='font-weight: bold; font-size: 15pt; color: blue;'>Team</span>"
+									 html += "<br/><a href='#'>"+str+"</a>";
+								 }
+								 else{
+									 html += "<br/><a href='#'>"+str+"</a>";	 
+								 }
+								 
+								 
+								 						 
+						 });
+						 
+						 html += "<li class='divider'></li>";
+							 
+						 $("#teamSearch").html(html);
+							 
+					 }
+					 else{
+						 
+						 html += "<span class='list-group-item'>검색결과가 없습니다.</span>";
+						 
+					 }
+					 
+					 $("#drop").html(html);
+					 
+					 
+				 },
+				 error: function(request, status, error){
+						alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
+				 }
+				 						 
+			 });
+			
+			
+		 }); 
+		  
+		  $("#search_input").blur(function(){
+			 
+			  $("#search_input").val("");
+			  
+		  });
+		 
+		 
+		 
+		 
+		 
+		 /* var form_data = {search_input:$("#search_input").val()} */
+		 
+		/*  $(".dropdown").show();
+		
+		 $("#search_input").keyup(function(){
+			 
+			 alert("keyup 확인용")
+			 
+			 $(".dropdown").show();
+				 */		 		 
+			 <%-- $.ajax({
+				
+				 url: "<%= request.getContextPath() %>/teamSearch.action",
+				 type: "get",
+				 data: form_data,
+				 dataType: "JSON",
+				 success: function(json){
+					 
+					 if(json.length > 0){
+						 
+						 $.each(json, function(entryIndex, entry){
+							
+							 alert("teamSearch 확인용" + entry.team_name);
+							 
+							 var word = entry.team_name.trim();
+								// "ajax 프로그래밍"
+								
+							 var index = word.toLowerCase().indexOf( $("#search_input").val().toLowerCase() ); // 해당 문자열을 전부 다 소문자로 바꾸는 자바스크립트 함수 (toUpperCase())
+							 
+							 var len = $("#search_input").val().length;
+														
+							 var str ="";
+							
+								 str += "<span class='first' style='color: blue;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: red; font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: blue;'>" + word.substr(index+len) + "</span>"; 
+								
+								 html += "<li><span style='cursor: pointer;'>"+str+"</span></li>";
+								 
+								 /* html += "<li>"+entry.team_name+"&nbsp;&nbsp;admin : "+entry.admin_userid+"</li>"; */
+							 
+						 });
+						 
+						 $("#teamSearch"+entryIndex).html(html);
+							 
+					 }
+					 
+				 },
+				 error: function(request, status, error){
+						alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
+				 }
+				 						 
+			 }); --%>
+			 
+			<%--  $.ajax({
+					
+				 url: "<%= request.getContextPath() %>/projectSearch.action",
+				 type: "get",
+				 data: form_data,
+				 dataType: "JSON",
+				 success: function(json){
+						
+					 var html = "";
+					 
+					 if(json.length > 0){
+						 
+						 $.each(json, function(entryIndex, entry){
+							 html += "<li>"+entry.project_name+"</li>";
+							 
+							 $("#projectSearch"+entryIndex).html(html)
+							 							
+						 });
+						 
+						 
+					 }
+				 },
+				 error: function(request, status, error){
+						alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
+				 }
+				 						 
+			 });
+			 
+			 $.ajax({
+					
+				 url: "<%= request.getContextPath() %>/listSearch.action",
+				 type: "get",
+				 data: form_data,
+				 dataType: "JSON",
+				 success: function(json){
+						
+					 var html = "";
+					 
+					 if(json.length > 0){
+						 
+						 $.each(json, function(entryIndex, entry){
+							 html += "<li>"+entry.list_name+"</li>";
+							 
+							 $("#listSearch"+entryIndex).html(html)
+							 							
+						 });
+						 
+						 
+					 }
+				 },
+				 error: function(request, status, error){
+						alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
+				 }
+				 						 
+			 });
+			 
+			 $.ajax({
+					
+				 url: "<%= request.getContextPath() %>/memberSearch.action",
+				 type: "get",
+				 data: form_data,
+				 dataType: "JSON",
+				 success: function(json){
+						
+					 var html = "";
+					 
+					 if(json.length > 0){
+						 
+						 $.each(json, function(entryIndex, entry){
+							 html += "<li>"+entry.userid+"</li>";
+							 
+							 $("#memberSearch"+entryIndex).html(html);
+							 							
+						 });
+						 
+						 
+					 }
+				 },
+				 error: function(request, status, error){
+						alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
+				 }
+				 						 
+			 });
+			 
+			 
+			 $.ajax({
+					
+				 url: "<%= request.getContextPath() %>/cardSearch.action",
+				 type: "get",
+				 data: form_data,
+				 dataType: "JSON",
+				 success: function(json){
+						
+					 var html = "";
+					 
+					 if(json.length > 0){
+						 
+						 $.each(json, function(entryIndex, entry){
+							 html += "<li>"+entry.card_name+"</li>";
+							 
+							 $("#cardSearch"+entryIndex).html(html);
+							 							
+						 });
+						 
+						 
+					 }
+				 },
+				 error: function(request, status, error){
+						alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
+				 }
+				 						 
+			 }); --%>
+	 
+		 /* }); */
+		 
+	});
+		
+		
+	
+
+	// 팀 리스트와 프로젝트 리스트를 보여주는 함수
 	function teamlistButton(){
 		
-		$("#dropdown").empty();
+		$("#project_dropdown").empty();
 		
 		$.ajax({
 			url: "<%= request.getContextPath()%>/teamlist.action",
@@ -112,10 +445,10 @@
 				else{
 					
 					html += "<li><span style='color: #ff9900; padding-left: 20%;'>가입한 팀이 없습니다.</span></li>";
-					$("#dropdown").html(html);
+					$("#project_dropdown").html(html);
 				}
 								
-				$("#dropdown").html(html);		
+				$("#project_dropdown").html(html);		
 				$(".dropdown").show(html);
 				
 				
@@ -156,15 +489,14 @@
 
     <header class="header dark-bg">      
      
-	   <div class="container" style="border: 0px solid yellow; width: 150px; float: left;  padding-top: 2px; margin-bottom: ">                                  
+	   <div class="container" style="border: 0px solid yellow; width: 150px; float: left;  padding-top: 2px;">                                  
 		  <div class="dropdown" style="border: 0px solid yellow;">
 		  	 	  	 
-		     <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown" style=" background-color: black; margin-top:1px; color: black; border-color: black;"> 
+		     <button class="btn btn-default dropdown-toggle" type="button" id="project_button" data-toggle="dropdown" style=" background-color: black; margin-top:1px; color: black; border-color: black;"> 
 	    	 	<span class="icon_cloud-upload_alt logo" style="margin-right: 10px; font-size: 20pt; color: #ffc61a;"></span><span style="font-size: 16pt;" class="lite">Project</span>
 	   		 </button>  
 	   		    
-		     <ul class="dropdown-menu" id="dropdown" style="width: 300px;">
-		     
+		     <ul class="dropdown-menu" id="project_dropdown" style="width: 300px;">
 		     </ul> 
 		     
 		  </div>
@@ -201,14 +533,105 @@
       <div class="nav search-row" id="top_menu" style="float: left; padding-top: 1px; padding-left: 1px; padding-bottom: 2px; width: 500px; border: 0px solid yellow; ">
         <!--  search form start -->
         <ul class="nav top-menu">
-          <li>
-            <form class="navbar-form">
-              <input class="form-control" placeholder="Search" type="text" style="height: 40px;"> 
-            </form>
-          </li>
+           <li>
+	           <div style="border : 0px solid red; width: 300px;"> 
+		            <form class="navbar-form">
+		              <input class="form-control" id="search_input" name="search_input" data-toggle="dropdown" placeholder="Search" type="text" style="height: 35px;">
+			        </form>
+		        </div> 
+	       </li>      
+          
+         <!-- <div class="container">
+		  <div class="list-group drop dropdown-menu" id="drop" style="border: 1px solid yellow;">
+		    <span class='searchGroup' id='teamSearch'>Team<br/></span>
+		  </div>
+		</div> -->
+		
+		<div class="container" >
+		  <ul class="list-group drop dropdown-menu" id="drop">
+		   <!--  <li class="list-group-item">First item</li>
+		    <li class="list-group-item">Second item</li>
+		    <li class="list-group-item">Third item</li> -->
+		  </ul>
+		</div>
+		
+		<!-- <a href="#" class="list-group-item">Second item</a>
+		    <a href="#" class="list-group-item">Third item</a> -->
+		    <%-- <c:if test="${teamList != null}">
+	     		<span class="searchGroup" id="teamSearch">Team<br/></span>
+	     	</c:if> --%>
+	     	<%-- <c:if test="${projectList != null}">
+	     		<li>Project</li>
+	     		<c:forEach var="projectvo" items="${projectList}" varStatus="status">
+	     			<li id="projectSearch${status.index}"></li>
+	     		</c:forEach>
+	     	</c:if>
+	     	<c:if test="${listList != null}">
+	     		<li>List</li>
+	     		<c:forEach var="listvo" items="${listList}" varStatus="status">
+	     			<li id="listSearch${status.index}"></li>
+	     		</c:forEach>
+	     	</c:if>
+	     	<c:if test="${cardList != null}">
+	     		<li>Card</li>
+	     		<c:forEach var="cardvo" items="${cardList}" varStatus="status">
+	     			<li id="cardSearch${status.index}"></li>
+	     		</c:forEach>
+	     	</c:if>
+	     	<c:if test="${memberList != null}">
+	     		<li>Member</li>
+	     		<c:forEach var="teamvo" items="${teamList}" varStatus="status">
+	     			<li id="teamSearch${status.index}"></li>
+	     		</c:forEach>
+	     	</c:if> --%>
+          
+          
+           <!-- <div class="container" style="border: 1px solid yellow; width: 150px; float: left;  padding-top: 2px;">                                   
+		  	<div class="dropdown" id="dropdown_input" style="border: 1px solid yellow;">
+		  	 <ul class="dropdown-menu" id="searchFrm_dropdown" style="width: 300px; border: 1px solid yellow;">
+		  	  <li><span style="color: red;">부트스트랩 되는지 확인</span></li>
+		  	  <li><span style="color: red;">부트스트랩 되는지 확인22222222222222</span></li>
+		  	 </ul>	 -->		   		    
+								  				   		    
+		     <%-- <ul class="dropdown-menu" id="searchFrm_dropdown" style="width: 300px;">
+		     	<c:if test="${teamList != null}">
+		     		<li>Team</li>
+		     		<c:forEach var="teamvo" items="${teamList}" varStatus="status">
+		     			<li id="teamSearch${status.index}"></li>
+		     		</c:forEach>
+		     	</c:if>
+		     	<c:if test="${projectList != null}">
+		     		<li>Project</li>
+		     		<c:forEach var="projectvo" items="${projectList}" varStatus="status">
+		     			<li id="projectSearch${status.index}"></li>
+		     		</c:forEach>
+		     	</c:if>
+		     	<c:if test="${listList != null}">
+		     		<li>List</li>
+		     		<c:forEach var="listvo" items="${listList}" varStatus="status">
+		     			<li id="listSearch${status.index}"></li>
+		     		</c:forEach>
+		     	</c:if>
+		     	<c:if test="${cardList != null}">
+		     		<li>Card</li>
+		     		<c:forEach var="cardvo" items="${cardList}" varStatus="status">
+		     			<li id="cardSearch${status.index}"></li>
+		     		</c:forEach>
+		     	</c:if>
+		     	<c:if test="${memberList != null}">
+		     		<li>Member</li>
+		     		<c:forEach var="teamvo" items="${teamList}" varStatus="status">
+		     			<li id="teamSearch${status.index}"></li>
+		     		</c:forEach>
+		     	</c:if>     
+		     </ul> --%> 
+		     
+		 <!--  </div>
+	   </div> -->
+			
         </ul> 
         <!--  search form end -->
-      </div>
+      </div> 
 	  
 	  <div style="padding-left: 50%;">  
 	  <!--logo start--> 

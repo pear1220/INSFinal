@@ -6,7 +6,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.spring.finalins.model.CardVO;
 import com.spring.finalins.model.InterMinjaeDAO;
+import com.spring.finalins.model.ListVO;
 import com.spring.finalins.model.MemberVO;
 import com.spring.finalins.model.ProjectVO;
 import com.spring.finalins.model.TeamVO;
@@ -17,6 +19,7 @@ public class MinjaeService implements InterMinjaeServie {
 	@Autowired
 	private InterMinjaeDAO dao;
 
+	// ========================================================== PROJECTBUTTON ========================================================================================
 	// header : 로그인한 userid의 팀의 리스트를 얻음
 	@Override
 	public List<TeamVO> getTeamList(String userid) {
@@ -40,5 +43,39 @@ public class MinjaeService implements InterMinjaeServie {
 		
 		return projectList;
 	}
+
+	// ========================================================== SEARCH ========================================================================================
+	// header : 검색을 위해 teamList 를 얻음
+	@Override
+	public List<TeamVO> getSearch_team(String search_input) {
+		
+		List<TeamVO> teamList = dao.getSearch_team(search_input);
+		
+		return teamList;
+	}
+
+	/*@Override
+	public List<ProjectVO> getSearch_project(HashMap<String, String> map) {
+		
+		List<ProjectVO> projectList = dao.getSearch_project(map);
+		
+		return projectList;
+	}
+
+	@Override
+	public List<ListVO> getSearch_list(HashMap<String, String> map) {
+		
+		List<ListVO> listList = dao.getSearch_list(map);
+		
+		return listList;
+	}
+
+	@Override
+	public List<CardVO> getSearch_card(HashMap<String, String> map) {
+		
+		List<CardVO> cardList = dao.getSearch_card(map);
+		
+		return cardList;
+	}*/
 	
 }

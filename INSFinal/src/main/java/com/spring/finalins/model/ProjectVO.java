@@ -8,7 +8,6 @@ public class ProjectVO {
 	private String project_visibility_st;
 	private String project_delete_status;
 	private String project_favorite_status;
-	private String project_profilejpg;
 	private String fk_project_image_idx;
 	
 	public ProjectVO() {}
@@ -24,7 +23,6 @@ public class ProjectVO {
 		this.project_visibility_st = project_visibility_st;
 		this.project_delete_status = project_delete_status;
 		this.project_favorite_status = project_favorite_status;
-		this.project_profilejpg = project_profilejpg;
 		this.fk_project_image_idx = fk_project_image_idx;
 	}
 
@@ -88,17 +86,7 @@ public class ProjectVO {
 		this.project_favorite_status = project_favorite_status;
 	}
 
-
-	public String getProject_profilejpg() {
-		return project_profilejpg;
-	}
-
-
-	public void setProject_profilejpg(String project_profilejpg) {
-		this.project_profilejpg = project_profilejpg;
-	}
-
-
+	
 	public String getFk_project_image_idx() {
 		return fk_project_image_idx;
 	}

@@ -6,6 +6,7 @@
 <!-- ==== #27. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
 <mapper namespace="mj">
 	
+	<!-- header : 로그인한 userid의 팀의 리스트를 얻음 -->
 	<resultMap type="com.spring.finalins.model.TeamVO" id="getTeamListMap">
 		<result property="team_idx" column="team_idx" javaType="String"/>
 		<result property="admin_userid" column="admin_userid" javaType="String"/>
@@ -14,7 +15,6 @@
 		<result property="team_visibility_status" column="team_visibility_status" javaType="String"/>
 		<result property="team_image" column="team_image" javaType="String"/>
 	</resultMap> 
-	
 	<select id="getTeamList" parameterType="String" resultMap="getTeamListMap">
 		select team_idx, admin_userid, team_name, team_delete_status, team_visibility_status, team_image 
 		from ins_team A join ins_team_member B
@@ -22,7 +22,7 @@
 		where B.team_userid = #{userid}
 	</select>
 	
-	
+	<!-- header : 해당 user의 팀에 해당하는 프로젝트 리스트를 얻음 -->
 	<resultMap type="com.spring.finalins.model.ProjectVO" id="getProjectListMap">
 		<result property="project_idx" column="project_idx" javaType="String"/>
 		<result property="fk_team_idx" column="fk_team_idx" javaType="String"/>
@@ -30,17 +30,103 @@
 		<result property="project_visibility_st" column="project_visibility_st" javaType="String"/>
 		<result property="project_delete_status" column="project_delete_status" javaType="String"/>
 		<result property="project_favorite_status" column="project_favorite_status" javaType="String"/>
-		<result property="project_profilejpg" column="project_profilejpg" javaType="String" />
 		<result property="fk_project_image_idx" column="fk_project_image_idx" javaType="String" />
 	</resultMap>
-		 
 	<select id="getProjectList" parameterType="HashMap" resultMap="getProjectListMap">
-		select project_idx, fk_team_idx, project_name, project_visibility_st, project_delete_status, project_favorite_status, project_profilejpg, fk_project_image_idx
+		select project_idx, fk_team_idx, project_name, project_visibility_st, project_delete_status, project_favorite_status, fk_project_image_idx
 		from ins_project A join ins_project_member B
 		on A.project_idx = B.fk_project_idx
 		where B.project_member_userid = #{userid} and fk_team_idx = #{fk_team_idx}
 	</select>
-	 
-
+	
+	<!-- header : 검색을 위해 teamList 를 얻음 -->
+	<resultMap type="com.spring.finalins.model.TeamVO" id="getSearch_teamMap">
+		<result property="team_idx" column="team_idx" javaType="String"/>
+		<result property="admin_userid" column="admin_userid" javaType="String"/>
+		<result property="team_name" column="team_name" javaType="String" />
+		<result property="team_delete_status" column="team_delete_status" javaType="String"/>
+		<result property="team_visibility_status" column="team_visibility_status" javaType="String"/>
+		<result property="team_image" column="team_image" javaType="String"/>
+	</resultMap> 
+	<select id="getSearch_team" parameterType="String" resultMap="getSearch_teamMap">	
+		select team_idx, admin_userid, team_name, team_delete_status, team_visibility_status, team_image 
+		from ins_team 
+		where team_delete_status = 1 and team_visibility_status = 1 and team_name like '%' || #{search_input} || '%'
+	</select>
+	
+	
+	<!-- header : 검색을 위해 projectList 를 얻음 -->
+<!-- 	<resultMap type="com.spring.finalins.model.ProjectVO" id="getSearch_projectMap">
+		<result property="project_idx" column="project_idx" javaType="String"/>
+		<result property="fk_team_idx" column="fk_team_idx" javaType="String"/>
+		<result property="project_name" column="project_name" javaType="String" />
+		<result property="project_visibility_st" column="project_visibility_st" javaType="String"/>
+		<result property="project_delete_status" column="project_delete_status" javaType="String"/>
+		<result property="project_favorite_status" column="project_favorite_status" javaType="String"/>
+		<result property="fk_project_image_idx" column="fk_project_image_idx" javaType="String" />
+	</resultMap>	 
+	<select id="getSearch_project" parameterType="HashMap" resultMap="getSearch_projectMap">
+		select project_idx, fk_team_idx, project_name, project_visibility_st, project_delete_status, project_favorite_status, fk_project_image_idx
+		from ins_project A join ins_project_member B
+		on A.project_idx = B.fk_project_idx
+		where B.project_member_userid = #{userid} and project_name like '%' || #{search_input} || '%'
+	</select>
+	
+	header : 검색을 위해 listList 를 얻음
+	<resultMap type="com.spring.finalins.model.ListVO" id="getSearch_listMap">
+		<result property="list_idx" column="list_idx" javaType="String"/>
+		<result property="fk_project_idx" column="fk_project_idx" javaType="String"/>
+		<result property="list_name" column="list_name" javaType="String"/>
+		<result property="list_delete_status" column="list_delete_status" javaType="String"/>
+	</resultMap>
+	<select id="getSearch_list" parameterType="HashMap" resultMap="getSearch_listMap" >
+		select list_idx, fk_project_idx, list_name, list_delete_status
+		from ins_list C join( select project_idx, fk_team_idx, project_name, project_visibility_st, project_delete_status, project_favorite_status, project_profilejpg, fk_project_image_idx
+		                        from ins_project A join ins_project_member B
+		                        on A.project_idx = B.fk_project_idx
+		                        where B.project_member_userid = #{userid}) D
+		on C.fk_project_idx = D.project_idx
+		where C.list_delete_status = 1 and list_name like '%' || #{search_input} || '%'
+	</select>
+	
+	<resultMap type="com.spring.finalins.model.CardVO" id="getSearch_cardMap">
+		<result property="card_idx" column="card_idx" javaType="String"/>
+		<result property="fk_list_idx" column="fk_list_idx" javaType="String"/>
+		<result property="card_userid" column="card_userid" javaType="String"/>
+		<result property="card_title" column="card_title" javaType="String"/>
+	</resultMap>
+	<select id="getSearch_card" parameterType="HashMap" resultMap="getSearch_cardMap">
+		select card_idx, fk_list_idx, card_userid, card_title
+		from ins_list C join( select project_idx, fk_team_idx, project_name, project_visibility_st, project_delete_status, project_favorite_status, project_profilejpg, fk_project_image_idx
+		                        from ins_project A join ins_project_member B
+		                        on A.project_idx = B.fk_project_idx
+		                        where B.project_member_userid =  #{userid}) D
+		on C.fk_project_idx = D.project_idx
+		join ins_card E
+		on C.list_idx = E.fk_list_idx
+		where card_delete_status = 1 and card_title like '%' || #{search_input} || '%'
+	</select>
+	
+	<resultMap type="com.spring.finalins.model.CardVO" id="getSearch_cardMap">
+		<result property="card_idx" column="card_idx" javaType="String" />
+		<result property="fk_list_idx" column="fk_list_idx" javaType="String" />
+		<result property="card_userid" column="card_userid" javaType="String" />
+		<result property="card_title" column="card_title" javaType="String" />
+		<result property="card_commentcount" column="card_commentcount" javaType="String" />
+		<result property="card_date" column="card_date" javaType="String" />
+		<result property="card_delete_status" column="card_delete_status" javaType="String" />
+	</resultMap>
+	<select id="getSearch_card" parameterType="HashMap" resultMap="getSearch_cardMap">		
+		select card_idx, fk_list_idx, card_userid, card_title, card_commentcount, card_date, card_delete_status
+		from ins_list C join( select project_idx, fk_team_idx, project_name, project_visibility_st, project_delete_status, project_favorite_status, project_profilejpg, fk_project_image_idx
+		                        from ins_project A join ins_project_member B
+		                        on A.project_idx = B.fk_project_idx
+		                        where B.project_member_userid = #{userid}) D
+			 on C.fk_project_idx = D.project_idx
+			 join ins_card E
+			 on C.list_idx = E.fk_list_idx
+		where card_delete_status = 1 and card_title like '%' || #{search_input} || '%'
+	</select> -->
+	
 </mapper>
  
