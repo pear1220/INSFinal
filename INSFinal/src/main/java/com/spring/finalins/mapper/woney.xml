@@ -5,7 +5,85 @@
 
 <!-- ==== #27. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
 <mapper namespace="woney">
+	<!-- // 카드 정보 받아오기 -->
+	<resultMap type="HashMap" id="cardMap">
+		<result property="CARDIDX" column="card_idx" javaType="String"/>
+		<result property="FKLISTIDX" column="fk_list_idx" javaType="String"/>
+		<result property="CARDUSERID" column="card_userid" javaType="String"/>
+		<result property="CARDTITLE" column="card_title" javaType="String"/>
+		<result property="CARDCOMMENTCOUNT" column="card_commentCount" javaType="String"/>
+		<result property="CARDDATE" column="card_date" javaType="String"/>
+		<result property="CARDDELETESTATUS" column="card_delete_status" javaType="String"/>
+	</resultMap>
+
+	<select id="getCardInfo" parameterType="String" resultMap="cardMap">
+		select card_idx, fk_list_idx, card_userid , card_title, card_commentCount, 
+		to_char(card_date,'yyyy-mm-dd hh24:mi:ss'), card_delete_status
+		from ins_card
+		where card_delete_status = 1 and
+			card_idx=#{cardIdx}
+	</select>
 	
+	<!-- // 카드 상세 정보 받아오기 -->
+	<resultMap type="HashMap" id="cardDetailMap">
+		<result property="DETAILIDX" column="card_detail_idx" javaType="String"/>
+		<result property="FKCARDIDX" column="fk_card_idx" javaType="String"/>
+		<result property="DESCRIPTION" column="card_description" javaType="String"/>
+		<result property="FILENAME" column="card_filename" javaType="String"/>
+		<result property="ORGFILENAME" column="card_orgfilename" javaType="String"/>
+		<result property="BYTE" column="card_byte" javaType="String"/>
+	</resultMap>
+
+	<select id="getCardDetailInfo" parameterType="String" resultMap="cardDetailMap">
+		select card_detail_idx, fk_card_idx, card_description,
+				card_filename, card_orgfilename, card_byte
+		from ins_card_detail
+		where fk_card_idx=#{cardIdx}
+	</select>
+
+	<!-- // 프로젝트 멤버 체크 -->
+	<select id="getProjectMember" parameterType="HashMap" resultType="Integer">
+		select count(*)
+		from ins_card A join ins_list B
+		on A.fk_list_idx = B.list_idx
+		join ins_project_member C
+		on B.fk_project_idx= C.fk_project_idx
+		where card_delete_status = 1 and 
+				card_idx=#{cardIdx} and
+				project_member_userid=#{userid}
+	</select>
+	
+	<!-- // 카드 제목 수정 -->
+	<update id="setCardTitleUpdate" parameterType="HashMap">
+		update ins_card set card_title = #{cardUpdateTitle}
+		where card_delete_status = 1 and
+		 		card_idx = #{cardIdx}
+	</update>
+	
+	<!-- // 카드 Description 존재 여부 체크 -->
+	<select id="cardDescriptionCNT" parameterType="String" resultType="Integer">
+		select count(*)
+		from ins_card_detail
+		where fk_card_idx=#{cardIdx}
+	</select>
+	
+	<!-- // 카드 Description 입력 -->
+	<insert id="setcardDescriptionInsert" parameterType="HashMap">
+		insert into ins_card_detail(card_detail_idx, fk_card_idx) values(seq_card_detail.nextval,#{cardIdx})
+	</insert>
+	
+	<!-- // 카드 Description 수정 -->
+	<update id="setcardDescriptionUpdate" parameterType="HashMap">
+		update ins_card_detail set card_description = #{cardDescription}
+		where fk_card_idx=#{cardIdx}
+	</update>
+	
+	<!-- // 파일첨부 -->
+	<update id="add_withFile" parameterType="com.spring.finalins.model.CardVO">
+		update ins_card_detail set card_filename = #{card_filename},card_orgfilename=#{card_orgfilename},card_byte=#{card_byte}
+		where fk_card_idx =#{fk_card_idx}
+	</update>
+		
 </mapper>
  
  
