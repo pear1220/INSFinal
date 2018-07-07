@@ -13,7 +13,7 @@ public class QnaVO {  // 코멘트는 필요 없음. 원글러 + 관리자답글
 	
 	private String qna_idx; // 시퀀스 seq_qna
 	private String fk_userid;  //-QnA작성자ID
-	private int fk_qna_category;//카테고리idx
+	private int fk_qna_category_idx;//카테고리idx
 	private String qna_title; //문의제목
 	private String qna_content; //문의내용
 	private String qna_date;  //문의작성일
@@ -92,13 +92,13 @@ public class QnaVO {  // 코멘트는 필요 없음. 원글러 + 관리자답글
 	public QnaVO() {}	
 	
 
-	public QnaVO(String qna_idx, String fk_userid, int fk_qna_category, String qna_title, String qna_content, String qna_date,
+	public QnaVO(String qna_idx, String fk_userid, int fk_qna_category_idx, String qna_title, String qna_content, String qna_date,
 			String qna_fk_idx, String qna_depthno, String qna_groupno, String qna_filename, String qna_orgfilename,
 			String qna_byte, MultipartFile attach) {
 		
 		this.qna_idx = qna_idx;
 		this.fk_userid = fk_userid;
-		this.fk_qna_category = fk_qna_category;
+		this.fk_qna_category_idx = fk_qna_category_idx;
 		this.qna_title = qna_title;
 		this.qna_content = qna_content;
 		this.qna_date = qna_date;
@@ -132,13 +132,13 @@ public class QnaVO {  // 코멘트는 필요 없음. 원글러 + 관리자답글
 	}
 
 
-	public int getFk_qna_category() {
-		return fk_qna_category;
+	public int getFk_qna_category_idx() {
+		return fk_qna_category_idx;
 	}
 
 
-	public void setFk_qna_category(int fk_qna_category) {
-		this.fk_qna_category = fk_qna_category;
+	public void setFk_qna_category_idx(int fk_qna_category_idx) {
+		this.fk_qna_category_idx = fk_qna_category_idx;
 	}
 
 

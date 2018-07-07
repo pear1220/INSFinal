@@ -1,6 +1,9 @@
 package com.spring.finalins.service;
 
+import java.util.List;
+
 import com.spring.finalins.model.MemberVO;
+import com.spring.finalins.qna.model.QnaVO;
 
 public interface InterJihyeService {
 
@@ -9,6 +12,8 @@ public interface InterJihyeService {
 	int updateMyProfile(MemberVO membervo);  // 회원정보수정 업데이트 하기
 
 	int deleteMyAccount(String userid); // 회원탈퇴(leave_status 업데이트 하기)
+
+	
 
 }
 

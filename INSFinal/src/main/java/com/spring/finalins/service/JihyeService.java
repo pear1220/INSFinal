@@ -1,10 +1,13 @@
 package com.spring.finalins.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.spring.finalins.model.InterJihyeDAO;
 import com.spring.finalins.model.MemberVO;
+import com.spring.finalins.qna.model.QnaVO;
 
 @Service
 public class JihyeService implements InterJihyeService{
@@ -33,5 +36,7 @@ public class JihyeService implements InterJihyeService{
 		int n = dao.deleteMyAccount(userid);
 		return n;
 	}
+
+
 
 }

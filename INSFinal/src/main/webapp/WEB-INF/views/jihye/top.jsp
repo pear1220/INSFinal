@@ -46,7 +46,7 @@
 } */
 
 
-.avatar {
+.avatar2 {
     vertical-align: middle;
     width: 200px;
     height: 200px; 
@@ -109,10 +109,10 @@
 </style>
 
 <script>
-function changeImg(){
+/* function changeImg(){
 	alert("클릭하셨습니다.");
 }
-
+ */
 
 </script>
 
@@ -120,8 +120,8 @@ function changeImg(){
 
 <div class="grid-container" style="border: 0px solid black; margin_bottom: 100px;">
   <div class="grid-item item1"> <!--grid-item  -->
-     <div class="avatar" style="border: 3px solid black;"> <!-- 이미지가 있을 div 공간을 동그랗게 만드는 방법 -->
-        <img src="<%= request.getContextPath() %>/resources/img/Spain.png" alt="Avatar"  class="avatar">
+     <div class="avatar2" style="border: 3px solid black;"> <!-- 이미지가 있을 div 공간을 동그랗게 만드는 방법 -->
+        <img src="<%= request.getContextPath() %>/resources/img/Spain.png" alt="Avatar2"  class="avatar2">
      <%--  이미지를 라운드 크기로 만드는 방법 
         <img src="<%= request.getContextPath() %>/resources/img/Spain.png" alt="Avatar" class="avatar"> --%>
        <div class="attach1" style="3px solid red; " >

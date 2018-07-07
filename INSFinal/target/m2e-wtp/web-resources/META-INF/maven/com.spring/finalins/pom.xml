@@ -8,11 +8,20 @@
 	<packaging>war</packaging>
 	<version>1.0.0-BUILD-SNAPSHOT</version>
 	<properties>
-		<java-version>1.8</java-version>
+	
+  		<java-version>1.8</java-version>
 		<org.springframework-version>4.3.4.RELEASE</org.springframework-version>
 		<org.aspectj-version>1.6.10</org.aspectj-version>
 		<org.slf4j-version>1.6.6</org.slf4j-version>
 		<org.apache.tiles-version>3.0.5</org.apache.tiles-version> <!-- ===== #9. Spring 프레임워크 버전 4.x 이상시  tiles 관련 추가하기 ===== -->  
+		<!-- 구글링: pull하다오류 떠서 아래 두 줄을 추가함 
+	해당 문제 발생시.
+    [WARN] Using platform encoding (MS949 actually) to copy filtered resources, i.e. build is platform dependent!    
+     -->
+	    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+      <!-- 구글링: pull하다오류 떠서 아래 두 줄을 추가함  -->  
+		
 	</properties>
 	
 	<!-- ===== #1. ojdbc.jar 를 받기 위한 리포지터리 주소 변경 =====  -->

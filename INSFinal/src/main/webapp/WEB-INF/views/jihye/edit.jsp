@@ -28,7 +28,7 @@ $(document).ready(function(){
 	
     
     // 회원 정보 수정 입력&버튼 눌렀을 때 유효성 검사 (패스원드,패스워드 체크, 이메일, 닉네임, 전화)
-	$("#pwd").focusout(function(){
+	$("#pwd").keyup(function(){  // focusout -> keyup
 		var passwd = $(this).val().trim(); // 패스워드 값을 넣는다.
 		
 		var regexp_passwd = new RegExp(/^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).*$/g);
@@ -56,7 +56,7 @@ $(document).ready(function(){
     	}
    });
 	
-	$("#pwdchk").focusout(function(){
+	$("#pwdchk").keyup(function(){
 		if($(this).val()==''){
     		$(this).css("border-color", "#FF0000");
     			$('#submit').attr('disabled',true);
@@ -77,7 +77,7 @@ $(document).ready(function(){
     	}
    });
 
-    $("#email").focusout(function(){
+/*     $("#email").focusout(function(){
     	var email = $("#email").val().trim();
     	var regexp_email = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
     	var bool = regexp_email.test(email);
@@ -100,18 +100,29 @@ $(document).ready(function(){
     		$('#submit').attr('disabled',false);
     		$("#error_email").text("");
     	}
-   });
+   }); */
     
 
     
-    $("#nickname").focusout(function(){
+    $("#nickname").keyup(function(){
+    	
+    	var nickname = $("#nickname").val().trim();
+    	var regexp_nickname = new RegExp(/^[가-힣]{2,10}|[a-zA-Z]{2,10}$/);
+    	var bool = regexp_nickname.test(nickname);
+    	
 		if($(this).val()==''){
-    		$(this).css("border-color", "#FF0000");
-    			$('#submit').attr('disabled',true);
-    			$("#error_nickname").text("* 닉네임을 입력하세요.");
+			$(this).css("border-color", "#FF0000");
+			$('#submit').attr('disabled',true);
+			$("#error_nickname").text("* 닉네임을 입력하세요.");
+    		
     	}
-    	else
-    	{
+    	else if(!bool){
+			$(this).css("border-color", "#FF0000");
+			$('#submit').attr('disabled',true);
+			$("#error_nickname").text("* 한글은 2~10글자, 영문은 2~10글자로 입력해 주세요.");
+    		
+    	}
+    	else{
     		$(this).css("border-color", "#2eb82e");
     		$('#submit').attr('disabled',false);
     		$("#error_nickname").text("");
@@ -119,7 +130,7 @@ $(document).ready(function(){
    });
 
     
-    $("#tel2").focusout(function(){
+    $("#tel2").keyup(function(){
     	var tel2 = $(this).val().trim();
     	var regexp_tel2 = /\d{3,4}/g; 
 		// 3~4자리 숫자 입력 정규표현식
@@ -145,7 +156,7 @@ $(document).ready(function(){
     	}
 
 	});
-    $("#tel3").focusout(function(){
+    $("#tel3").keyup(function(){
     	var tel3 = $(this).val().trim();
     	var regexp_tel3 = /\d{3,4}/g; 
 		// 3~4자리 숫자 입력 정규표현식

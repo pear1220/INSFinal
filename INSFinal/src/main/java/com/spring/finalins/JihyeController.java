@@ -1,8 +1,7 @@
 package com.spring.finalins;
 
-
-
 import java.io.File;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.spring.finalins.model.MemberVO;
 import com.spring.finalins.model.PhotoVO;
+import com.spring.finalins.qna.model.QnaVO;
 import com.spring.finalins.service.InterJihyeService;
 
 @Controller
@@ -25,6 +25,7 @@ public class JihyeController {
 	// ======  의존객체 주입하기(DI: Dependency Injection) ========
 	@Autowired
 	private InterJihyeService service;
+
 
 
 	// ====== #132. 파일업로드 및 다운로드를 해주는 FileManager 클래스 의존객체 주입하기(DI: Dependency Injection) ========
@@ -200,12 +201,7 @@ public class JihyeController {
  
     
 	
-	@RequestMapping(value="/qna.action", method= {RequestMethod.GET})
-	public String requireLogin_qna(HttpServletRequest req, HttpServletResponse res) {
 
-		
-		return "jihye/qna.tiles";
-	}
 	
 	
 	@RequestMapping(value="/setting.action", method= {RequestMethod.GET})

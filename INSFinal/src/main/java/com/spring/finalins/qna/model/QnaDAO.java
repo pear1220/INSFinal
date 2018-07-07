@@ -18,24 +18,45 @@ public class QnaDAO implements InterQnaDAO {
 	@Autowired
 	private SqlSessionTemplate sqlsession;
 	
-	// ====== #42. 메인페이지용 이미지 파일이름을 가져오는 모델단 getImgfilenameList() 메소드 생성하기 ======
+	
+	// QnA목록 보여주기
 	@Override
+	public List<QnaVO> getQnaList(String userid) {
+		List<QnaVO> qnaList= sqlsession.selectList("qna.getQnaList", userid);
+		return qnaList;
+	}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	// ====== #42. 메인페이지용 이미지 파일이름을 가져오는 모델단 getImgfilenameList() 메소드 생성하기 ======
+	/*@Override
 	public List<String> getImgfilenameList() {
 		
 		List<String> imgfilenameList = sqlsession.selectList("board.getImgfilenameList");
 		
 		return imgfilenameList;
-	}
+	}*/
 
-	
-	// ====== #47. 로그인 여부 알아오기 ======
-	@Override
-	public MemberVO getLoginMember(HashMap<String, String> map) {
-		
-		MemberVO loginuser = sqlsession.selectOne("board.getLoginMember", map);
-		
-		return loginuser;
-	}
+
+
 
 
 	// ====== #55. 글쓰기(파일첨부가 없는 글쓰기) ====== 
@@ -46,8 +67,9 @@ public class QnaDAO implements InterQnaDAO {
 		return n;
 	}
 
+	
 
-	// ======= #59. 글목록 보여주기(검색어가 없는 전체 글목록 보여주기) =====
+/*	// ======= #59. 글목록 보여주기(검색어가 없는 전체 글목록 보여주기) =====
 	@Override
 	public List<QnaVO> boardList() {
 		//mybatis
@@ -108,7 +130,7 @@ public class QnaDAO implements InterQnaDAO {
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
 	// ====== #87. 댓글쓰기 ======
-/*	@Override
+	@Override
 	public int addComment(CommentVO commentvo) {
 	    int n = sqlsession.insert("board.addComment", commentvo);
 	    
@@ -150,7 +172,7 @@ public class QnaDAO implements InterQnaDAO {
 	public int deleteComment(HashMap<String, String> map) {
 		int n= sqlsession.update("board.deleteComment", map);
 		return n ;
-	}*/
+	}
 
     ///////////////////////////////////////////////////////////////////////////////////////
 	// 컬럼네임은 ${} 데이터는 #{}이다!!!!
@@ -218,7 +240,7 @@ public class QnaDAO implements InterQnaDAO {
 	public int deleteComment(HashMap<String, String> map) {
 		// TODO Auto-generated method stub
 		return 0;
-	}
+	}*/
 
 
    

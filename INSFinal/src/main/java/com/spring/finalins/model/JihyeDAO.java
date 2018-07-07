@@ -34,10 +34,7 @@ public class JihyeDAO implements InterJihyeDAO{
 	// 회원탈퇴(leave_status 업데이트 하기)
 	@Override
 	public int deleteMyAccount(String userid) {
-		int n = sqlsession.update("jihye.deleteMyAccount", userid);
-		
-	
-		
+		int n = sqlsession.update("jihye.deleteMyAccount", userid);	
 		return n;
 	}
 

@@ -121,6 +121,16 @@ create table ins_QnA_category
 , constraint PK_qna_category_idx primary key(qna_category_idx)
 );
 
+--QnA카테고리 idx용 시퀀스 생성
+create sequence seq_qna_category
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+
 --QnA 테이블 생성
 create table ins_QnA
 ( qna_idx             number        not null --시퀀스 seq_qna
@@ -148,6 +158,7 @@ nomaxvalue
 nominvalue
 nocycle
 nocache;
+
 
 --프로젝트 테이블 생성
 create table ins_project
@@ -485,12 +496,40 @@ where userid = 'jihye';
 
 commit;
 
+-- qna 테이블 삭제했다 다시 생성하기
+drop sequence seq_qna_category;
+drop table ins_QnA_category purge;
 
 
+drop sequence seq_qna;
+drop table ins_QnA purge;
 
+-- qna 게시판을 위해 데이터 생성
+-- qna 카테고리 데이터 생성
+insert into ins_QnA_category(qna_category_idx,qna_category)
+values(seq_qna_category.nextval, '문의');
 
+insert into ins_QnA_category(qna_category_idx,qna_category)
+values(seq_qna_category.nextval, '기타');
 
+commit;
 
+-- qna  글 목록
+insert into ins_QnA(qna_idx, fk_userid, fk_qna_category_idx, qna_title, qna_content, qna_date, qna_fk_idx, qna_depthno,  qna_filename, qna_orgfilename, qna_byte)
+values(seq_qna.nextval, 'jihye', 1, 'qna 테스트입니다.', 'qna 테스트 내용물입니다.' , default, seq_qna.nextval, default, default, default, 0 );
+
+select *
+from ins_QnA_category
+
+select *
+from ins_QnA
+
+commit;
+
+-- qna 목록 불러오기
+select qna_idx, fk_userid, fk_qna_category_idx, qna_title, qna_content, qna_date, qna_fk_idx, qna_depthno,  qna_filename, qna_orgfilename, qna_byte
+from ins_QnA
+where fk_userid = 'jihye';
 
 
 
