@@ -527,12 +527,26 @@ from ins_QnA
 commit;
 
 -- qna 목록 불러오기
-select qna_idx, fk_userid, fk_qna_category_idx, qna_title, qna_content, qna_date, qna_fk_idx, qna_depthno,  qna_filename, qna_orgfilename, qna_byte
-from ins_QnA
+select qna_idx, fk_userid, qna_category , qna_title, qna_content, qna_date, qna_fk_idx, qna_depthno,  qna_filename, qna_orgfilename, qna_byte
+from ins_QnA A join ins_QnA_category B
+on A.fk_qna_category_idx = B.qna_category_idx
 where fk_userid = 'jihye';
 
 
 
+-- **** 페이징 처리를 위해서 목록에 글쓰기를 많이 한다 *** ---
+declare 
+   v_cnt number(3) := 1;
+ begin
+   loop
+     insert into ins_QnA(qna_idx, fk_userid, fk_qna_category_idx, qna_title, qna_content, qna_date, qna_fk_idx, qna_depthno,  qna_filename, qna_orgfilename, qna_byte)
+     values(seq_qna.nextval,'jihye', 1,  'qna 테스트'||v_cnt ||'입니다.', '안녕하세요? 안지혜입니다. 하하하하하'|| v_cnt,  default, seq_qna.nextval, default, default, default, 0);
+     v_cnt := v_cnt + 1;
+   exit when v_cnt > 10;
+   end loop;
+ end;
+ 
+commit;
 
 
 
