@@ -334,7 +334,7 @@
     function html5Upload() {	
     	var tempFile,
     		sUploadURL;
-    	// **************************************************************************
+    	
     	sUploadURL= '/finalins/image/multiplePhotoUpload.action'; 	//upload URL
     	
     	//파일을 하나씩 보내고, 결과를 받음.
@@ -458,9 +458,9 @@
 	 * Ajax 통신 시 error가 발생할 때 처리하는 함수입니다.
 	 * @return
 	 */
-/*	function onAjaxError (){
+	function onAjaxError (){
 		alert("[가이드]사진 업로더할 서버URL셋팅이 필요합니다.-onAjaxError");
-	}*/
+	}
 
  	/**
       * 이미지 업로드 시작
@@ -479,7 +479,6 @@
  	 */
  	function callFileUploader (){
  		oFileUploader = new jindo.FileUploader(jindo.$("uploadInputBox"),{
- 			// **********************************************
  			sUrl  : '/finalins/image/photoUpload.action',	// 파일업로드시 동작되는 컨트롤러 url
  	        sCallback : location.href.replace(/\/[^\/]*$/, '') + '/callback.html',	//업로드 이후  redirect 페이지 url
  	    	sFiletype : "*.jpg;*.png;*.bmp;*.gif",						//허용할 파일의 형식. ex) "*", "*.*", "*.jpg", 구분자(;)	
