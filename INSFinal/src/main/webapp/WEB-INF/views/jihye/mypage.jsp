@@ -3,7 +3,7 @@
     
 <jsp:include page="top.jsp" /> 
    
-    
+<%--     
    <div class="navtab" align="center">    
 	    <ul class="nav nav-tabs abc">
 	    <!-- 부트스트랩 3.3.7버전에서 data-toggle에 tab이라 적으면 안된다 그래서 tab1이라 바꿨다. -->
@@ -14,7 +14,7 @@
 	   </ul>   
    </div>     
 
-
+ --%>
 
   <div class="tab-content">
 	    <div id="profile" class="tab-pane fade in active">

@@ -4,6 +4,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
+<jsp:include page="top.jsp" /> 
+
 <style>
    table, th, td {border: solid 1px gray;}
    
@@ -32,32 +34,7 @@
 	        oEditor.exec("UPDATE_CONTENTS_FIELD");
 	        jindo.$("content");
 	        <%-- 스마트 에디터 구현 끝(no frame) --%> 
-	        
-	        
-	    	/*  // 1. 글제목 유효성 검사
-			var subjectval = $("#subject").val().trim();
-			if(subjectval == ""){
-				alert("글제목을 입력하세요!!");
-				return;
-			} 
-			
-			// 2. 글내용 유효성 검사
-			var contentval = $("#content").val().trim();
-			if(contentval == ""){
-				alert("글내용을 입력하세요!!");
-				return;
-			}
-			
-			// 3. 글암호 유효성 검사
-			var pwval = $("#pw").val().trim();
-			if(pwval == ""){
-				alert("글암호를 입력하세요!!");
-				return;
-			} */
-	        
-	        
-          ///////////////////////////////////////////////////////////////
-	        
+ 
 	        // 글제목 유효성 검사
 	        var subjectval = document.getElementById("subject").value.trim();
 	        
@@ -88,35 +65,15 @@
 			content.value = content.value.replace(/(<p>|<\/p>)/gi, ""); //<p> 또는 </p> 모두 제거시
 	        
 	        
-	        // 글암호 유효성 검사
-	        var pwval = document.getElementById("pw").value.trim();
-	        
-	        if(pwval == "") {
-	        	alert("글암호를 입력하세요!!");
-	        	return;
-	        }
-            ///////////////////////////////////////////////////////////////
 	         // 폼 submit
            var editFrm = document.editFrm;
-   		   editFrm.subject.value = subjectval;
-   		   editFrm.content.value = content.value;
-   	       editFrm.pw.value = pwval;
-	   	   	       
-	   	   editFrm.action = "/board/editEnd.action";
+   		   editFrm.qna_title.value = subjectval;
+   		   editFrm.qna_content.value = content.value;
+   	   
+	   	   editFrm.action = "editQnaEnd.action";
 	   	   editFrm.method = "POST";
 	   	   editFrm.submit();
-		/* 	
-			var frm = document.editFrm;
-			
-			frm.subject.value= subjectval;
-			frm.content.value= contentval;
-			frm.pw.value = pwval;
-			
-			frm.action="/board/editEnd.action";
-			frm.method="post";
-			frm.submit(); */
-			
-			
+
 		});
 		
 	
@@ -131,28 +88,22 @@
 
         <tr>
             <th  style="width: 70px; text-align: center;">글번호</th>
-            <td>${boardvo.seq}</td>
+            <td>${qnavo.qna_idx}</td>
         </tr>     
         <tr>
             <th  style="width: 70px; text-align: center;">성명</th>
-            <td>${boardvo.name}</td>
+            <td>${sessionScope.loginuser.name}</td>
         </tr>          
         <tr>
             <th  style="width: 70px; text-align: center;">제목</th>
-            <td><input type="text" id="subject" value="${boardvo.subject}" style="width: 920px;"></td>
+            <td><input type="text" id="subject" value="${qnavo.qna_title}" style="width: 920px;"></td>
         </tr>       
         <tr>
             <th  style="width: 70px; text-align: center;">내용</th>
-            <!-- <td><textarea id="content" rows="10" cols="130">대<br/>한"\r\n"민"\n"국</textarea></td>  -->
-            <!-- <td><textarea id="content" rows="10" cols="130">대&#10;한민&#10;국</textarea></td> -->
-            <!--   ※ textarea 태그에서는 일반적인 <br/> 태그나 \r\n, \r, \n 을 사용하여 개행처리를 할 수 있다.
-              textarea 태그에서 개행 처리는 &#10; 를 사용하면 된다.  --> 
-            <%-- <td><textarea id="content" rows="10" cols="130">${boardvo.content}</textarea></td>    --%>
+    
             <td>
-            <%-- *** 스마트 에디터 사용하기 전 ***  스마트 에디터는 자기마음대로 p태그로 바꾸기 때문에 이것을 주석처리 하였다.
-            <textarea id="content" rows="10" cols="130">${fn:replace(boardvo.content, "<br/>", "&#10;")}</textarea>
-            --%> 
-            <textarea id="content" rows="10" cols="130" style="width: 95%; height: 412px;">${boardvo.content}</textarea>
+          
+            <textarea id="content" rows="10" cols="130" style="width: 95%; height: 412px;">${qnavo.qna_content}</textarea>
             
             
             <%-- ****  textarea 태그에서 required="required" 속성을 사용하면  스마트 에디터는 오류가 발생하므로 사용하면 안된다. **** --%>
@@ -974,26 +925,28 @@
 				}
 				</script>
             	<%--============================= 스마트 에디터 끝 ========================================== --%>
-            
-
-            
+    
             </td>
         </tr>       
-        <tr>
-            <th>암호</th>
-            <td><input type="password" id="pw"></td>
-        </tr>  
+          <%-- ==== #135. 파일첨부 타입 추가하기  ==== --%>
+            <tr>
+                <th>파일첨부</th>
+                <td><input type="file" name="attach"  value="${qnavo.qna_orgfilename}"/></td> <%--name은 db컬럼과 똑같이 해야 한다. --%>
+            </tr>
+            
    </table>
+
+	
    
    <br/>
    <button type="button" id="btnUpdate">완료</button>
    <button type="button" onClick="javascript:history.back();" >취소</button>  
   
    <form name="editFrm">
-      <input type="hidden" name="seq" value="${boardvo.seq}" />
-      <input type="hidden" name="subject" />
-      <input type="hidden" name="content" />
-      <input type="hidden" name="pw" />
+      <input type="hidden" name="qna_idx" value="${qnavo.qna_idx}" />
+      <input type="hidden" name="qna_title" />
+      <input type="hidden" name="qna_content" />
+ 
       
    </form>
    

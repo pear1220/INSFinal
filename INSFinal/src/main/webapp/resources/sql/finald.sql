@@ -140,7 +140,7 @@ create table ins_QnA
 , qna_content         CLOB not null          --문의내용
 , qna_date            date default sysdate not null --문의작성일
 , qna_fk_idx          number default 0 not null --원글번호
-, qna_depthno         number default 0 not null --답글여부
+, qna_depthno         number default 0 not null --답글여부 0: 답글 없음(삭제 가능)/1 : 답글있음(답글 있을 땐 삭제가 안됨)
 , qna_groupno         number default 0 not null --그룹번호
 , qna_filename        varchar2(255)          --첨부파일명
 , qna_orgfilename     varchar2(255)          --첨부파일원본명
@@ -549,7 +549,11 @@ declare
 commit;
 
 
+-- QnA 글 삭제하기(답글이 없을 경우 qna_depthno 가 0일 경우)
+delete from ins_QnA 
+where qna_idx = 2  and qna_depthno = 0 
 
+rollback;
 
 
 

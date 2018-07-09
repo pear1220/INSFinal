@@ -11,7 +11,11 @@
 
 <!--  Join Form check JS -->
 <!-- <script src="resources/js/custom/edit_check.js"></script>  -->
-
+<style>
+.form-control{
+              color: black;
+             }
+</style>
 
 <script type="text/javascript">
 
@@ -76,33 +80,6 @@ $(document).ready(function(){
 
     	}
    });
-
-/*     $("#email").focusout(function(){
-    	var email = $("#email").val().trim();
-    	var regexp_email = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
-    	var bool = regexp_email.test(email);
-    	
-		if($(this).val()==''){
-    		$(this).css("border-color", "#FF0000");
-    			$('#submit').attr('disabled',true);
-    			$("#error_email").text("* E-Mail을 입력하세요.");
-    	}
-		else if(!bool)
-			{
-			$(this).css("border-color", "#FF0000");
-			$('#submit').attr('disabled',true);
-			$("#error_email").text("* E-Mail을 올바르게 입력하세요.");	    			 
-	         // e메일을 검사해주는 정규표현식 객체 생성
-			}
-    	else
-    	{
-    		$(this).css("border-color", "#2eb82e");
-    		$('#submit').attr('disabled',false);
-    		$("#error_email").text("");
-    	}
-   }); */
-    
-
     
     $("#nickname").keyup(function(){
     	
@@ -282,14 +259,14 @@ function goDel()
 </script>
    
 <%-- 상단에 탭메뉴이다. 탭을 클릭하면 링크타고 페이지 이동한다. --%> 
-<div class="navtab" align="center">        
+<%-- <div class="navtab" align="center">        
 	 <ul class="nav nav-tabs abc">
 		 <li><a data-toggle="tab1" href="<%= request.getContextPath() %>/mypage.action">Profile</a></li>
 		 <li><a data-toggle="tab1" href="<%= request.getContextPath() %>/qna.action">Q&A</a></li>
 		 <li ><a data-toggle="tab1" href="<%= request.getContextPath() %>/setting.action">Setting</a></li>
 		 <li class="active"><a data-toggle="tab1" href="<%= request.getContextPath() %>/edit.action">Edit</a></li> 
 	</ul>   
-</div>     
+</div>  --%>    
 
 <%-- edit 페이지에 있는 회원정보 수정 form --%> 
 <div align="center" style="border: 0px solid gold; width: 30%; margin-left: 35%;">

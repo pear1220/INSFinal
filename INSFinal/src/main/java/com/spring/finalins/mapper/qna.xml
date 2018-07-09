@@ -35,6 +35,68 @@
 	from ins_QnA
 	where fk_userid = #{userid}
   </select>
+  
+  
+   <!-- ====== #125. ins_QnA 테이블의 groupno 의 max값 알아오기  ======  -->
+   <!-- 참고) 맨처음에 insert하기 전에 원글이 뷰단에서 넘겨서 groupno를 얻어 올때,  groupno는 null이기 때문에 nvl을 써준다. -->
+   <select id="getGroupMaxno" resultType="Integer">
+       select nvl(max(qna_groupno) , 0)   
+      from ins_QnA
+   </select>
+   
+   <!-- ====== #126. Qna 문의하기(파일첨부가 없는 글쓰기, 답변형 게시판)  -->
+    <insert id="write" parameterType="com.spring.finalins.qna.model.QnaVO">
+      <if test='qna_fk_idx.equals("")'>
+       insert into ins_QnA(qna_idx, fk_userid, fk_qna_category_idx, qna_title, qna_content, qna_date, qna_fk_idx, qna_depthno, qna_groupno)
+        values(seq_qna.nextval, #{fk_userid}, #{fk_qna_category_idx}, #{qna_title}, #{qna_content}, default, default, default, ${qna_groupno}) 
+      </if>   
+     <if test='!qna_fk_idx.equals("")'>
+        insert into ins_QnA(qna_idx, fk_userid, fk_qna_category_idx, qna_title, qna_content, qna_date, qna_fk_idx, qna_depthno, qna_groupno)
+        values(seq_qna.nextval, #{fk_userid},#{fk_qna_category_idx}, #{qna_title}, #{qna_content}, default,  #{qna_fk_idx},#{qna_depthno}+1) 
+      </if> 
+   </insert>
+   
+   
+   
+      <!-- ======  파일첨부가 있는 글쓰기(답변형 게시판) -->
+    <insert id="write_withFile" parameterType="com.spring.finalins.qna.model.QnaVO" >
+       <if test='qna_fk_idx.equals("")'>
+         insert into ins_QnA(qna_idx, fk_userid, fk_qna_category_idx, qna_title, qna_content, qna_date, qna_fk_idx, qna_depthno, qna_groupno, qna_filename, qna_orgfilename, qna_byte)
+         values(seq_qna.nextval, #{fk_userid}, #{fk_qna_category_idx}, #{qna_title}, #{qna_content}, default, default, default, #{qna_groupno}, #{qna_filename}, #{qna_orgfilename}, #{qna_byte})
+        </if>
+         <if test='!qna_fk_idx.equals("")'>
+         insert into ins_QnA(qna_idx, fk_userid, fk_qna_category_idx, qna_title, qna_content, qna_date, qna_fk_idx, qna_depthno, qna_groupno, qna_filename, qna_orgfilename, qna_byte)
+         values(seq_qna.nextval, #{fk_userid}, #{fk_qna_category_idx}, #{qna_title}, #{qna_content}, default, default, #{qna_depthno}+1, #{qna_groupno}, #{qna_filename}, #{qna_orgfilename}, #{qna_byte})
+        </if>
+   </insert>
+
+     
+   <!-- ======  글 1개 보여주기 -->
+   <select id="getView" parameterType="String" resultType="com.spring.finalins.qna.model.QnaVO" >
+       select qna_idx, fk_userid, fk_qna_category_idx, qna_title, qna_content, qna_date, qna_fk_idx, qna_depthno, qna_groupno, qna_filename, qna_orgfilename, qna_byte
+      from ins_QnA
+      where qna_idx = #{qna_idx}  
+   </select>
+   
+   
+   <!--  ====== 글 1개 수정하기 ====== -->
+	<update id="editQna" parameterType="com.spring.finalins.qna.model.QnaVO">
+	    update ins_QnA set qna_title = #{qna_title}, 
+	                        qna_content = #{qna_content}
+	    where qna_idx = #{qna_idx} 
+	</update>
+	
+	
+	<!--  ====== 글 1개 삭제하기 ====== -->
+	<delete id="del" parameterType="String">
+	   delete from ins_QnA 
+	    where qna_idx = #{qna_idx}  and qna_depthno = 0 
+	</delete>
+	
+   
+   
+   
+   
 
 	
 </mapper>
