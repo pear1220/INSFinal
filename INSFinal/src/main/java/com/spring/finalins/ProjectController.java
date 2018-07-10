@@ -3,6 +3,7 @@ package com.spring.finalins;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -45,6 +46,14 @@ public class ProjectController {
 		if(loginuser != null) {
 			HttpSession session = request.getSession();
 			session.setAttribute("loginuser", loginuser);
+			
+			//로그인 가능한 유저인 경우 유저의 팀리스트를 select해서 세션에 담아 보내준다.
+			List<HashMap<String, String>> teamList = service.getTeamList(userid);
+			List<HashMap<String, String>> projectList = service.getProjectList(userid);
+	//		System.out.println("팀리스트 확인용: " + teamList.size() );
+			
+			session.setAttribute("projectList", projectList);
+			session.setAttribute("teamList", teamList);
 		}
 		return "login/loginEnd.tiles";
 	} // end of loginEnd(HttpServletRequest request)
@@ -107,9 +116,133 @@ public class ProjectController {
 	} // end of idcheck(HttpServletRequest request)
 	
 	
-	//
-	public String requireLogin_getTeamList(HttpServletRequest request, HttpServletResponse respons) {
+	//팀idx의 가져와서 프로젝트 노출도 리스트를 보여주는 메소드
+	@RequestMapping(value="getTeamVS.action", method= {RequestMethod.GET})
+	public String getTeamVS(HttpServletRequest request) {
+		String teamIDX = request.getParameter("teamIDX");
 		
-		return "";
-	}
+		HttpSession session = request.getSession();
+		MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
+		String userid = loginuser.getUserid();
+		
+		HashMap<String, String> userInfo = new HashMap<String, String>();
+		userInfo.put("teamIDX", teamIDX);
+		userInfo.put("userid", userid);
+		
+		HashMap<String, String> teamInfo = service.getTeamVS(userInfo);
+		
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("visibility_status", teamInfo.get("visibility_status"));
+		jsonObj.put("admin_status", teamInfo.get("admin_status"));
+		
+		String str_jsonObj = jsonObj.toString();
+		
+		request.setAttribute("str_jsonObj", str_jsonObj);
+		return "main/getTeamVSJSON";
+	} // end of getTeamVS(HttpServletRequest request)
+	
+	
+	//프로젝트를 생성하는 메소드
+	@RequestMapping(value="insertProject.action", method= {RequestMethod.POST})
+	public String insertProject(HttpServletRequest request) {
+		String userid = request.getParameter("PJuserid");
+		String project_name = request.getParameter("project_name");
+		String pjst = request.getParameter("pjst");
+		String team_idx = request.getParameter("team");
+		
+		HashMap<String, String> project_info = new HashMap<String, String>();
+		project_info.put("userid", userid);
+		project_info.put("project_name", project_name);
+		project_info.put("pjst", pjst);
+		project_info.put("team_idx", team_idx);
+		
+		int result = service.insertProject(project_info);
+		
+		request.setAttribute("project_info", project_info);
+		request.setAttribute("result", result);
+		return "main/insertProjectEnd.tiles";
+	} // end of insertProject(HttpServletRequest request) 
+	
+	
+	//생성된 프로젝트 페이지로 이동하는 메소드
+	@RequestMapping(value="project.action", method= {RequestMethod.GET})
+	public String showProjectPage(HttpServletRequest request) {
+		String project_name = request.getParameter("project_name");
+		String project_idx= request.getParameter("project_idx");
+		
+		HttpSession session = request.getSession();
+		session.removeAttribute("projectInfo");
+		MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
+		
+		if(loginuser != null) {
+			String userid = loginuser.getUserid();
+			
+			HashMap<String, String> map = new HashMap<String, String>();
+			map.put("userid", userid);
+			map.put("project_idx", project_idx);
+			map.put("project_name", project_name);
+			
+			//유저가 접속한 프로젝트의 정보를 가져오는 메소드
+			HashMap<String, String> projectInfo = service.getProjectInfo(map);
+			session.setAttribute("projectInfo", projectInfo);
+		}
+		return "project/project.tiles";
+	} // end of showProjectPage(HttpServletRequest request)
+	
+	
+	//프로젝트의 즐겨찾기 상태를 변경하는 메소드
+	@RequestMapping(value="updateFavoriteStatus.action", method= {RequestMethod.POST})
+	public String updateFavoriteStatus(HttpServletRequest request) {
+		String userid = request.getParameter("userid");
+		String favorite_status = request.getParameter("favorite_status");
+		String project_idx = request.getParameter("project_idx");
+		
+		HttpSession session = request.getSession();
+		session.removeAttribute("projectInfo");
+		
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("userid", userid);
+		map.put("favorite_status", favorite_status);
+		map.put("project_idx", project_idx);
+		
+		int result = service.updateFavoriteStatus(map);
+		String msg = "";
+		JSONObject jsonObj = new JSONObject();
+		
+		if(result == 1) { //update 성공한 경우
+			msg = "즐겨찾기 설정이 변경되었습니다!";
+			
+			if(favorite_status.equals("1")) {
+				favorite_status = "0";
+			}
+			else if(favorite_status.equals("0")) {
+				favorite_status = "1";
+			}
+		}
+		else {
+			msg = "즐겨찾기 설정이 변경에 실패했습니다!!";
+		}
+		
+		HashMap<String, String> projectInfo = service.getProjectInfo(map);
+		
+		jsonObj.put("msg", msg);
+		jsonObj.put("result", result);
+		jsonObj.put("favorite_status", favorite_status);
+		jsonObj.put("project_idx", projectInfo.get("project_idx"));
+		jsonObj.put("project_name", projectInfo.get("project_name"));
+		jsonObj.put("project_visibility", projectInfo.get("project_visibility"));
+		jsonObj.put("project_favorite", projectInfo.get("project_favorite"));
+		jsonObj.put("project_member_idx", projectInfo.get("project_member_idx"));
+		jsonObj.put("member_id", projectInfo.get("member_id"));
+		jsonObj.put("project_admin", projectInfo.get("project_admin"));
+		
+		String str_jsonObj = jsonObj.toString();
+		
+		session.setAttribute("projectInfo", projectInfo);
+		request.setAttribute("str_jsonObj", str_jsonObj);
+		
+		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~str_jsonObj => " + str_jsonObj);
+		
+		return "project/updateFavoriteStatusJSON";
+	} // end of updateFavoriteStatus(HttpServletRequest request)
 }

@@ -39,6 +39,11 @@ text, select{
 <script type="text/javascript">
 
 	$(document).ready(function(){
+		
+		if(${sessionScope.loginuser != null}){
+			alert("회원가입은 로그인 상태에서 이용하실 수 없습니다!!");
+			location.href = "<%=request.getContextPath()%>/index.action";
+		}
 	
 		$("#userid").keyup(function(){
 			goCheckID();
@@ -111,7 +116,8 @@ text, select{
 		$( "#btn-submit" ).click(function() {
 			blankCheck();
 			if(check != 0){
-				alert("공백을 채우시오");
+				alert("check확인: " + check);
+				//	alert("공백을 채우시오");
 			}
 			else{
 				var frm = document.registerFrm;
@@ -241,6 +247,7 @@ text, select{
 	function blankCheck(){ //submit버튼을 눌렀을 때 공백을 검사하는 함수
 		/* var baday = $("#birthday").val();
 		console.log("확인: " + baday); */
+		check = 0;
 		if($("#userid").val()==''){
     		$("#userid").css("border-color", "#FF0000");
     	//	$('#btn-submit').attr('disabled',true);
