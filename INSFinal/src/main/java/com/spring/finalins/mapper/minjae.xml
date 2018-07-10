@@ -40,7 +40,8 @@
 	</select>
 	
 	<!-- header : 검색을 위해 teamList 를 얻음 -->
-	<resultMap type="com.spring.finalins.model.TeamVO" id="getSearch_teamMap">
+	<resultMap type="HashMap" id="getSearch_teamMap">
+		<result property="rno" column="rno" javaType="String" />
 		<result property="team_idx" column="team_idx" javaType="String"/>
 		<result property="admin_userid" column="admin_userid" javaType="String"/>
 		<result property="team_name" column="team_name" javaType="String" />
@@ -48,15 +49,16 @@
 		<result property="team_visibility_status" column="team_visibility_status" javaType="String"/>
 		<result property="team_image" column="team_image" javaType="String"/>
 	</resultMap> 
-	<select id="getSearch_team" parameterType="String" resultMap="getSearch_teamMap">	
-		select team_idx, admin_userid, team_name, team_delete_status, team_visibility_status, team_image 
-		from ins_team 
-		where team_delete_status = 1 and team_visibility_status = 1 and team_name like '%' || #{search_input} || '%'
+	<select id="getSearch_team" parameterType="HashMap" resultMap="getSearch_teamMap">	
+		   select team_idx, admin_userid, team_name, team_delete_status, team_visibility_status, team_image 
+		   from ins_team 
+		   where team_delete_status = 1 and team_visibility_status = 1 and team_name like '%' ||  #{search_input} || '%' 
 	</select>
 	
 	
 	<!-- header : 검색을 위해 projectList 를 얻음 -->
-<!-- 	<resultMap type="com.spring.finalins.model.ProjectVO" id="getSearch_projectMap">
+<!--  	<resultMap type="HashMap" id="getSearch_projectMap">
+ 		<result property="rno" column="rno" javaType="String" />
 		<result property="project_idx" column="project_idx" javaType="String"/>
 		<result property="fk_team_idx" column="fk_team_idx" javaType="String"/>
 		<result property="project_name" column="project_name" javaType="String" />
@@ -66,38 +68,112 @@
 		<result property="fk_project_image_idx" column="fk_project_image_idx" javaType="String" />
 	</resultMap>	 
 	<select id="getSearch_project" parameterType="HashMap" resultMap="getSearch_projectMap">
-		select project_idx, fk_team_idx, project_name, project_visibility_st, project_delete_status, project_favorite_status, fk_project_image_idx
-		from ins_project A join ins_project_member B
-		on A.project_idx = B.fk_project_idx
-		where B.project_member_userid = #{userid} and project_name like '%' || #{search_input} || '%'
+	    select rno,  project_idx, fk_team_idx, project_name, project_visibility_st, project_delete_status, project_favorite_status, fk_project_image_idx
+	    from 
+	    (
+	    	select row_number() over(order by project_idx desc) as rno,
+	            project_idx, fk_team_idx, project_name, project_visibility_st, project_delete_status, project_favorite_status, fk_project_image_idx
+			from ins_project A join ins_project_member B
+			on A.project_idx = B.fk_project_idx
+			where B.project_member_userid = #{userid} and project_name like '%' || #{search_input} || '%'
+	    )V
+	    where  rno between #{startRno} and #{endRno}
 	</select>
 	
 	header : 검색을 위해 listList 를 얻음
-	<resultMap type="com.spring.finalins.model.ListVO" id="getSearch_listMap">
+	<resultMap type="HashMap" id="getSearch_listMap">
+		<result property="rno" column="rno" javaType="String" />
 		<result property="list_idx" column="list_idx" javaType="String"/>
 		<result property="fk_project_idx" column="fk_project_idx" javaType="String"/>
 		<result property="list_name" column="list_name" javaType="String"/>
 		<result property="list_delete_status" column="list_delete_status" javaType="String"/>
 	</resultMap>
 	<select id="getSearch_list" parameterType="HashMap" resultMap="getSearch_listMap" >
-		select list_idx, fk_project_idx, list_name, list_delete_status
-		from ins_list C join( select project_idx, fk_team_idx, project_name, project_visibility_st, project_delete_status, project_favorite_status, project_profilejpg, fk_project_image_idx
-		                        from ins_project A join ins_project_member B
-		                        on A.project_idx = B.fk_project_idx
-		                        where B.project_member_userid = #{userid}) D
-		on C.fk_project_idx = D.project_idx
-		where C.list_delete_status = 1 and list_name like '%' || #{search_input} || '%'
+	    select rno, list_idx, fk_project_idx, list_name, list_delete_status
+	    from 
+	    (
+	    select row_number() over(order by list_idx desc) as rno,
+	            list_idx, fk_project_idx, list_name, list_delete_status
+			from ins_list C join( select project_idx, fk_team_idx, project_name, project_visibility_st, project_delete_status, project_favorite_status, fk_project_image_idx
+			                        from ins_project A join ins_project_member B
+			                        on A.project_idx = B.fk_project_idx
+			                        where B.project_member_userid = #{userid}) D
+			on C.fk_project_idx = D.project_idx
+			where C.list_delete_status = 1 and list_name like '%' || #{search_input} || '%'
+	    )V
+	    where rno between #{startRno} and #{endRno}
 	</select>
 	
-	<resultMap type="com.spring.finalins.model.CardVO" id="getSearch_cardMap">
+	<resultMap type="HashMap" id="getSearch_cardMap">
+		<result property="rno" column="rno" javaType="String" />
 		<result property="card_idx" column="card_idx" javaType="String"/>
 		<result property="fk_list_idx" column="fk_list_idx" javaType="String"/>
 		<result property="card_userid" column="card_userid" javaType="String"/>
 		<result property="card_title" column="card_title" javaType="String"/>
 	</resultMap>
 	<select id="getSearch_card" parameterType="HashMap" resultMap="getSearch_cardMap">
-		select card_idx, fk_list_idx, card_userid, card_title
-		from ins_list C join( select project_idx, fk_team_idx, project_name, project_visibility_st, project_delete_status, project_favorite_status, project_profilejpg, fk_project_image_idx
+	    select rno, card_idx, fk_list_idx, card_userid, card_title
+	    from
+	    (
+	    select row_number() over(order by card_idx desc) as rno,
+	            card_idx, fk_list_idx, card_userid, card_title
+			from ins_list C join( select project_idx, fk_team_idx, project_name, project_visibility_st, project_delete_status, project_favorite_status, fk_project_image_idx
+			                        from ins_project A join ins_project_member B
+			                        on A.project_idx = B.fk_project_idx
+			                        where B.project_member_userid =  #{userid}) D
+			on C.fk_project_idx = D.project_idx
+			join ins_card E
+			on C.list_idx = E.fk_list_idx
+			where card_delete_status = 1 and card_title like '%' || #{search_input} || '%'
+	    )V
+	    where rno between #{startRno} and #{endRno}
+	</select>-->
+  
+	<resultMap type="HashMap" id="getSearch_memberMap">
+		<result property="rno" column="rno" javaType="String" />
+		<result property="userid" column="userid" javaType="String" />
+		<result property="name" column="name" javaType="String" />
+		<result property="nickname" column="nickname" javaType="String" />
+		<result property="profilejpg" column="profilejpg" javaType="String" />
+	</resultMap>
+	<select id="getSearch_member" parameterType="HashMap" resultMap="getSearch_memberMap">		
+	     select rno, userid, name, nickname, profilejpg
+	     from
+	      (
+	      select row_number() over(order by userid desc) as rno,
+	             userid, name, nickname, profilejpg
+		    from ins_member
+		    where leave_status = 0 and userid like '%' || #{search_input} || '%' 
+		          or name like '%' || #{search_input} || '%' 
+		          or nickname like '%' || #{search_input} || '%'
+	      )V
+	      where rno between #{startRno} and #{endRno}
+	</select> 
+	
+	
+	<select id="getSearch_team_count" parameterType="String" resultType="int">
+		select count(*) as cnt 
+		from ins_team 
+		where team_delete_status = 1 and team_visibility_status = 1 and team_name like '%' || #{search_input} || '%'
+	</select>
+<!-- 	<select id="getSearch_project_count" parameterType="HashMap"  resultType="int">
+		select count(*) as cnt
+		from ins_project A join ins_project_member B
+		on A.project_idx = B.fk_project_idx
+		where B.project_member_userid = #{userid} and project_name like '%' || #{search_input} || '%'
+	</select>
+	<select id="getSearch_list_count" parameterType="HashMap" resultType="int">
+		select count(*) as cnt
+		from ins_list C join( select project_idx, fk_team_idx, project_name, project_visibility_st, project_delete_status, project_favorite_status, fk_project_image_idx
+		                        from ins_project A join ins_project_member B
+		                        on A.project_idx = B.fk_project_idx
+		                        where B.project_member_userid = #{userid}) D
+		on C.fk_project_idx = D.project_idx
+		where C.list_delete_status = 1 and list_name like '%' || #{search_input} || '%'
+	</select>
+	<select id="getSearch_card_count" parameterType="HashMap" resultType="int">
+		select count(*) as cnt
+		from ins_list C join( select project_idx, fk_team_idx, project_name, project_visibility_st, project_delete_status, project_favorite_status, fk_project_image_idx
 		                        from ins_project A join ins_project_member B
 		                        on A.project_idx = B.fk_project_idx
 		                        where B.project_member_userid =  #{userid}) D
@@ -105,28 +181,29 @@
 		join ins_card E
 		on C.list_idx = E.fk_list_idx
 		where card_delete_status = 1 and card_title like '%' || #{search_input} || '%'
-	</select>
+	</select>-->
 	
-	<resultMap type="com.spring.finalins.model.CardVO" id="getSearch_cardMap">
-		<result property="card_idx" column="card_idx" javaType="String" />
-		<result property="fk_list_idx" column="fk_list_idx" javaType="String" />
-		<result property="card_userid" column="card_userid" javaType="String" />
-		<result property="card_title" column="card_title" javaType="String" />
-		<result property="card_commentcount" column="card_commentcount" javaType="String" />
-		<result property="card_date" column="card_date" javaType="String" />
-		<result property="card_delete_status" column="card_delete_status" javaType="String" />
+	<select id="getSearch_member_count" parameterType="String" resultType="int">
+		select count(*) as cnt
+	    from ins_member
+	    where leave_status = 0 and userid like '%' || #{search_input} || '%' 
+	          or name like '%' || #{search_input} || '%' 
+	          or nickname like '%' || #{search_input} || '%'
+	</select> 
+	
+	<!-- <resultMap type="HashMap" id="getSearch_memberTotalMap">
+		<result property="userid" column="userid" javaType="String" />
+		<result property="name" column="name" javaType="String" />
+		<result property="nickname" column="nickname" javaType="String" />
+		<result property="profilejpg" column="profilejpg" javaType="String" />
 	</resultMap>
-	<select id="getSearch_card" parameterType="HashMap" resultMap="getSearch_cardMap">		
-		select card_idx, fk_list_idx, card_userid, card_title, card_commentcount, card_date, card_delete_status
-		from ins_list C join( select project_idx, fk_team_idx, project_name, project_visibility_st, project_delete_status, project_favorite_status, project_profilejpg, fk_project_image_idx
-		                        from ins_project A join ins_project_member B
-		                        on A.project_idx = B.fk_project_idx
-		                        where B.project_member_userid = #{userid}) D
-			 on C.fk_project_idx = D.project_idx
-			 join ins_card E
-			 on C.list_idx = E.fk_list_idx
-		where card_delete_status = 1 and card_title like '%' || #{search_input} || '%'
-	</select> -->
+	<select id="getSearch_memberTotal" parameterType="HashMap" resultMap="getSearch_memberTotalMap">		
+        select userid, name, nickname, profilejpg
+	    from ins_member
+	    where leave_status = 0 and userid like '%' || #{search_input} || '%' 
+	          or name like '%' || #{search_input} || '%' 
+	          or nickname like '%' || #{search_input} || '%'
+	</select>  -->
 	
 </mapper>
  

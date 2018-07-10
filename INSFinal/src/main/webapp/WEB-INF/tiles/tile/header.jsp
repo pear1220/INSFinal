@@ -15,7 +15,7 @@
 		font-weight: bold;     
 	}
 
-	#drop {
+	#drop, #memberListMore {
 		margin-left: 193px;
 		width: 500px;
 	}
@@ -38,6 +38,29 @@
 	input[type=text]:focus {
 	    width: 100%;
 	}
+	
+	.btn {
+		margin-left: 20px;
+	}
+	
+	.dropdown .dropdown-menu {
+	    -webkit-transition: all 0.3s;
+	    -moz-transition: all 0.3s;
+	    -ms-transition: all 0.3s;
+	    -o-transition: all 0.3s;
+	    transition: all 0.3s;
+	
+	    max-height: 0;
+	    display: block;
+	    overflow: hidden;
+	    opacity: 0;
+	}
+
+	.dropdown.open .dropdown-menu {
+	    max-height: 300px;
+	    opacity: 1;
+	}
+	
 </style>
 
 
@@ -65,320 +88,579 @@
 			
 			 teamlistButton();
 			
-		}); 
+		  }); // end of $("#project_button").click()-------------------------------------------------------------------
 		 
-		
-		 
-		 
-		  $("#search_input").keyup(function(){
-		
-			$("#drop").show();
-									
-			var html = "";
-
-			 var form_data = {search_input:$("#search_input").val()}
-			
-			 $.ajax({
-					
-				 url: "<%= request.getContextPath() %>/teamSearch.action",
-				 type: "get",
-				 data: form_data,
-				 dataType: "JSON",
-				 success: function(json){
-					
-					
-					 if(json.length > 0){
-										 
-						 $.each(json, function(entryIndex, entry){
-														
-							 var word = entry.team_name.trim();
-							 // "ajax 프로그래밍"
-								
-							 var index = word.toLowerCase().indexOf( $("#search_input").val().toLowerCase() ); // 해당 문자열을 전부 다 소문자로 바꾸는 자바스크립트 함수 (toUpperCase())
-							 
-							 
-							 var len = $("#search_input").val().length;
-														
-							 var str ="";
-							
-								 str += "<span class='first' style='color: blue;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: red; font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: blue;'>" + word.substr(index+len) + "</span>"; 
-								
-								 if(entryIndex == 0){
-									 html += "<span style='font-weight: bold; font-size: 15pt; color: blue;'>Team</span>"
-									 html += "<br/><a href='#'>"+str+"</a>";
-								 }
-								 else{
-									 html += "<br/><a href='#'>"+str+"</a>";	 
-								 }
-								 
-								 
-								 						 
-						 });
-						 
-						 html += "<li class='divider'></li>";
-							 
-						 $("#teamSearch").html(html);
-							 
-					 }
-					 else{
-						 
-						 html += "<span class='list-group-item'>검색결과가 없습니다.</span>";
-						 
-					 }
-					 
-					 $("#drop").html(html);
-					 
-					 
-				 },
-				 error: function(request, status, error){
-						alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
-				 }
-				 						 
-			 });
-			 
-			 $.ajax({
-					
-				 url: "<%= request.getContextPath() %>/projectSearch.action",
-				 type: "get",
-				 data: form_data,
-				 dataType: "JSON",
-				 success: function(json){
-					
-					
-					 if(json.length > 0){
-										 
-						 $.each(json, function(entryIndex, entry){
-														
-							 var word = entry.team_name.trim();
-							 // "ajax 프로그래밍"
-								
-							 var index = word.toLowerCase().indexOf( $("#search_input").val().toLowerCase() ); // 해당 문자열을 전부 다 소문자로 바꾸는 자바스크립트 함수 (toUpperCase())
-							 
-							 
-							 var len = $("#search_input").val().length;
-														
-							 var str ="";
-							
-								 str += "<span class='first' style='color: blue;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: red; font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: blue;'>" + word.substr(index+len) + "</span>"; 
-								
-								 if(entryIndex == 0){
-									 html += "<span style='font-weight: bold; font-size: 15pt; color: blue;'>Team</span>"
-									 html += "<br/><a href='#'>"+str+"</a>";
-								 }
-								 else{
-									 html += "<br/><a href='#'>"+str+"</a>";	 
-								 }
-								 
-								 
-								 						 
-						 });
-						 
-						 html += "<li class='divider'></li>";
-							 
-						 $("#teamSearch").html(html);
-							 
-					 }
-					 else{
-						 
-						 html += "<span class='list-group-item'>검색결과가 없습니다.</span>";
-						 
-					 }
-					 
-					 $("#drop").html(html);
-					 
-					 
-				 },
-				 error: function(request, status, error){
-						alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
-				 }
-				 						 
-			 });
-			
-			
-		 }); 
-		  
-		  $("#search_input").blur(function(){
-			 
-			  $("#search_input").val("");
+		  $("#btnMoreMember").click(function(){
 			  
+			  /* $("#memberListMore").show(); */
+			  btnMoreClick();
+		  	
 		  });
-		 
-		 
-		 
-		 
-		 
-		 /* var form_data = {search_input:$("#search_input").val()} */
-		 
-		/*  $(".dropdown").show();
+		  
+		  var start = 1;
 		
-		 $("#search_input").keyup(function(){
+		  var len = 2;
+			
+		  $("#search_input").keyup(function(){
 			 
-			 alert("keyup 확인용")
-			 
-			 $(".dropdown").show();
-				 */		 		 
-			 <%-- $.ajax({
+			  $("#drop").show();
+			
+			 console.log(start);
+			 console.log($("#search_input").val());
+			  
+			 var word = "";
+			 			
+			 var form_data = {"search_input" : $("#search_input").val()}
+			  
+			<%--  $.ajax({
 				
 				 url: "<%= request.getContextPath() %>/teamSearch.action",
 				 type: "get",
 				 data: form_data,
 				 dataType: "JSON",
 				 success: function(json){
+					
+					 var html1 = "";
+					 
+					 console.log("teamSearch.action 확인" + json.length);
 					 
 					 if(json.length > 0){
-						 
+										 
 						 $.each(json, function(entryIndex, entry){
-							
-							 alert("teamSearch 확인용" + entry.team_name);
-							 
-							 var word = entry.team_name.trim();
-								// "ajax 프로그래밍"
+														
+							 word = entry.team_name.trim();
+							 // "ajax 프로그래밍"
 								
 							 var index = word.toLowerCase().indexOf( $("#search_input").val().toLowerCase() ); // 해당 문자열을 전부 다 소문자로 바꾸는 자바스크립트 함수 (toUpperCase())
 							 
-							 var len = $("#search_input").val().length;
+							 
+							 var leng = $("#search_input").val().length;
 														
 							 var str ="";
 							
-								 str += "<span class='first' style='color: blue;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: red; font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: blue;'>" + word.substr(index+len) + "</span>"; 
+								 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color:#fed189; font-weight: bold;'>" +word.substr(index, leng)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+leng) + "</span>"; 
 								
-								 html += "<li><span style='cursor: pointer;'>"+str+"</span></li>";
-								 
-								 /* html += "<li>"+entry.team_name+"&nbsp;&nbsp;admin : "+entry.admin_userid+"</li>"; */
-							 
-						 });
+								 if(entryIndex == 0){
+									 html1 += "<span class='lite' style='font-weight: bold; font-size: 15pt;'>Team</span>"
+									 html1 += "<br/><a href='#'>"+str+"</a>";
+								 }
+								 else{
+									 html1 += "<a href='#'>"+str+"</a>";/* "<br/><a href='#'>"+str+"</a>"; */	 
+								 }
+								 						 
+						 }); // end of $.each()--------------------------------------------------
 						 
-						 $("#teamSearch"+entryIndex).html(html);
+						/*  if(json.length > 2){
+							 html1 += "<li><button type='button' id='btnMoreMemberSearch' value=''>더보기</button></li>";
+						 } */
+						 
+						 html1 += "<li class='divider'></li>";
+							 
+						 /* $("#teamSearch").html(html); */
 							 
 					 }
+					 else{
+						 
+						 $("#drop_team").hide();
+						 
+					 }
+					 
+						 $("#drop_team").html(html1); 
+					 /* $("#drop").show(); */
+					 /* $("#drop_team").append(html1); */
+					 
+					 if(${sessionScope.teamListCount < 3}){
+						 $("#btnMoreTeam").hide();
+					 }
+					 else{
+						 $("#btnMoreTeam").show();
+						 
+						 $("#btnMoreTeam").click(function(){
+						 
+							$.ajax({
+								url: "<%= request.getContextPath() %>/btnMore.action",
+								data: form_data,
+								type: "get",
+ 								success: function(){
+ 									$("#btnMoreTeam").val( parseInt(start) + len );
+ 									 
+ 									$("#countTeam").text( parseInt( $("#countTeam").text()) + json.length );
+
+ 									 if($("#totalTeamCount").text() == $("#countTeam").text()){
+ 										 
+ 										 $("#btnMoreTeam").text("처음으로");
+ 										 $("#countTeam").text("0");
+ 										 
+ 									 }
+ 								},
+ 								error: function(request, status, error){
+				 					
+ 									 alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌 									
+ 							 	}
+							}); 
+							 
+						 });	 
+					 }
+					 
+					 
+					
 					 
 				 },
 				 error: function(request, status, error){
-						alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
-				 }
-				 						 
-			 }); --%>
+										 					
+						 alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
+						
+				 },
+				 /* contentType: false,
+
+				 processData: false */
+
+				 
+			 }); // end of teamSearch.action $.ajax------------------------------------------------------------------- --%>
 			 
-			<%--  $.ajax({
+			/*  $("#btnMoreTeam").val( parseInt(start) + len );
+			 
+			 $("#countTeam").text( parseInt( $("#countTeam").text()) + json.length );
+
+			 if($("#totalTeamCount").text() == $("#countTeam").text()){
+				 
+				 $("#btnMoreTeam").text("처음으로");
+				 $("#countTeam").text("0");
+				 
+			 } */ 
+			  
+			 
+			 
+			 /*  $("#btnMoreTeam").bind("click", function(){
+			  
+			  if( $(this).text() == "처음으로" ){
+				  
+				  $("#drop").empty();
+				  start = 1;
+				  $(this).text("더보기");
+				  
+			  }
+			  else{
+				  start = $(this).val(); 
+				  
+			  }
+			  
+		  }); //  end of $("#btnMore").bind()---------------------------------------------  */
+			 
+			 <%--  $.ajax({
 					
 				 url: "<%= request.getContextPath() %>/projectSearch.action",
 				 type: "get",
 				 data: form_data,
 				 dataType: "JSON",
 				 success: function(json){
-						
-					 var html = "";
-					 
-					 if(json.length > 0){
-						 
-						 $.each(json, function(entryIndex, entry){
-							 html += "<li>"+entry.project_name+"</li>";
-							 
-							 $("#projectSearch"+entryIndex).html(html)
-							 							
-						 });
-						 
-						 
-					 }
-				 },
-				 error: function(request, status, error){
-						alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
-				 }
-				 						 
-			 });
-			 
-			 $.ajax({
 					
-				 url: "<%= request.getContextPath() %>/listSearch.action",
-				 type: "get",
-				 data: form_data,
-				 dataType: "JSON",
-				 success: function(json){
-						
-					 var html = "";
-					 
-					 if(json.length > 0){
-						 
-						 $.each(json, function(entryIndex, entry){
-							 html += "<li>"+entry.list_name+"</li>";
-							 
-							 $("#listSearch"+entryIndex).html(html)
-							 							
-						 });
-						 
-						 
-					 }
-				 },
-				 error: function(request, status, error){
-						alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
-				 }
-				 						 
-			 });
-			 
-			 $.ajax({
+					 var html2 = "";
 					
-				 url: "<%= request.getContextPath() %>/memberSearch.action",
-				 type: "get",
-				 data: form_data,
-				 dataType: "JSON",
-				 success: function(json){
-						
-					 var html = "";
+					 console.log("projectSearch.action 확인" + json.length);
 					 
 					 if(json.length > 0){
-						 
+										 
 						 $.each(json, function(entryIndex, entry){
-							 html += "<li>"+entry.userid+"</li>";
+							
+							 /* alert("실행확인"); */
 							 
-							 $("#memberSearch"+entryIndex).html(html);
-							 							
+							 word = entry.project_name.trim();
+							 // "ajax 프로그래밍"
+								
+							 var index = word.toLowerCase().indexOf( $("#search_input").val().toLowerCase() ); // 해당 문자열을 전부 다 소문자로 바꾸는 자바스크립트 함수 (toUpperCase())
+							 
+							 
+							 var leng = $("#search_input").val().length;
+														
+							 var str ="";
+							
+								 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: #fed189; font-weight: bold;'>" +word.substr(index, leng)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+leng) + "</span>"; 
+								
+								 if(entryIndex == 0){
+									 html2 += "<span class='lite' style='font-weight: bold; font-size: 15pt; color: gray;'>Project</span>"
+									 html2 += "<br/><a href='#'>"+str+"</a>";
+								 }
+								 else{
+									 html2 += "<a href='#'>"+str+"</a>";	 
+								 }
+								 
+								 
+								 						 
 						 });
 						 
+						 if(json.length > 2){
+							 html2 += "<li><button type='button' id='btnMoreMemberSearch' value=''>더보기</button></li>";
+						 }
+						 
+						 html2 += "<li class='divider'></li>";
+							 
+						/*  $("#teamSearch").html(html); */
+							 
+					 }
+					 else{
+						 
+						 $("#drop_project").hide();
 						 
 					 }
-				 },
-				 error: function(request, status, error){
-						alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
-				 }
-				 						 
-			 });
-			 
-			 
-			 $.ajax({
-					
-				 url: "<%= request.getContextPath() %>/cardSearch.action",
-				 type: "get",
-				 data: form_data,
-				 dataType: "JSON",
-				 success: function(json){
-						
-					 var html = "";
 					 
-					 if(json.length > 0){
-						 
-						 $.each(json, function(entryIndex, entry){
-							 html += "<li>"+entry.card_name+"</li>";
-							 
-							 $("#cardSearch"+entryIndex).html(html);
-							 							
-						 });
-						 
-						 
-					 }
-				 },
-				 error: function(request, status, error){
-						alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
-				 }
-				 						 
-			 }); --%>
-	 
-		 /* }); */
-		 
-	});
-		
-		
-	
+					 /* $("#drop_project").html(html2); */
+					 $("#drop_project").append(html2);
+					 
+					 $("#btnMoreProject").val( parseInt(start) + len );
+					 
+					 $("#countProject").text( parseInt( $("#countProject").text()) + json.length );
 
+					 if($("#totalProjectCount").text() == $("#countProject").text()){
+						 
+						 $("#btnMoreProject").text("처음으로");
+						 $("#countProject").text("0");
+						 
+					 }
+					 
+					 
+					 
+				 },
+				 error: function(request, status, error){
+						alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
+				 }
+				 						 
+			 }); 
+			 
+			  $.ajax({
+					
+					 url: "<%= request.getContextPath() %>/listSearch.action",
+					 type: "get",
+					 data: form_data,
+					 dataType: "JSON",
+					 success: function(json){
+												 					 
+						 var html3 = "";
+						
+						 console.log("listSearch.action 확인" + json.length);
+						 
+						 if(json.length > 0){
+											 
+							 $.each(json, function(entryIndex, entry){
+														 
+								 word = entry.list_name.trim();
+								 // "ajax 프로그래밍"
+									
+								 var index = word.toLowerCase().indexOf( $("#search_input").val().toLowerCase() ); // 해당 문자열을 전부 다 소문자로 바꾸는 자바스크립트 함수 (toUpperCase())
+								 
+								 
+								 var leng = $("#search_input").val().length;
+															
+								 var str ="";
+								
+									 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: #fed189; font-weight: bold;'>" +word.substr(index, leng)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+leng) + "</span>"; 
+									
+									 if(entryIndex == 0){
+										 html3 += "<span class='lite' style='font-weight: bold; font-size: 15pt; color: gray;'>List</span>"
+										 html3 += "<br/><a href='#'>"+str+"</a>";
+									 }
+									 else{
+										 html3 += "<a href='#'>"+str+"</a>";	 
+									 }
+									 
+									 
+									 						 
+							 });
+							 
+							 if(json.length > 2){
+								 html3 += "<li><button type='button' id='btnMoreMemberSearch' value=''>더보기</button></li>";
+							 }
+							 
+							 html3 += "<li class='divider'></li>";
+								 
+							/*  $("#teamSearch").html(html); */
+								 
+						 }
+						 else{
+							 
+							 $("#drop_list").hide();
+							 
+						 }
+						 
+						 /* $("#drop_list").html(html3); */
+						 $("#drop_list").append(html3);
+						 
+						 $("#btnMoreList").val( parseInt(start) + len );
+						 
+						 $("#countList").text( parseInt( $("#countList").text()) + json.length );
+
+						 if($("#totalListCount").text() == $("#countList").text()){
+							 
+							 $("#btnMoreList").text("처음으로");
+							 $("#countList").text("0");
+							 
+						 }	
+						 
+						 
+						 
+					 },
+					 error: function(request, status, error){
+							alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
+					 }
+					 						 
+				 });
+			  
+			  
+			  
+			  $.ajax({
+					
+					 url: "<%= request.getContextPath() %>/cardSearch.action",
+					 type: "get",
+					 data: form_data,
+					 dataType: "JSON",
+					 success: function(json){
+												 					 
+						 var html4 = "";
+						
+						 console.log("cardSearch.action 확인" + json.length);
+						 
+						 if(json.length > 0){
+											 
+							 $.each(json, function(entryIndex, entry){
+								
+								 if(( entry.card_title.trim() ).indexOf($("#search_input").val()) != -1 ){
+									 word = entry.card_title.trim();	 
+								 }
+								 else if(( entry.card_userid.trim() ).indexOf($("#search_input").val()) != -1 ){
+									 word = entry.card_userid.trim();
+								 }
+								
+								 // "ajax 프로그래밍"
+									
+								 var index = word.toLowerCase().indexOf( $("#search_input").val().toLowerCase() ); // 해당 문자열을 전부 다 소문자로 바꾸는 자바스크립트 함수 (toUpperCase())
+								 
+								 
+								 var leng = $("#search_input").val().length;
+															
+								 var str ="";
+								
+									 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: #fed189; font-weight: bold;'>" +word.substr(index, leng)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+leng) + "</span>"; 
+									
+									 if(entryIndex == 0){
+										 html4 += "<span class='lite' style='font-weight: bold; font-size: 15pt; color: gray;'>Card</span>"
+										 html4 += "<br/><a href='#'>"+str+"</a>";
+									 }
+									 else{
+										 html4 += "<a href='#'>"+str+"</a>";	 
+									 }
+									 
+									 
+									 						 
+							 });
+							 
+							 if(json.length > 2){
+								 html4 += "<li><button type='button' id='btnMoreMemberSearch' value=''>더보기</button></li>";
+							 }
+							 
+							 html4 += "<li class='divider'></li>";
+								 
+							/*  $("#teamSearch").html(html); */
+								 
+						 }
+						 else{
+							 
+							 $("#drop_card").hide();
+							 
+						 }
+						 
+						 /* $("#drop_card").html(html4); */
+						 $("#drop_card").append(html4);
+						 
+						 $("#btnMoreCard").val( parseInt(start) + len );
+						 
+						 $("#countCard").text( parseInt( $("#countCard").text()) + json.length );
+
+						 if($("#totalCardCount").text() == $("#countCard").text()){
+							 
+							 $("#btnMoreCard").text("처음으로");
+							 $("#countCard").text("0");
+							 
+						 }	
+						 
+						 
+						 
+					 },
+					 error: function(request, status, error){
+							alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
+					 }
+					 						 
+				 }); 
+			  
+			  console.log(start);
+			  --%>
+				 $.ajax({
+					
+					 url: "<%= request.getContextPath() %>/memberSearch.action",
+					 type: "get",
+					 data: form_data,
+					 dataType: "JSON",
+					 success: function(json){
+												 					 
+						 var html5 = "";
+						
+						 if(json.length > 0){
+														 
+							 $.each(json, function(entryIndex, entry){
+								
+								 if(( entry.userid.trim() ).indexOf($("#search_input").val()) != -1 ){
+									word = entry.userid.trim(); 	 
+								 }
+								 else if(( entry.name.trim() ).indexOf($("#search_input").val()) != -1 ){
+									word = entry.name.trim(); 	 
+								 }
+								 else if(( entry.nickname.trim() ).indexOf($("#search_input").val()) != -1 ){
+									word = entry.nickname.trim(); 	 
+								 }
+								 									
+								 var index = word.toLowerCase().indexOf( $("#search_input").val().toLowerCase() ); // 해당 문자열을 전부 다 소문자로 바꾸는 자바스크립트 함수 (toUpperCase())
+								 								 
+								 var leng = $("#search_input").val().length;
+															
+								 var str ="";
+								
+									 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: #fed189; font-weight: bold;'>" +word.substr(index, leng)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+leng) + "</span>"; 
+									
+									 var imgsrc = "<%= request.getContextPath() %>/resources/img/";
+									 
+									 if(entryIndex == 0){
+										 
+										 html5 += "<span class='lite' style='font-weight: bold; font-size: 15pt; color: gray;'>Member</span>"
+										 /* html5 += "<br/><img src='"+imgsrc+entry.profilejpg+"' alt='Avatar' class='avatar' />"; */
+										 html5 += "<br/><img src='"+imgsrc+"avatar1.jpg' alt='Avatar' class='avatar' />";
+										 
+										 
+										 if(( entry.userid.trim() ).indexOf($("#search_input").val()) != -1 ){
+											 html5 += "<a href='#'style='float: left;'>"+str+"("+entry.nickname+") - "+entry.name+"</a>";	 
+										 }
+										 else if(( entry.name.trim() ).indexOf($("#search_input").val()) != -1 ){
+											 html5 += "<a href='#'style='float: left;'>"+entry.userid+"("+entry.nickname+") - "+str+"</a>";	 
+										 }
+										 else if(( entry.nickname.trim() ).indexOf($("#search_input").val()) != -1 ){
+											 html5 += "<a href='#'style='float: left;'>"+entry.userid+"("+str+") - "+entry.name+"</a>"; 	 
+										 }
+										 
+									 }
+									 else{
+										 
+										 /* html5 += "<br/><span style='float= left;'><img src='"+imgsrc+"avatar1.jpg' alt='Avatar' class='avatar' /></span>"; */
+										 html5 += "<br/><img style='float= left;' src='"+imgsrc+"avatar1.jpg' alt='Avatar' class='avatar' />";
+										 
+										 if(( entry.userid.trim() ).indexOf($("#search_input").val()) != -1 ){
+											 html5 += "<a href='#'style='float: left;'>"+str+"("+entry.nickname+") - "+entry.name+"</a>";	 
+										 }
+										 else if(( entry.name.trim() ).indexOf($("#search_input").val()) != -1 ){
+											 html5 += "<a href='#'style='float: left;'>"+entry.userid+"("+entry.nickname+") - "+str+"</a>";	 
+										 }
+										 else if(( entry.nickname.trim() ).indexOf($("#search_input").val()) != -1 ){
+											 html5 += "<a href='#'style='float: left;'>"+entry.userid+"("+str+") - "+entry.name+"</a>"; 	 
+										 }
+										 
+									 }
+									 						 
+							 }); // end of $.each()-----------------------------------------------------------------------------------
+							 	
+							 
+							 
+							 html5 += "<li class='divider'></li>";
+								 
+														
+							 $("#drop_member").html(html5);
+							  
+						 }
+						 else{
+							 
+							 $("#drop_member").hide();
+							 
+						 }
+						 
+						  $("#drop_member").html(html5); 
+						 
+						 /*  $("#drop_member").append(html5); */
+						 
+						 /* $("#btnMoreMember").val( parseInt(start) + len );
+						 
+						 $("#countMember").text( parseInt( $("#countMember").text()) + json.length );
+	
+						 if($("#totalMemberCount").text() == $("#countMember").text()){
+							 
+							 $("#btnMoreMember").text("처음으로");
+							 $("#countMember").text("0");
+							 
+						 }  */
+						 
+					 },
+					 error: function(request, status, error){
+							alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
+					 }
+					
+				 }); // end of memberSearch.action $.ajax()-----------------------------------------------------------
+			  
+				 
+				  /* $("#btnMoreMember").val( parseInt(start) + len );
+				 
+				 $("#countMember").text( parseInt( $("#countMember").text()) + json.length );
+
+				 if($("#totalMemberCount").text() == $("#countMember").text()){
+					 
+					 $("#btnMoreMember").text("처음으로");
+					 $("#countMember").text("0"); 
+					 
+				 } */
+				 
+				   $("#drop").show(); 
+		 	});// end of $("#search_input").keyup()-------------------------------------------------------------------
+			 
+			/*  $("#search_input").blur(function(){
+				 
+				  $("#search_input").val("");
+				  
+			 }); // end of $("#search_input").blur()--------------------------------------------------------------------
+			 */
+		
+		 $("#drop").click(function(event){
+			
+			 var word = "";
+			 
+			 var $target = $(event.target);
+			 
+			 if($target.is(".first")){
+				 word = $target.text() + $target.next().text() + $target.next().next().text();
+			 }
+			 else if($target.is(".second")){
+				 word = $target.prev().text() + $target.text() + $target.next().text();
+			 }
+			 else if($target.is(".third")){
+				 word = $target.prev().prev().text() + $target.prev().text() + $target.text();
+			 }
+			 
+			 $("#search_input").val(word);
+			 
+			 $("#drop").hide();
+			 
+			 /* goSearch(word); */
+			 			 
+		 }); // end of $("#drop").click()----------------------------------------------------
+		 
+	}); // end of $(document).ready()----------------------------------------------------------
+	
+	/* function goSearch(word){
+		
+		var frm = document.searchFrm;
+		
+		frm.search_input.value = word;
+		frm.method = "GET";
+		frm.action = "search_input.action";
+		// frm.submit();
+		
+	}//  end of goSearch(word)-----------------------------------------------------------------
+	 */
+	
+	
 	// 팀 리스트와 프로젝트 리스트를 보여주는 함수
 	function teamlistButton(){
 		
@@ -462,6 +744,8 @@
 		
 	}
 	
+	
+	
 
  
 </script>
@@ -535,7 +819,7 @@
         <ul class="nav top-menu">
            <li>
 	           <div style="border : 0px solid red; width: 300px;"> 
-		            <form class="navbar-form">
+		            <form class="navbar-form" name="searchFrm">
 		              <input class="form-control" id="search_input" name="search_input" data-toggle="dropdown" placeholder="Search" type="text" style="height: 35px;">
 			        </form>
 		        </div> 
@@ -552,8 +836,28 @@
 		   <!--  <li class="list-group-item">First item</li>
 		    <li class="list-group-item">Second item</li>
 		    <li class="list-group-item">Third item</li> -->
+		    
+				<%-- <c:if test="${sessionScope.teamListCount > 2 }"></c:if>
+					<li id="drop_team"></li>
+				    <li><a class="btn btn-default btn-sm btnMore" id="btnMoreTeam" >Team More</a></li>
+				<c:if test="${sessionScope.teamListCount < 2 }">
+					<li id="drop_team"></li>
+				</c:if>	 --%>			
+		    <!-- <li id="drop_project"></li>
+		    
+				    <li><a class="btn btn-default btn-sm btnMore" id="btnMoreProject" >Project More</a></li>
+		    <li id="drop_list"></li>
+				    <li><a class="btn btn-default btn-sm btnMore" id="btnMoreList" >List More</a></li>
+		    <li id="drop_card"></li>
+				    <li><a class="btn btn-default btn-sm btnMore" id="btnMoreCard" >Card More</a></li> -->
+		    		<li id="drop_member"></li>
+				    <c:if test="${sessionScope.memberListCount > 2 }">
+				    	<li><a class="btn btn-default btn-sm btnMore" id="btnMoreMember">Member More</a></li>
+				    </c:if>
 		  </ul>
 		</div>
+		
+		
 		
 		<!-- <a href="#" class="list-group-item">Second item</a>
 		    <a href="#" class="list-group-item">Third item</a> -->
@@ -789,7 +1093,7 @@
           </li> 
           
           <li>
-          <img src="<%=request.getContextPath() %>/resources/img/avatar1.jpg" alt="Avatar" class="avatar" />
+          <img src="<%= request.getContextPath() %>/resources/img/avatar1.jpg" alt="Avatar" class="avatar" />
           </li>
           <!-- user login dropdown end -->
                     <!-- task notificatoin start -->
@@ -882,6 +1186,6 @@
         <!-- notificatoin dropdown end-->
       </div>
     </header>
-    </c:if>  
+    </c:if> 
     <!--header end-->
 	
