@@ -23,25 +23,21 @@
     
 <script type="text/javascript">
 
-   // name, content, regDate
-   function goWrite() {
-   // 유효성 검사
-      var frm = document.addWriteFrm;
+    function reply() {
+
+      var frm = document.replyFrm;
       
-      var nameval = frm.name.value.trim();
+      var qna_fk_idx = $("#qna_fk_idx").val();
       
-      if(nameval == "") {
-         alert("로그인을 하세요!!!");
-         return;
-      }
-   }  
-   
-   
-    function deletQna(qna_idx){
-    	
-    	
-    	
-    	
+   //   console.log(qna_fk_idx);
+      frm.action="goWrite.action";
+      frm.method = "post";
+      frm.submit();
+
+   }   
+
+    function deleteQna(qna_idx){
+
     	// 팝업창을 띄운 뒤 한 번 더 묻고 예/아니오 예라고 선택했을 때 del
     	var qna_idx = ${qnavo.qna_idx};
     	var frm = document.delFrm;
@@ -51,10 +47,7 @@
     	frm.submit();
     	
     }
-   
-      
-   
-     
+    
 </script>   
 
 <div style="padding-left: 10%;">
@@ -68,7 +61,7 @@
         </tr>     
         <tr>
             <th  style="width: 70px; text-align: center;">성명</th>
-            <td>${sessionScope.loginuser.name}</td>
+            <td>${qnavo.fk_userid}</td>
         </tr>          
         <tr>
             <th  style="width: 70px; text-align: center;">제목</th>
@@ -86,10 +79,10 @@
         <tr>
             <th>첨부파일</th>
             <td>
-                <c:if test="${sessionScope.loginuser != null}">
-                   <a href="<%= request.getContextPath() %>/download.action?qna_idx=${qnavo.qna_idx}">${qnavo.qna_orgfilename}</a>
+                <c:if test="${sessionScope.loginuser.userid != null}">
+                  <a href="<%= request.getContextPath() %>/download.action?qna_idx=${qnavo.qna_idx}">${qnavo.qna_orgfilename}</a>
                 </c:if>
-                <c:if test="${sessionScope.loginuser == null}">
+                <c:if test="${sessionScope.loginuser.userid == null}">
                    ${qnavo.qna_orgfilename}
                 </c:if>
             </td>
@@ -104,21 +97,36 @@
    
    
    <br/>
-   <button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/qna.action'">목록보기</button>
-   <button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/editQna.action?qna_idx=${qnavo.qna_idx}'">수정</button>  
-   <button type="button" onClick="deletQna('${qnavo.qna_idx}')">삭제</button>
-   
-   <br/>
-   <br/>
-   
-   
+   <button type="button" class="btn btn-primary btn-sm" onClick="javascript:location.href='<%= request.getContextPath() %>/qna.action'">목록보기</button>
+   <c:if test="${!sessionScope.loginuser.userid.equals('admin') }">
+	   <button type="button" class="btn btn-primary btn-sm" onClick="javascript:location.href='<%= request.getContextPath() %>/editQna.action?qna_idx=${qnavo.qna_idx}'">수정</button>  
+	   <button type="button" class="btn btn-primary btn-sm" onClick="deleteQna('${qnavo.qna_idx}')">삭제</button>
+   </c:if>
    <!-- ==== #120. 답변글쓰기 버튼 추가하기(현재 보고 있는 글이 작성하려는 답변글의 원글(부모글)이 된다. ) ==== -->
  <%--    <button type="button" onClick="javascript:location.href='<%= request.getContextPath() %>/goWrite.action">답변글쓰기</button> --%>
-    <button id="goWrite"type="button" class="btn btn-dark btn-sm"  onClick="location.href='<%=request.getContextPath() %>/goWrite.action'">답변글쓰기</button>
-                                                                                                       <!--  부모글의 값을 받기 때문에 qnavo를 불러서 넣는다. 그리고 fk_seq는 참조키가 아닌 seq랑 같은 것이기 때문에 seq를 넣음. -->
+    <c:if test="${sessionScope.loginuser.userid.equals('admin') }">
+          <button id="goWrite"type="button" class="btn btn-primary btn-sm"  onClick="reply();">답변글쓰기</button>
+     </c:if>                                                                                                  <!--  부모글의 값을 받기 때문에 qnavo를 불러서 넣는다. 그리고 fk_seq는 참조키가 아닌 seq랑 같은 것이기 때문에 seq를 넣음. -->
+   <br/> 
    <br/>
    
 </div>
+
+<%-- 삭제 form --%>
+<form name="delFrm">
+  <input type="hidden" name="qna_idx" />
+</form>
+
+<%-- 답글 form --%>
+<form name="replyFrm">
+  <input type="text" id="qna_fk_idx" name="qna_fk_idx" value="${qnavo.qna_fk_idx}" />
+  <input type="text" name="qna_groupno" value="${qnavo.qna_groupno}" />
+  <input type="text" name="qna_depthno" value="${qnavo.qna_depthno}" />
+ <%--  <input type="hidden" name="qna_idx" value="${qna_idx}" /> --%>
+</form>
+
+
+
 
 <script src="resources/jihye/bootstrap4/popper.js"></script> 
 <script src="resources/jihye/bootstrap4/bootstrap.min.js"></script>
@@ -127,6 +135,3 @@
 <script src="resources/jihye/checkout_custom.js"></script>
 
 
-<form name="delFrm">
-  <input type="hidden" name="qna_idx" />
-</form>

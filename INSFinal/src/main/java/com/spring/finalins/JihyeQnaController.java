@@ -1,4 +1,4 @@
-package com.spring.finalins;
+ package com.spring.finalins;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,7 +43,7 @@ public class JihyeQnaController {
     private FileManager fileManager;	
 
 
-	// 회원 - qna 페이지
+	// 회원 - qna 목록 보여주기
 	@RequestMapping(value="/qna.action", method= {RequestMethod.GET})
 	public String requireLogin_qna(HttpServletRequest req, HttpServletResponse res) {
 
@@ -51,22 +51,58 @@ public class JihyeQnaController {
 		HttpSession session = req.getSession();
 		MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
 		
-		String userid = null;
+		String userid = loginuser.getUserid(); 
 		List<QnaVO> qnaList = null;
 
-		if (loginuser != null) {
-			userid = loginuser.getUserid();	
-        	qnaList = service.qnaList(userid);  //QnA목록 보여주기
+		//QnA목록 보여주기
+		if ( !userid.equalsIgnoreCase("admin") ) { // 회원인 경우
+        	qnaList = service.qnaList(userid);  
 		}
-		
+		else { // admin인 경우
+		     qnaList = service.qnaList();
+		}
+
 		req.setAttribute("qnaList", qnaList);
 		
 		return "jihye/qna.tiles";
 	}
 	
+	
+	
+	 // ======= #61. 글 1개를 보여주는 페이지 요청하기 =====
+    @RequestMapping(value = "/view.action", method = { RequestMethod.GET})
+    public String requireLogin_view(HttpServletRequest req,  HttpServletResponse res) {
+
+        HttpSession session = req.getSession();
+ 		MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
+ 		String userid = loginuser.getUserid();
+
+ 	    String qna_idx = req.getParameter("qna_idx"); // 글번호 받아오기
+ 	    QnaVO qnavo = service.getView(qna_idx);
+ 		
+ 	      if(!qnavo.getFk_userid().equals(userid) && !userid.equalsIgnoreCase("admin")) {
+ 			
+ 	    	 String msg = "경로가 잘못되었습니다.</br>다른 사용자의 문의 글을 볼 수 없습니다.";
+			String loc = "javascript:history.back();";
+
+			req.setAttribute("msg", msg);
+			req.setAttribute("loc", loc);
+
+			return "msg.notiles";
+			
+         }else if(qnavo.getFk_userid().equals(userid) || userid.equals("admin")) {
+ 	         qnavo = service.getView(qna_idx);
+ 	         req.setAttribute("qnavo", qnavo);  
+         }
+ 	      
+ 	     return "jihye/view.tiles"; 
+        
+    }
+
+	
 		
 	  // 글쓰기 페이지 요청하기
-      @RequestMapping(value="/goWrite.action", method={RequestMethod.GET})
+      @RequestMapping(value="/goWrite.action", method={RequestMethod.POST})
       public String requireLogin_writeQna(HttpServletRequest req, HttpServletResponse res) {
          
          // 처음에 글쓰기(원글)은 아래 fk_seq/groupno/depthno 값이 없다.
@@ -74,12 +110,19 @@ public class JihyeQnaController {
          // 그러나 답변 글쓰기 경우 위의 세가지 값을 뷰단에서 받아서 컨트롤러로 넘긴다.
       //   System.out.println("확인용입니다.");
 
+    	  String qnavo = req.getParameter("qnavo");
+    	  
+    	  
          // ===== #121. 답변글쓰기 추가 되었으므로 아래와 같이 한다(시작). =======
-         String fk_qna_category_idx = req.getParameter("fk_qna_category_idx");
+         String qna_fk_idx = req.getParameter("qna_fk_idx");
          String qna_groupno = req.getParameter("qna_groupno");
          String qna_depthno = req.getParameter("qna_depthno");
+         
+         System.out.println("qna_fk_idx"+qna_fk_idx);
+         System.out.println("qna_groupno"+qna_groupno);
+         System.out.println("qna_depthno"+qna_depthno);
 
-         req.setAttribute("fk_qna_category_idx", fk_qna_category_idx);
+         req.setAttribute("qna_fk_idx", qna_fk_idx);
          req.setAttribute("qna_groupno", qna_groupno);
          req.setAttribute("qna_depthno", qna_depthno);
 
@@ -95,6 +138,15 @@ public class JihyeQnaController {
       public String writeEnd(QnaVO qnavo,MultipartHttpServletRequest req,  HttpSession session, HttpServletResponse res) {
 	  //requireLogin_
     	  
+    	   String qna_fk_idx = req.getParameter("qna_fk_idx");
+           String qna_groupno = req.getParameter("qna_groupno");
+           String qna_depthno = req.getParameter("qna_depthno");
+           
+           System.out.println("qna_fk_idx"+qna_fk_idx);
+           System.out.println("qna_groupno"+qna_groupno);
+           System.out.println("qna_depthno"+qna_depthno);
+
+   
     	  
           MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
           String userid = null;
@@ -197,6 +249,13 @@ public class JihyeQnaController {
     		         // VO를 사용하면 편함
     		         String qna_content = qnavo.getQna_content().replaceAll("\r\n", "<br/>");
     		         qnavo.setQna_content(qna_content);
+    		         
+    		         qnavo.setQna_depthno(qna_depthno);
+    		         qnavo.setQna_fk_idx(qna_fk_idx);
+    		         qnavo.setQna_groupno(qna_groupno);
+    		         
+    		         System.out.println("qnavo 그룹넘버"+qnavo.getQna_groupno());
+    		         
 
     		         int n = 0;
 
@@ -228,41 +287,6 @@ public class JihyeQnaController {
     			return "msg.notiles";
     		}
         
-      }
-      
-      
-      
-      // ======= #61. 글 1개를 보여주는 페이지 요청하기 =====
-      @RequestMapping(value = "/view.action", method = { RequestMethod.GET})
-      public String requireLogin_view(HttpServletRequest req,  HttpServletResponse res) {
-
-        HttpSession session = req.getSession();
-   		MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
-
-   	    String qna_idx = req.getParameter("qna_idx"); // 글번호 받아오기
-   	   QnaVO qnavo = service.getView(qna_idx);
-   		
-   			if (!qnavo.getFk_userid().equals(loginuser.getUserid())) {
-
-   				String msg = "경로가 잘못되었습니다.(다른 사용자의 문의 글을 볼 수 없습니다.";
-   				String loc = "javascript:history.back();";
-
-   				req.setAttribute("msg", msg);
-   				req.setAttribute("loc", loc);
-
-   				return "msg.notiles";
-   			
-   			} else { 
-
-   	         // 조회수 1증가 없이 그냥 글 1개를 가져오는 것
-   	         qnavo = service.getView(qna_idx);// 조회수 증가가 필요없으니까 userid가 필요하지 않다.
-
-   	         req.setAttribute("qnavo", qnavo);
-   	   
-   	         return "jihye/view.tiles"; // sideinfo 가 없이 만든다.
-
-   			}
-      
       }
 
       
@@ -346,7 +370,7 @@ public class JihyeQnaController {
   	
  // ====== #77. 글삭제 페이지 요청 =====
  	@RequestMapping(value = "/del.action", method = { RequestMethod.POST})
- 	public String requiredLogin_del(HttpServletRequest req, HttpServletResponse res) { // LoginCheck.java 체크할때 파라미터가
+ 	public String requireLogin_del(HttpServletRequest req, HttpServletResponse res) { // LoginCheck.java 체크할때 파라미터가
  																						// 두개였었다.
 
  		// 삭제해야할 글번호 가져오기
@@ -398,42 +422,38 @@ public class JihyeQnaController {
 
  	}
 
-/* 	// ====== #78. 글삭제 페이지 완료하기 =====
- 	@RequestMapping(value = "/delEnd.action", method = { RequestMethod.POST })
- 	public String requiredLogin_delEnd(HttpServletRequest req, HttpServletResponse res) throws Throwable {
-
- 		
- 		 * 글 삭제를 하려면 원본 글의 암호와 삭제시 입력된 암호가 일치할때만 삭제가 가능하도록 해야 한다. 서비스단에서 글삭제를 처리한 결과를
- 		 * int타입으로 받아오겠다.
- 		 
- 		String qna_idx = req.getParameter("qna_idx");
- 	
- 		
- 	}
-*/
-      
-
-      
 	
    // ==== #148. 첨부파일 다운로드 받기 =====
-  	@RequestMapping(value = "/download.action", method = { RequestMethod.GET })
-  	public void requiredLogin_download(HttpServletRequest req, HttpServletResponse res) {
-  		// 다운만 받으면 끝나기 때문에 페이지 이동도 없고 리턴타입이 없다. 그냥 void
+  	@RequestMapping(value = "/download.action", method = { RequestMethod.GET})
+  	public String requireLogin_download(HttpServletRequest req, HttpServletResponse res) {
+      
+  		HttpSession session = req.getSession();
+  		MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
+  		
+  		String userid = loginuser.getUserid();
 
   		String qna_idx = req.getParameter("qna_idx");  // get방식 주소창에 seq로 받았으니까 받는 것도seq이다!!
   		// 첨부파일이 있는 글번호
 
-  	//	System.out.println(">>>>>>>>>>" + qna_idx);
-
   		QnaVO qnavo = service.getView(qna_idx);
 
+  		// 유효성 검사: 글쓴 유저가 아닌 사람은 다운로드가 불가능하다.
+  		if(!userid.equalsIgnoreCase(qnavo.getFk_userid()) && !userid.equalsIgnoreCase("admin")) {
+  			String msg = "다운로드가 불가합니다.";
+			String loc = "javascript:history.back()";
+
+			req.setAttribute("msg", msg);
+			req.setAttribute("loc", loc);
+
+			return "msg.notiles";
+  		}
+  		
+  		
   		String qna_filename = qnavo.getQna_filename();
   		String qna_orgfilename = qnavo.getQna_orgfilename();
 
   		// WAS(톰캣)의 webapp 의 절대경로를 알아와야 한다.
-  		HttpSession session = req.getSession(); // 파라미터에 HttpSession session을 넣어도 되고 이런식으로 불러와도 된다. 상관없다.
-
-  		String root = session.getServletContext().getRealPath("/"); // /는 첫번째 경로를 말한다. 확장자.java //
+        String root = session.getServletContext().getRealPath("/"); // /는 첫번째 경로를 말한다. 확장자.java //
   																	// session.getServletContext().getRealPath("/"); ==
   																	// 절대경로
   		String path = root + "resources" + File.separator + "files"; // path 는 업로드 되는 곳
@@ -462,11 +482,13 @@ public class JihyeQnaController {
 
   		}
   		
-  	
+  		return null;
+  		
+	}
   		
   		
 
-  	}
+ 
   	
   	
   	

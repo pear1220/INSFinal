@@ -43,6 +43,34 @@
 
 <style>
 
+ ul {
+  list-style: none;
+  margin-left: 0;
+ }
+ ul > li {
+  display: inline-block;
+ }
+ ul > li > a {
+  color: #fff;
+  text-decoration: none;
+  display: block;
+  padding: 5px 10px;
+  background-color: #888;
+ }
+ ul > li:hover > a,
+ ul > li:focus > a,
+ ul > li:active > a,
+ ul > li.active >a {
+  color: yellow;
+  background-color: #000;
+ }
+
+
+
+
+
+
+
 .grid-container {
   display: grid;
   /* grid-gap: 10px; */
@@ -155,12 +183,18 @@
 <script>
 
  $(document).ready(function(){
+	 
+	 var sBtn = $(".ccc > li");    //  ul > li 이를 sBtn으로 칭한다. (클릭이벤트는 li에 적용 된다.)
+	  sBtn.find("a").click(function(){   // sBtn에 속해 있는  a 찾아 클릭 하면.
+	   sBtn.removeClass("active");     // sBtn 속에 (active) 클래스를 삭제 한다.
+	   $(this).parent().addClass("active"); // 클릭한 a에 (active)클래스를 넣는다.
+	  })
     
-    $("li").click(function(){
+/*     $("li").click(function(){
 
        $(this).addClass("active");
     }); 
-    
+     */
    /*  $("#a").click(function(){
        $("#clickActive1").addClass("active");
     });
@@ -175,6 +209,7 @@
 }
  */
 
+
 </script>
 
 
@@ -183,6 +218,7 @@
   <div class="grid-item item1"> <!--grid-item  -->
      <div class="avatar2" style="border: 3px solid black;"> <!-- 이미지가 있을 div 공간을 동그랗게 만드는 방법 -->
         <img src="<%= request.getContextPath() %>/resources/img/Spain.png" alt="Avatar2"  class="avatar2">
+        <span>야 야야야</span>
      <%--  이미지를 라운드 크기로 만드는 방법 
         <img src="<%= request.getContextPath() %>/resources/img/Spain.png" alt="Avatar" class="avatar"> --%>
        <div class="attach1" style="3px solid red; " >
@@ -223,10 +259,18 @@
  <%-- 상단에 탭메뉴이다. 탭을 클릭하면 링크타고 페이지 이동한다. --%> 
 <div class="navtab" align="center">        
     <ul class="nav nav-tabs abc">
-       <li><a id="a" data-toggle="tab1" href="<%= request.getContextPath() %>/mypage.action">Profile</a></li>
-       <li><a id="b"  data-toggle="tab2" href="<%= request.getContextPath() %>/qna.action">Q&A</a></li>
-       <li><a id="a" data-toggle="tab3" href="<%= request.getContextPath() %>/setting.action">Setting</a></li>
-       <li><a id="a"data-toggle="tab4" href="<%= request.getContextPath() %>/edit.action">Edit</a></li> 
+        <c:if test="${sessionScope.loginuser.userid.equals('admin') }">  
+            <li><a id="ccc"data-toggle="tab5" href="<%= request.getContextPath() %>/managementMember.action">Management</a></li> 
+       </c:if>
+       <c:if test="${!sessionScope.loginuser.userid.equals('admin') }">  
+	       <li><a id="ccc" data-toggle="tab1" href="<%= request.getContextPath() %>/mypage.action">Profile</a></li>
+	       <li><a id="ccc"data-toggle="tab4" href="<%= request.getContextPath() %>/edit.action">Edit</a></li> 
+       </c:if> 
+       
+	       <li><a id="ccc"  data-toggle="tab2" href="<%= request.getContextPath() %>/qna.action">Q&A</a></li>
+	       <li><a id="ccc" data-toggle="tab3" href="<%= request.getContextPath() %>/setting.action">Setting</a></li>
+  
+    
    </ul>   
 </div>  
  

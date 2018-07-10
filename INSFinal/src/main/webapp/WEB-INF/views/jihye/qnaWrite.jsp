@@ -73,6 +73,10 @@ table, th, td, input, textarea {border: solid gray 1px;}
            
          // form 전송하기
          var frm = document.WriteFrm;
+         
+         
+         
+         
          frm.action= "<%= request.getContextPath() %>/writeEnd.action";
          frm.method= "post";
          frm.submit();
@@ -969,9 +973,9 @@ table, th, td, input, textarea {border: solid gray 1px;}
       <br/>
       
 				      <%-- ==== #122. 답변글쓰기인 경우 부모글의 seq값이 fk_seq값, 부모글의  groupno 값과 부모글의 depthno 값을 hidden 타입으로 보내준다. =====   --%>
-				      <input type="hidden" name="qna_fk_idx"   value="${qna_fk_idx}"  />   
-				      <input type="hidden" name="qna_groupno"  value="${qna_groupno}" />
-				      <input type="hidden" name="qna_depthno"  value="${qna_depthno}" />
+				      <input type="text" id="qna_fk_idx" name="qna_fk_idx"   value="${qna_fk_idx}"  />   
+				      <input type="text"  id="qna_groupno" name="qna_groupno"  value="${qna_groupno}" />
+				      <input type="text" name="qna_depthno"  value="${qna_depthno}" />
 				      
 				      <div id="writeqna">
 				      <button type="button" class="btn btn-dark btn-sm"  id="btnWrite">쓰기</button>

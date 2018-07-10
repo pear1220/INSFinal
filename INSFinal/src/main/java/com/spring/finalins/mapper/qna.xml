@@ -6,7 +6,7 @@
 <!-- ==== #27. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
 <mapper namespace="qna">
  
-  <!-- 테이블 조인시 이렇게 해야 하는데 겨우 컬럼 하나 가지고 하기엔 낭비라 생각해 jsp페이지에서 if절을 줄 것이다. -->
+ <!-- 테이블 조인시 이렇게 해야 하는데 겨우 컬럼 하나 가지고 하기엔 낭비라 생각해 jsp페이지에서 if절을 줄 것이다. -->
  <!--  <resultMap type="HashMap" id="getQnaListMap">
 	<result property="QNA_IDX" 	column="qna_idx" 	javaType="String" />
  	<result property="FK_USERID" 	column="fk_userid" 	javaType="String" />
@@ -29,12 +29,117 @@
 	where fk_userid = #{userid}
   </select> -->
   
-  <!-- Qna 목록 보여주기 -->
+  <!-- 회원인 경우 Qna 목록 보여주기 -->
   <select id="getQnaList" parameterType="String" resultType="com.spring.finalins.qna.model.QnaVO">
     select qna_idx, fk_userid, fk_qna_category_idx , qna_title, qna_content, qna_date, qna_fk_idx, qna_depthno,  qna_filename, qna_orgfilename, qna_byte
 	from ins_QnA
 	where fk_userid = #{userid}
   </select>
+  
+  
+   <!-- admin인 경우 Qna 목록 보여주기 -->
+  <select id="getQnaListAll" resultType="com.spring.finalins.qna.model.QnaVO">
+    select qna_idx, fk_userid, fk_qna_category_idx , qna_title, qna_content, qna_date, qna_fk_idx, qna_depthno,  qna_filename, qna_orgfilename, qna_byte
+	from ins_QnA
+  </select>
+  
+  <!-- ////////////////////////////////////////////////////////////////////////////////// -->
+	<!-- ===== #142. 파일첨부가 있는 답변형 게시판 글목록 보여주기 페이징 처리(검색어가 없는 전체글목록 보여주기, 댓글의 갯수를 보여주는 것 포함)  
+	                              먼저 위의  #127. 글목록 보여주기(검색어가 있는 것 & 댓글의 갯수를 보여주는 것 포함) 를 주석처리 한 후 아래와 같이 한다.
+	              **   select문에 fileName, orgFilename, fileSize 컬럼을 추가한다.   **           ===== -->
+	      
+	<!-- <select id="boardList"  parameterType="HashMap" resultType="com.spring.board.model.BoardVO">
+	    select  seq, name, subject, readCount, regDate, commentCount
+              , groupno, fk_seq, depthno
+              , fileName, orgFilename, fileSize
+		from 
+		(
+		select rownum as RNO
+		     , V.seq, V.name, V.subject, V.content, V.readCount, V.regDate, V.commentCount
+             , V.groupno, V.fk_seq, V.depthno
+             , V.fileName, V.orgFilename, V.fileSize
+		from 
+		(
+		select seq, name 
+		     , case when length(subject) > 20 then substr(subject, 1, 18)||'..'
+		       else subject end as subject
+		     , content , readCount
+		     , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
+		     , commentCount
+             , groupno, fk_seq, depthno
+             , fileName, orgFilename, fileSize
+		from tblBoard
+		where status = 1
+	    start with fk_seq = 0
+	    connect by prior seq = fk_seq
+		order siblings by groupno desc, seq asc  
+	    ) V
+		) T  
+		where T.RNO <![CDATA[>=]]> #{startRno} and T.RNO <![CDATA[<=]]> #{endRno} 
+	</select>
+	
+	
+	<select id="boardList2" parameterType="HashMap" resultType="com.spring.board.model.BoardVO">
+	    select  seq, name, subject, readCount, regDate, commentCount
+              , groupno, fk_seq, depthno
+             , fileName, orgFilename, fileSize
+		from 
+		(
+		select rownum as RNO
+		     , V.seq, V.name, V.subject, V.content, V.readCount, V.regDate, V.commentCount
+             , V.groupno, V.fk_seq, V.depthno
+             , V.fileName, V.orgFilename, V.fileSize
+		from 
+		(
+		select seq, name 
+		     , case when length(subject) > 20 then substr(subject, 1, 18)||'..'
+		       else subject end as subject
+		     , content , readCount
+		     , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
+		     , commentCount
+             , groupno, fk_seq, depthno
+             , fileName, orgFilename, fileSize
+		from tblBoard
+		where status = 1
+		and ${colname} like '%'|| #{search} ||'%'
+	    start with fk_seq = 0
+	    connect by prior seq = fk_seq
+		order siblings by groupno desc, seq asc  
+	    ) V
+		) T  
+		where T.RNO <![CDATA[>=]]> #{startRno} and T.RNO <![CDATA[<=]]> #{endRno} 
+	</select> -->
+	
+	<!-- ////////////////////////////////////////////////////////////////////////////////// -->
+	
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
   
    <!-- ====== #125. ins_QnA 테이블의 groupno 의 max값 알아오기  ======  -->
@@ -48,11 +153,11 @@
     <insert id="write" parameterType="com.spring.finalins.qna.model.QnaVO">
       <if test='qna_fk_idx.equals("")'>
        insert into ins_QnA(qna_idx, fk_userid, fk_qna_category_idx, qna_title, qna_content, qna_date, qna_fk_idx, qna_depthno, qna_groupno)
-        values(seq_qna.nextval, #{fk_userid}, #{fk_qna_category_idx}, #{qna_title}, #{qna_content}, default, default, default, ${qna_groupno}) 
+        values(seq_qna.nextval, #{fk_userid}, #{fk_qna_category_idx}, #{qna_title}, #{qna_content}, default, default, default, #{qna_groupno}) 
       </if>   
      <if test='!qna_fk_idx.equals("")'>
         insert into ins_QnA(qna_idx, fk_userid, fk_qna_category_idx, qna_title, qna_content, qna_date, qna_fk_idx, qna_depthno, qna_groupno)
-        values(seq_qna.nextval, #{fk_userid},#{fk_qna_category_idx}, #{qna_title}, #{qna_content}, default,  #{qna_fk_idx},#{qna_depthno}+1) 
+        values(seq_qna.nextval, #{fk_userid},#{fk_qna_category_idx}, #{qna_title}, #{qna_content}, default,  #{qna_fk_idx},#{qna_depthno}+1, #{qna_groupno}) 
       </if> 
    </insert>
    

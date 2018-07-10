@@ -13,29 +13,33 @@ import com.spring.finalins.model.MemberVO;
 @Repository
 public class QnaDAO implements InterQnaDAO {
 
-	// ===== #29. 의존객체 주입하기(DI: Dependency Injection)
-	// root-context.xml 의 의존객체 설정하기에서 어떤 클래스에 주입할지 알 수 있음
-	@Autowired
-	private SqlSessionTemplate sqlsession;
+		// ===== #29. 의존객체 주입하기(DI: Dependency Injection)
+		// root-context.xml 의 의존객체 설정하기에서 어떤 클래스에 주입할지 알 수 있음
+		@Autowired
+		private SqlSessionTemplate sqlsession;
+		
 	
+		
+		// 회원인 경우  QnA목록 보여주기
+		@Override
+		public List<QnaVO> getQnaList(String userid) {
+			List<QnaVO> qnaList= sqlsession.selectList("qna.getQnaList", userid);
+			return qnaList;
+		}
+		// admin인 경우 QnA목록 보여주기
+		@Override
+		public List<QnaVO> getQnaList() {
+			List<QnaVO> qnaList= sqlsession.selectList("qna.getQnaListAll");
+			return qnaList;
+		}
 	
-	// QnA목록 보여주기
-	@Override
-	public List<QnaVO> getQnaList(String userid) {
-		List<QnaVO> qnaList= sqlsession.selectList("qna.getQnaList", userid);
-		return qnaList;
-	}
-	
-	 // ======  글쓰기(파일첨부가 없는 글쓰기) ====== 
-	   @Override
-	   public int write(QnaVO qnavo) {;
+		 // ======  글쓰기(파일첨부가 없는 글쓰기) ====== 
+	    @Override
+	    public int write(QnaVO qnavo) {;
 	      //mybatis
 	      int n = sqlsession.insert("qna.write", qnavo);
-	      
-	     
-	      
 	      return n;
-	   }
+	    }
 
 	   // =====  ins_QnA 테이블의 groupno 의 max값 알아오기 ===== 
 	   @Override
@@ -61,18 +65,18 @@ public class QnaDAO implements InterQnaDAO {
 	   }
 
 	   // 글 1개 수정하기
-	@Override
-	public int editQna(QnaVO qnavo) {
-	    int n = sqlsession.update("qna.editQna", qnavo);
-		return n;
-	}
+		@Override
+		public int editQna(QnaVO qnavo) {
+		    int n = sqlsession.update("qna.editQna", qnavo);
+			return n;
+		}
 
-	// 글 1개 삭제하기
-	@Override
-	public int del(String qna_idx) {
-		int n = sqlsession.delete("qna.del", qna_idx);
-		return n;
-	}
+		// 글 1개 삭제하기
+		@Override
+		public int del(String qna_idx) {
+			int n = sqlsession.delete("qna.del", qna_idx);
+			return n;
+		}
 
 
 	

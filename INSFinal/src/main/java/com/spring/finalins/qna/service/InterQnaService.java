@@ -10,8 +10,10 @@ import com.spring.finalins.model.MemberVO;
 public interface InterQnaService {
 	
 	
-	 List<QnaVO> qnaList(String userid); // QnA목록 보여주기
-	
+	 List<QnaVO> qnaList(String userid); // QnA목록 보여주기(회원일 경우)
+	 
+	 List<QnaVO> qnaList();// QnA목록 보여주기(admin일 경우)
+	 
 	 int write(QnaVO qnavo);// 글쓰기(파일첨부가 없는 글쓰기)
 
 	 int write_withFile(QnaVO qnavo); // 파일첨부가 있는 글쓰기(답변형 게시판)

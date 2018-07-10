@@ -86,6 +86,15 @@ $(document).ready(function(){
    frm.submit();
 } // end of function goView() */
 
+function goWrite(){
+	
+  var frm = document.qnaWriteFrm;
+      
+    frm.action="goWrite.action";
+    frm.method = "post";
+    frm.submit();
+}
+
 
 </script>  
 
@@ -97,8 +106,7 @@ $(document).ready(function(){
 
 
 <!-- QnA 게시판 -->
-<div class="super_container">
-   
+<div class="super_container"> 
    <div class="cart_container" style="padding-top: 20px;">
       <div class="container" >
          <div class="row" >
@@ -111,14 +119,14 @@ $(document).ready(function(){
                   </div>
                </div>      
                
-                  <div align="right" style="margin-bottom:15px;">
-                     <div>
-                    <c:if test="${(sessionScope.loginuser).userid != 'admin' }">
-                     <button id="goWrite"type="button" class="btn btn-dark btn-sm"  onClick="location.href='<%=request.getContextPath() %>/goWrite.action'">Q&A 글쓰기</button>
-                    <%--  <button type="button" class="btn btn-dark btn-sm"  onClick="showMine('${(sessionScope.loginuser).userid}');">나의 글 보기</button> --%>
-                    </c:if>
-                    </div>
-                  </div>
+                <div align="right" style="margin-bottom:15px;">
+	                   <div>
+		                    <c:if test="${(sessionScope.loginuser).userid != 'admin' }">
+		                     <button id="goWrite"type="button" class="btn btn-dark btn-sm"  onClick="goWrite();">Q&A 글쓰기</button>
+		                    <%--  <button type="button" class="btn btn-dark btn-sm"  onClick="showMine('${(sessionScope.loginuser).userid}');">나의 글 보기</button> --%>
+		                    </c:if>
+	                   </div>
+                 </div>
                 
                 
                 <form name="statusFrm">
@@ -141,6 +149,10 @@ $(document).ready(function(){
                           <th style="text-align: center; white-space: pre;" >작성일자</th>
                           <th style="text-align: center; white-space: pre;" >작성자</th>
                           <th style="text-align: center; white-space: pre;" >답변상태</th>
+                          <!-- ==== #144. 파일여부를 보여주도록 수정 ==== -->
+				          <th  style="width: 70px; text-align: center;">첨부파일</th>
+<!-- 				          <th  style="width: 100px; text-align: center;">크기(bytes)</th> -->
+				        
                         </tr>
                    </thead>   
                    
@@ -150,25 +162,45 @@ $(document).ready(function(){
                        </c:if> 
                        
                         <c:if test="${qnaList.size() > 0}">  
-                          <c:forEach var="qnavo" items="${qnaList}">
-                               <tr style="text-align: center;">
-                                 <td>${qnavo.qna_idx}</td>
-                              <c:if test="${qnavo.fk_qna_category_idx == 1}">  
-                                 <td>기술문의</td>
-                              </c:if>   
-                              <c:if test="${qnavo.fk_qna_category_idx == 2}"> 
-                                 <td>기타</td>
-                              </c:if>   
-                                 <td><a href='<%= request.getContextPath() %>/view.action?qna_idx=${qnavo.qna_idx}'>${qnavo.qna_title}</a></td> 
-                                <%--   <td><span class="subject" onClick="goView('${qnavo.qna_idx}');">${qnavo.qna_title}</span></td> --%>
-                                 <td>${qnavo.qna_date}</td>
-                                 <td>${qnavo.fk_userid}</td>
-                               <c:if test="${qnavo.qna_depthno == 0}">
-                                 <td><span style="color: blue; ">대기중</span></td>
-                               </c:if>
-                               <c:if test="${qnavo.qna_depthno == 1}">
-                                 <td><span style="color: red; text-size: bold;">답변완료</span></td>
-                               </c:if>
+                             <c:forEach var="qnavo" items="${qnaList}">
+                                <tr style="text-align: center;">
+                                      <td>${qnavo.qna_idx}</td>      
+                                <c:if test="${qnavo.fk_qna_category_idx == 1}">  
+                                      <td>기술문의</td>
+                                 </c:if>   
+                                 <c:if test="${qnavo.fk_qna_category_idx == 2}"> 
+                                       <td>기타</td>
+                                  </c:if>  
+                                 <c:if test="${qnavo.qna_fk_idx == 0}">   
+                                        <td><a href='<%= request.getContextPath() %>/view.action?qna_idx=${qnavo.qna_idx}'>${qnavo.qna_title}</a></td> 
+                                    <%-- <td><span class="subject" onClick="goView('${qnavo.qna_idx}');">${qnavo.qna_title}</span></td> --%>
+                                   </c:if>
+                                   <!-- 답변글인 경우  -->
+		                         <c:if test="${qnavo.qna_fk_idx > 0}">
+				                         <td><a href='<%= request.getContextPath() %>/view.action?qna_idx=${qnavo.qna_idx}'><span style="color: red; font-style: italic; padding-left: ${qnavo.qna_depthno * 20}px;">└Re&nbsp;&nbsp;</span> ${qnavo.qna_title}<span style="color: red; font-size: 5px; font-style: italic; font-size: smaller; vertical-align: sub;">답변</span></a>
+				                 </c:if>      
+		                                <td>${qnavo.qna_date}</td>
+		                                <td>${qnavo.fk_userid}</td>
+	                              <c:if test="${qnavo.qna_depthno == 0}">
+	                                     <td><span style="color: blue; ">대기중</span></td>
+	                              </c:if>
+	                              <c:if test="${qnavo.qna_depthno == 1}">
+	                                     <td><span style="color: red; text-size: bold;">답변완료</span></td>
+	                              </c:if>
+	                              
+	                                 <%-- ==== #145. 첨부파일 여부 표시하기 ==== --%>
+				                 <td align="center" >
+				                     <c:if test="${not empty qnavo.qna_filename}">
+				                        <img src="<%= request.getContextPath() %>/resources/jihye/disk.gif">
+				                     </c:if>   
+				                 </td> 
+				              <%--    <td align="center" >
+				                      <c:if test="${not empty qnavo.qna_byte}">
+				                        ${qnavo.qna_byte}
+				                     </c:if>   
+				                  </td> 
+	                               --%>
+	                              
                                  </tr>
                               </c:forEach>
                           </c:if>  
@@ -179,15 +211,12 @@ $(document).ready(function(){
                
                <!-- 페이징 처리하기 -->
                <div style="margin-top: 20px; margin-bottom:20px; text-align:center;">
-               </div>
+               </div> 
                
             </div>
          </div>
       </div>
-   </div>
-   
-   
-   
+   </div> 
 </div>   
 
 
@@ -197,8 +226,16 @@ $(document).ready(function(){
 <script src="resources/jihye/plugins/parallax-js-master/parallax.min.js"></script>
 <script src="resources/jihye/checkout_custom.js"></script>
 
-  <form name="goViewFrm">
-      <input type="hidden" name="qna_idx" />
-   </form>
+<form name="goViewFrm">
+    <input type="hidden" name="qna_idx" />
+ </form>
+ 
+ <%-- qna 글쓰기 --%>
+ <form name="qnaWriteFrm">
+  <input type="hidden" name="fk_qna_category_idx" value="${fk_qna_category_idx}" />
+  <input type="hidden" name="qna_groupno" value="${qna_groupno}" />
+  <input type="hidden" name="qna_depthno" value="${qna_depthno}" />
+ <%--  <input type="hidden" name="qna_idx" value="${qna_idx}" /> --%>
+</form>
 
 

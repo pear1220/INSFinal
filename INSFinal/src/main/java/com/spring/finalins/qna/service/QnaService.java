@@ -28,10 +28,18 @@ public class QnaService implements InterQnaService {
 	
 	
 	
-	// QnA목록 보여주기
+	    // QnA목록 보여주기
+	    // 회원인 경우
 		@Override
 		public List<QnaVO> qnaList(String userid) {
 			List<QnaVO> qnaList= dao.getQnaList(userid);
+			return qnaList;
+		}
+		
+		// admin 인 경우
+		@Override
+		public List<QnaVO> qnaList() {
+			List<QnaVO> qnaList= dao.getQnaList();
 			return qnaList;
 		}
 	

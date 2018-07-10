@@ -9,8 +9,9 @@ import com.spring.finalins.model.MemberVO;
 public interface InterQnaDAO {
 	
 	
-	
-	List<QnaVO> getQnaList(String userid); // QnA목록 보여주기
+	// QnA목록 보여주기
+	List<QnaVO> getQnaList(String userid); // 회원인 경우
+	List<QnaVO> getQnaList(); // admin인 경우
 	
    int write(QnaVO qnavo);// 글쓰기(파일첨부가 없는 글쓰기)
 
@@ -23,6 +24,8 @@ public interface InterQnaDAO {
 	int editQna(QnaVO qnavo); // 글 1개 수정하기
 
 	int del(String qna_idx); // 글 1개 삭제하기
+
+	
 
 
 	
