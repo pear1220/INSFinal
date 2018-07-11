@@ -17,11 +17,15 @@ public interface InterMinjaeServie {
 
 	List<TeamVO> getSearch_team(String search_input); // header : 검색을 위해 teamList 를 얻음
 
-	/*List<ProjectVO> getSearch_project(HashMap<String, String> map); // header : 검색을 위해 projectList 를 얻음
-
+	List<ProjectVO> getSearch_project(HashMap<String, String> map); // header : 검색을 위해 projectList 를 얻음
+	
 	List<ListVO> getSearch_list(HashMap<String, String> map);// header : 검색을 위해 listList 를 얻음
 
 	List<CardVO> getSearch_card(HashMap<String, String> map);// header : 검색을 위해 cardList 를 얻음
-*/
+
+	List<HashMap<String, String>> getSearch_member(String search_input); // header : 검색을 위해 memberList 를 얻음
+
+	int leaveProject(String userid); // project_bar: 프로젝트를 탈퇴
+
 	 
 }

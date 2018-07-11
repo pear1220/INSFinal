@@ -115,7 +115,6 @@ public class MINJAEController {
 				jsonObj.put("project_name", projectvo.getProject_name());
 				jsonObj.put("project_visibility_st", projectvo.getProject_visibility_st());
 				jsonObj.put("project_delete_status", projectvo.getProject_delete_status());
-				jsonObj.put("project_favorite_status", projectvo.getProject_favorite_status());
 				jsonObj.put("fk_project_image_idx", projectvo.getFk_project_image_idx());
 				
 				jsonArr.put(jsonObj);
@@ -132,21 +131,7 @@ public class MINJAEController {
 		return "projectlist.notiles";
 		
 	}
-	
-	/*@RequestMapping(value="/test.action", method= {RequestMethod.GET})
-	public String test(HttpServletRequest req,  HttpServletResponse res) {
-	
-		return "test.notiles";
-	}
-	*/
-	
-/*	@RequestMapping(value="/totalSearch.action", method= {RequestMethod.GET})
-	public String totalSearch(HttpServletRequest req,  HttpServletResponse res) {
-	
-		return "totalSearch.notiles";
 
-	}
-	*/
 	// header : 검색을 위해 teamList 를 얻음
 	@RequestMapping(value="/teamSearch.action", method= {RequestMethod.GET})
 	public String teamSearch(HttpServletRequest req,  HttpServletResponse res) {
@@ -183,15 +168,19 @@ public class MINJAEController {
 			req.setAttribute("str_jsonArr", str_jsonArr);
 	
 		}
+		
+		HttpSession session = req.getSession();
+		session.setAttribute("search_input", search_input);
 	
 		return "teamSearch.notiles";
 
 	}
 	
-	/*// header : 검색을 위해 projectList 를 얻음
+	// header : 검색을 위해 projectList 를 얻음
 	@RequestMapping(value="/projectSearch.action", method= {RequestMethod.GET})
 	public String projectSearch(HttpServletRequest req,  HttpServletResponse res) {
 	
+		System.out.println("controller 실행확인");
 		HttpSession session = req.getSession();
 		MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
 		
@@ -200,6 +189,8 @@ public class MINJAEController {
 		if(!search_input.trim().isEmpty()) {
 			
 			HashMap<String, String> map = new HashMap<String, String>();
+			map.put("userid", loginuser.getUserid());
+			map.put("search_input", search_input);
 			
 			List<ProjectVO> projectList = service.getSearch_project(map);
 			
@@ -215,7 +206,6 @@ public class MINJAEController {
 					jsonObj.put("project_name", projectvo.getProject_name());
 					jsonObj.put("project_visibility_st", projectvo.getProject_visibility_st());
 					jsonObj.put("project_delete_status", projectvo.getProject_delete_status());
-					jsonObj.put("project_favorite_status", projectvo.getProject_favorite_status());
 					jsonObj.put("fk_project_image_idx", projectvo.getFk_project_image_idx());
 					
 					jsonArr.put(jsonObj);
@@ -322,7 +312,70 @@ public class MINJAEController {
 		
 		return "cardSearch.notiles";
 
-	}*/
+	}
+	
+	
+	@RequestMapping(value="/memberSearch.action", method= {RequestMethod.GET})
+	public String memberSearch(HttpServletRequest req,  HttpServletResponse res) {
+			
+		String search_input = req.getParameter("search_input");
+		
+		if(!search_input.trim().isEmpty()) {
+						
+			List<HashMap<String, String>> memberList = service.getSearch_member(search_input);
+		
+			JSONArray jsonArr = new JSONArray();
+			
+			if(memberList != null && memberList.size() > 0) {
+				
+				for(HashMap<String, String> memberMap:memberList) {
+					
+					JSONObject jsonObj = new JSONObject();
+					
+					jsonObj.put("userid", memberMap.get("userid"));
+					jsonObj.put("nickname", memberMap.get("nickname"));
+					jsonObj.put("name", memberMap.get("name"));
+					jsonObj.put("profilejpg", memberMap.get("profilejpg"));
+					
+					
+					jsonArr.put(jsonObj);
+					
+				}
+				
+			}
+			
+			String str_jsonArr = jsonArr.toString();
+			req.setAttribute("str_jsonArr", str_jsonArr);
+			
+		}
+		
+		return "memberSearch.notiles";
+
+	}
+	
+	@RequestMapping(value="/leaveProject.action", method= {RequestMethod.GET})
+	public String requireLogin_leaveProject(HttpServletRequest req,  HttpServletResponse res) {
+		
+		HttpSession session = req.getSession();
+		MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
+		
+		int n = service.leaveProject(loginuser.getUserid());
+		
+		String msg = "";
+		String loc = "";
+					
+		if(n == 1) {
+			msg ="프로젝트 탈퇴가 되었습니다.";
+			loc = "/leaveProject.action";
+		}
+		else {
+			msg = "프로젝트 탈퇴에 실패하였습니다.";
+			loc = "javascript:history.back();";
+		}
+		
+		return "msg.notiles";
+
+	}
 	
 	
 	

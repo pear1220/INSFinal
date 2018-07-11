@@ -91,7 +91,7 @@
 	 	  <span style="font-size: 40pt; font-weight: bold;">&#9776; menu</span>
 	 	  <a href="javascript:void(0)"onclick="closeNav();"><span style="padding-left: 80%; ">&times;</span></a>
 	 	  <span style="cursor:pointer" onclick="openNav2();">Search in PROJECT</span> 
-		  <span style=" cursor: pointer; ">Leave PROJECT</span> 
+		  <span style=" cursor: pointer;" onclick="location.href='<%= request.getContextPath()%>/leaveProject.action'">Leave PROJECT</span> 
 		  <span style=" cursor: pointer; ">Delete PROJECT</span>
 		  <hr style="border: solid 1px gray;"> 
 		  <span>Activity</span>

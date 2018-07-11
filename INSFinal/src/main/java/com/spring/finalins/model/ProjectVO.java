@@ -7,14 +7,13 @@ public class ProjectVO {
 	private String project_name;
 	private String project_visibility_st;
 	private String project_delete_status;
-	private String project_favorite_status;
 	private String fk_project_image_idx;
 	
 	public ProjectVO() {}
 	
 	
 	public ProjectVO(String project_idx, String fk_team_idx, String project_name, String project_visibility_st,
-			String project_delete_status, String project_favorite_status, String project_profilejpg,
+			String project_delete_status, String project_profilejpg,
 			String fk_project_image_idx) {
 		
 		this.project_idx = project_idx;
@@ -22,7 +21,6 @@ public class ProjectVO {
 		this.project_name = project_name;
 		this.project_visibility_st = project_visibility_st;
 		this.project_delete_status = project_delete_status;
-		this.project_favorite_status = project_favorite_status;
 		this.fk_project_image_idx = fk_project_image_idx;
 	}
 
@@ -77,16 +75,6 @@ public class ProjectVO {
 	}
 
 
-	public String getProject_favorite_status() {
-		return project_favorite_status;
-	}
-
-
-	public void setProject_favorite_status(String project_favorite_status) {
-		this.project_favorite_status = project_favorite_status;
-	}
-
-	
 	public String getFk_project_image_idx() {
 		return fk_project_image_idx;
 	}

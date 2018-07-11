@@ -54,14 +54,14 @@ public class MinjaeService implements InterMinjaeServie {
 		return teamList;
 	}
 
-	/*@Override
+	@Override
 	public List<ProjectVO> getSearch_project(HashMap<String, String> map) {
 		
 		List<ProjectVO> projectList = dao.getSearch_project(map);
 		
 		return projectList;
 	}
-
+	
 	@Override
 	public List<ListVO> getSearch_list(HashMap<String, String> map) {
 		
@@ -76,6 +76,24 @@ public class MinjaeService implements InterMinjaeServie {
 		List<CardVO> cardList = dao.getSearch_card(map);
 		
 		return cardList;
-	}*/
+	}
+
+	@Override
+	public List<HashMap<String, String>> getSearch_member(String search_input) {
+
+		List<HashMap<String, String>> memberList = dao.getSearch_member(search_input);
+		
+		return memberList;
+	}
+
+	@Override
+	public int leaveProject(String userid) {
+		
+		int n = dao.leaveProject(userid);
+		
+		return n;
+	}
+	
+	
 	
 }

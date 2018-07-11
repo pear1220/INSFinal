@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ page import="java.net.InetAddress" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page import="java.net.InetAddress"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -9,50 +9,54 @@
 
 
 <style type="text/css">
+.teamname {
+	font-size: 15pt;
+	font-weight: bold;
+}
 
-	.teamname {
-		font-size: 15pt;
-		font-weight: bold;     
-	}
+#drop1 {
+	margin-left: 193px;
+	width: 500px;
+}
 
-	#drop {
-		margin-left: 193px;
-		width: 500px;
-	}
-	
-	input[type=text] {
-    width: 130px;
-    box-sizing: border-box;
-    border: 2px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
-    background-color: white;
-    background-image: url('searchicon.png');
-    background-position: 10px 10px; 
-    background-repeat: no-repeat;
-    padding: 12px 20px 12px 40px;
-    -webkit-transition: width 0.4s ease-in-out;
-    transition: width 0.4s ease-in-out;
-	}
+#drop2{
+	margin-left: 193px;
+	width: 500px;
+}
 
-	input[type=text]:focus {
-	    width: 100%;
-	}
+input[type=text] {
+	width: 130px;
+	box-sizing: border-box;
+	border: 2px solid #ccc;
+	border-radius: 4px;
+	font-size: 16px;
+	background-color: white;
+	background-image: url('searchicon.png');
+	background-position: 10px 10px;
+	background-repeat: no-repeat;
+	padding: 12px 20px 12px 40px;
+	-webkit-transition: width 0.4s ease-in-out;
+	transition: width 0.4s ease-in-out;
+}
+
+input[type=text]:focus {
+	width: 100%;
+}
+
 </style>
 
 
 
 
 
-<%  
+<%
 	//==== #177. (웹채팅관련9) ====//
-    // === 서버 IP 주소 알아오기 === //
+	// === 서버 IP 주소 알아오기 === //
 	InetAddress inet = InetAddress.getLocalHost();
-	String serverIP = inet.getHostAddress(); 
+	String serverIP = inet.getHostAddress();
 	int portnumber = request.getServerPort();
-	
-	String serverName = "http://"+serverIP+":"+portnumber;
 
+	String serverName = "http://" + serverIP + ":" + portnumber;
 %>
 
 <script type="text/javascript">
@@ -72,25 +76,34 @@
 		 
 		  $("#search_input").keyup(function(){
 		
-			$("#drop").show();
-									
-			var html = "";
-
+			 dropShow1();
+			
 			 var form_data = {search_input:$("#search_input").val()}
 			
+			/*  function imgclick(){
+				 var form_data = {search_input: $("#search_input").val(${sessionScope.search_input})}
+				 alert("확인용");
+			 } */
+			
+			 
 			 $.ajax({
 					
-				 url: "<%= request.getContextPath() %>/teamSearch.action",
+				 url: "<%=request.getContextPath()%>/teamSearch.action",
 				 type: "get",
 				 data: form_data,
 				 dataType: "JSON",
 				 success: function(json){
 					
+					 var html = "";
 					
 					 if(json.length > 0){
-										 
+						 
+						 $("#team_drop1").show();  
+								
+						 html += "<span class='lite' style='font-weight: bold; font-size: 15pt;'>Teams</span>";
+						 
 						 $.each(json, function(entryIndex, entry){
-														
+							 												
 							 var word = entry.team_name.trim();
 							 // "ajax 프로그래밍"
 								
@@ -101,54 +114,59 @@
 														
 							 var str ="";
 							
-								 str += "<span class='first' style='color: blue;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: red; font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: blue;'>" + word.substr(index+len) + "</span>"; 
+								 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: #fed189; font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+len) + "</span>"; 
 								
-								 if(entryIndex == 0){
-									 html += "<span style='font-weight: bold; font-size: 15pt; color: blue;'>Team</span>"
-									 html += "<br/><a href='#'>"+str+"</a>";
-								 }
-								 else{
-									 html += "<br/><a href='#'>"+str+"</a>";	 
-								 }
+							if(json.length < 2){
+								
+								 html += "<br/><a href='#'><span class='result'>"+str+"</span></a>";
 								 
-								 
-								 						 
-						 });
+								 $("#team_drop1").html(html);
+								
+							}	  
+							else{
+								
+								if(entryIndex < 2){
+									html += "<br/><a href='#'><span class='result'>"+str+"</span></a>";
+									
+								}
+								
+								$("#team_drop1").html(html);
+							
+							}
+											 
+						 }); // end of $.each()----------------------------------------------------------------------
+						 
+						 if(json.length > 2){ 
+							 html += "<li><a class='btn btn-default btn-sm' id='btnMore1'>More</a></li>";
+						 } 
 						 
 						 html += "<li class='divider'></li>";
+						 
+						 
+						 $("#team_drop1").html(html);
 							 
-						 $("#teamSearch").html(html);
-							 
-					 }
+					 } // json.length > 0 if()-------------------------------------------------------------------------
 					 else{
 						 
-						 html += "<span class='list-group-item'>검색결과가 없습니다.</span>";
+						 $("#team_drop1").hide();
 						 
-					 }
-					 
-					 $("#drop").html(html);
-					 
-					 
-				 },
-				 error: function(request, status, error){
-						alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
-				 }
-				 						 
-			 });
-			 
-			 $.ajax({
-					
-				 url: "<%= request.getContextPath() %>/projectSearch.action",
-				 type: "get",
-				 data: form_data,
-				 dataType: "JSON",
-				 success: function(json){
-					
-					
-					 if(json.length > 0){
-										 
+			  		}// json.length > 0 else()--------------------------------------------------------------------------
+			 	
+			  		
+			  		/* $("#drop1").html(html); */
+			  		
+				  	$("#btnMore1").click(function(){
+						 
+				  		 alert("btn1 확인용"); 
+				  		 dropShow2();
+				  		
+						 var html2 = "";
+						 
+						 html2 += "<span class='lite' style='font-weight: bold; font-size: 15pt;'>Teams</span>";
+						 html2 += "<span id='backicon'><img src='<%=request.getContextPath() %>/resources/img/left-arrow.png' /></span>";
+						 
 						 $.each(json, function(entryIndex, entry){
-														
+							 				
 							 var word = entry.team_name.trim();
 							 // "ajax 프로그래밍"
 								
@@ -159,32 +177,28 @@
 														
 							 var str ="";
 							
-								 str += "<span class='first' style='color: blue;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: red; font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: blue;'>" + word.substr(index+len) + "</span>"; 
+								 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: #fed189; font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+len) + "</span>"; 
 								
-								 if(entryIndex == 0){
-									 html += "<span style='font-weight: bold; font-size: 15pt; color: blue;'>Team</span>"
-									 html += "<br/><a href='#'>"+str+"</a>";
-								 }
-								 else{
-									 html += "<br/><a href='#'>"+str+"</a>";	 
-								 }
+								 html2 += "<br/><a href='#'><span class='result'>"+str+"</span></a>";
 								 
-								 
-								 						 
+							 $("#team_drop2").html(html2);
+								 		 
+						 }); // end of $.each()----------------------------------------------------------------------
+						  
+						 $("#team_drop2").html(html2);
+						 
+						
+						 $("#backicon").click(function(){
+								
+								/* alert("확인용:::::::"); */ 
+								dropShow1();
+									 
 						 });
 						 
-						 html += "<li class='divider'></li>";
-							 
-						 $("#teamSearch").html(html);
-							 
-					 }
-					 else{
 						 
-						 html += "<span class='list-group-item'>검색결과가 없습니다.</span>";
-						 
-					 }
-					 
-					 $("#drop").html(html);
+					 }); // end of $("#btnMore").click()---------------------------------------------------------------------------
+			 		
+
 					 
 					 
 				 },
@@ -192,191 +206,572 @@
 						alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
 				 }
 				 						 
-			 });
-			
-			
-		 }); 
-		  
-		  $("#search_input").blur(function(){
+			 });  
 			 
-			  $("#search_input").val("");
-			  
-		  });
-		 
-		 
-		 
-		 
-		 
-		 /* var form_data = {search_input:$("#search_input").val()} */
-		 
-		/*  $(".dropdown").show();
-		
-		 $("#search_input").keyup(function(){
 			 
-			 alert("keyup 확인용")
 			 
-			 $(".dropdown").show();
-				 */		 		 
-			 <%-- $.ajax({
+			 $.ajax({
+					
+				 url: "<%=request.getContextPath()%>/projectSearch.action",
+				 type: "get",
+				 data: form_data,
+				 dataType: "JSON",
+				 success: function(json){
+					
+					 var html = "";
+					
+					 if(json.length > 0){
+						 
+						 $("#project_drop1").show();  
+								
+						 html += "<span class='lite' style='font-weight: bold; font-size: 15pt;'>Projects</span>";
+						 
+						 $.each(json, function(entryIndex, entry){
+							 												
+							 var word = entry.project_name.trim();
+							 // "ajax 프로그래밍"
+								
+							 var index = word.toLowerCase().indexOf( $("#search_input").val().toLowerCase() ); // 해당 문자열을 전부 다 소문자로 바꾸는 자바스크립트 함수 (toUpperCase())
+							 
+							 
+							 var len = $("#search_input").val().length;
+														
+							 var str ="";
+							
+								 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: #fed189; font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+len) + "</span>"; 
+								
+							if(json.length < 2){
+								
+								 html += "<br/><a href='#'><span class='result'>"+str+"</span></a>";
+								 
+								 $("#project_drop1").html(html);
+								
+							}	  
+							else{
+								
+								if(entryIndex < 2){
+									html += "<br/><a href='#'><span class='result'>"+str+"</span></a>";
+									
+								}
+								$("#project_drop1").html(html);
+							
+							}
+											 
+						 }); // end of $.each()----------------------------------------------------------------------
+						 
+						 if(json.length > 2){ 
+							 html += "<li><a class='btn btn-default btn-sm' id='btnMore2'>More</a></li>";
+						 } 
+						 
+						 html += "<li class='divider'></li>";
+						 
+						 
+						 $("#project_drop1").html(html);
+							 
+					 } // json.length > 0 if()-------------------------------------------------------------------------
+					 else{
+						 
+						 $("#project_drop1").hide();
+						 
+			  		}// json.length > 0 else()--------------------------------------------------------------------------
+			 	
+			  		
+			  		/* $("#drop1").html(html); */
+			  		
+				  	$("#btnMore2").click(function(){
+						 
+				  		 alert("btn2 확인용"); 
+				  		 dropShow2();
+				  		
+						 var html2 = "";
+						 
+						 html2 += "<span class='lite' style='font-weight: bold; font-size: 15pt;'>Teams</span>";
+						 html2 += "<span id='backicon'><img src='<%=request.getContextPath() %>/resources/img/left-arrow.png' /></span>";
+						 
+						 $.each(json, function(entryIndex, entry){
+							 				
+							 var word = entry.project_name.trim();
+							 // "ajax 프로그래밍"
+								
+							 var index = word.toLowerCase().indexOf( $("#search_input").val().toLowerCase() ); // 해당 문자열을 전부 다 소문자로 바꾸는 자바스크립트 함수 (toUpperCase())
+							 
+							 
+							 var len = $("#search_input").val().length;
+														
+							 var str ="";
+							
+								 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: #fed189; font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+len) + "</span>"; 
+								
+								 html2 += "<br/><a href='#'><span class='result'>"+str+"</span></a>";
+								 
+							 $("#project_drop2").html(html2);
+								 		 
+						 }); // end of $.each()----------------------------------------------------------------------
+						  
+						 $("#project_drop2").html(html2);
+						 
+						
+						 $("#backicon").click(function(){
+								
+								/* alert("확인용:::::::"); */ 
+								dropShow1();
+									 
+						 });
+						 
+						 
+					 }); // end of $("#btnMore").click()---------------------------------------------------------------------------
+			 		
+
+					 
+					 
+				 },
+				 error: function(request, status, error){
+						alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
+				 }
+				 						 
+			 });  
+			 
+		 	 $.ajax({
 				
-				 url: "<%= request.getContextPath() %>/teamSearch.action",
-				 type: "get",
-				 data: form_data,
-				 dataType: "JSON",
-				 success: function(json){
+			 url: "<%=request.getContextPath()%>/listSearch.action",
+			 type: "get",
+			 data: form_data,
+			 dataType: "JSON",
+			 success: function(json){
+				
+				 var html = "";
+				
+				 if(json.length > 0){
 					 
-					 if(json.length > 0){
+					 $("#list_drop1").show();  
+							
+					 html += "<span class='lite' style='font-weight: bold; font-size: 15pt;'>Lists</span>";
+					 
+					 $.each(json, function(entryIndex, entry){
+						 												
+						 var word = entry.list_name.trim();
+						 // "ajax 프로그래밍"
+							
+						 var index = word.toLowerCase().indexOf( $("#search_input").val().toLowerCase() ); // 해당 문자열을 전부 다 소문자로 바꾸는 자바스크립트 함수 (toUpperCase())
 						 
-						 $.each(json, function(entryIndex, entry){
+						 
+						 var len = $("#search_input").val().length;
+													
+						 var str ="";
+						
+							 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: #fed189; font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+len) + "</span>"; 
 							
-							 alert("teamSearch 확인용" + entry.team_name);
-							 
-							 var word = entry.team_name.trim();
-								// "ajax 프로그래밍"
-								
-							 var index = word.toLowerCase().indexOf( $("#search_input").val().toLowerCase() ); // 해당 문자열을 전부 다 소문자로 바꾸는 자바스크립트 함수 (toUpperCase())
-							 
-							 var len = $("#search_input").val().length;
-														
-							 var str ="";
+						if(json.length < 2){
 							
-								 str += "<span class='first' style='color: blue;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: red; font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: blue;'>" + word.substr(index+len) + "</span>"; 
+							 html += "<br/><a href='#'><span class='result'>"+str+"</span></a>";
+							 
+							 $("#list_drop1").html(html);
+							
+						}	  
+						else{
+							
+							if(entryIndex < 2){
+								html += "<br/><a href='#'><span class='result'>"+str+"</span></a>";
 								
-								 html += "<li><span style='cursor: pointer;'>"+str+"</span></li>";
+							}
+							$("#list_drop1").html(html);
+						
+						}
+										 
+					 }); // end of $.each()----------------------------------------------------------------------
+					 
+					 if(json.length > 2){ 
+						 html += "<li><a class='btn btn-default btn-sm' id='btnMore3'>More</a></li>";
+					 } 
+					 
+					 html += "<li class='divider'></li>";
+					 
+					 
+					 $("#list_drop1").html(html);
+						 
+				 } // json.length > 0 if()-------------------------------------------------------------------------
+				 else{
+					 
+					 $("#list_drop1").hide();
+					 
+		  		}// json.length > 0 else()--------------------------------------------------------------------------
+		 	
+		  		
+		  		/* $("#drop1").html(html); */
+		  		
+			  	$("#btnMore3").click(function(){
+					 
+			  		 alert("btn3 확인용"); 
+			  		 dropShow2();
+			  		
+					 var html2 = "";
+					 
+					 html2 += "<span class='lite' style='font-weight: bold; font-size: 15pt;'>Lists</span>";
+					 html2 += "<span id='backicon'><img src='<%=request.getContextPath() %>/resources/img/left-arrow.png' /></span>";
+					 
+					 $.each(json, function(entryIndex, entry){
+						 				
+						 var word = entry.list_name.trim();
+						 // "ajax 프로그래밍"
+							
+						 var index = word.toLowerCase().indexOf( $("#search_input").val().toLowerCase() ); // 해당 문자열을 전부 다 소문자로 바꾸는 자바스크립트 함수 (toUpperCase())
+						 
+						 
+						 var len = $("#search_input").val().length;
+													
+						 var str ="";
+						
+							 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: #fed189; font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+len) + "</span>"; 
+							
+							 html2 += "<br/><a href='#'><span class='result'>"+str+"</span></a>";
+							 
+						 $("#list_drop2").html(html2);
+							 		 
+					 }); // end of $.each()----------------------------------------------------------------------
+					  
+					 $("#list_drop2").html(html2);
+					 
+					
+					 $("#backicon").click(function(){
+							
+							/* alert("확인용:::::::"); */ 
+							dropShow1();
 								 
-								 /* html += "<li>"+entry.team_name+"&nbsp;&nbsp;admin : "+entry.admin_userid+"</li>"; */
-							 
-						 });
-						 
-						 $("#teamSearch"+entryIndex).html(html);
-							 
-					 }
+					 });
 					 
-				 },
-				 error: function(request, status, error){
-						alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
-				 }
-				 						 
-			 }); --%>
+					 
+				 }); // end of $("#btnMore").click()---------------------------------------------------------------------------
+		 		
+
+				 
+				 
+			 },
+			 error: function(request, status, error){
+					alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
+			 }
+			 						 
+		 }); 
 			 
-			<%--  $.ajax({
-					
-				 url: "<%= request.getContextPath() %>/projectSearch.action",
-				 type: "get",
-				 data: form_data,
-				 dataType: "JSON",
-				 success: function(json){
+		
+		 $.ajax({
+				
+			 url: "<%=request.getContextPath()%>/cardSearch.action",
+			 type: "get",
+			 data: form_data,
+			 dataType: "JSON",
+			 success: function(json){
+				
+				 var html = "";
+				
+				 if(json.length > 0){
+					 
+					 $("#card_drop1").show();  
+							
+					 html += "<span class='lite' style='font-weight: bold; font-size: 15pt;'>Cards</span>";
+					 
+					 $.each(json, function(entryIndex, entry){
+						 												
+						 var word = entry.card_title.trim();
+						 // "ajax 프로그래밍"
+							
+						 var index = word.toLowerCase().indexOf( $("#search_input").val().toLowerCase() ); // 해당 문자열을 전부 다 소문자로 바꾸는 자바스크립트 함수 (toUpperCase())
+						 
+						 
+						 var len = $("#search_input").val().length;
+													
+						 var str ="";
 						
-					 var html = "";
-					 
-					 if(json.length > 0){
-						 
-						 $.each(json, function(entryIndex, entry){
-							 html += "<li>"+entry.project_name+"</li>";
+							 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: #fed189; font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+len) + "</span>"; 
+							
+						if(json.length < 2){
+							
+							 html += "<br/><a href='#'><span class='result'>"+str+"</span></a>";
 							 
-							 $("#projectSearch"+entryIndex).html(html)
-							 							
-						 });
-						 
-						 
-					 }
-				 },
-				 error: function(request, status, error){
-						alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
-				 }
-				 						 
-			 });
-			 
-			 $.ajax({
-					
-				 url: "<%= request.getContextPath() %>/listSearch.action",
-				 type: "get",
-				 data: form_data,
-				 dataType: "JSON",
-				 success: function(json){
+							 $("#card_drop1").html(html);
+							
+						}	  
+						else{
+							
+							if(entryIndex < 2){
+								html += "<br/><a href='#'><span class='result'>"+str+"</span></a>";
+								
+							}
+							$("#card_drop1").html(html);
 						
-					 var html = "";
+						}
+										 
+					 }); // end of $.each()----------------------------------------------------------------------
 					 
-					 if(json.length > 0){
+					 if(json.length > 2){ 
+						 html += "<li><a class='btn btn-default btn-sm' id='btnMore4'>More</a></li>";
+					 } 
+					 
+					 html += "<li class='divider'></li>";
+					 
+					 
+					 $("#card_drop1").html(html);
 						 
-						 $.each(json, function(entryIndex, entry){
-							 html += "<li>"+entry.list_name+"</li>";
-							 
-							 $("#listSearch"+entryIndex).html(html)
-							 							
-						 });
+				 } // json.length > 0 if()-------------------------------------------------------------------------
+				 else{
+					 
+					 $("#card_drop1").hide();
+					 
+		  		}// json.length > 0 else()--------------------------------------------------------------------------
+		 	
+		  		
+		  		/* $("#drop1").html(html); */
+		  		
+			  	$("#btnMore4").click(function(){
+					 
+			  		 alert("btn4 확인용"); 
+			  		 dropShow2();
+			  		
+					 var html2 = "";
+					 
+					 html2 += "<span class='lite' style='font-weight: bold; font-size: 15pt;'>Cards</span>";
+					 html2 += "<span id='backicon'><img src='<%=request.getContextPath() %>/resources/img/left-arrow.png' /></span>";
+					 
+					 $.each(json, function(entryIndex, entry){
+						 				
+						 var word = entry.card_title.trim();
+						 // "ajax 프로그래밍"
+							
+						 var index = word.toLowerCase().indexOf( $("#search_input").val().toLowerCase() ); // 해당 문자열을 전부 다 소문자로 바꾸는 자바스크립트 함수 (toUpperCase())
 						 
 						 
-					 }
-				 },
-				 error: function(request, status, error){
-						alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
-				 }
-				 						 
-			 });
-			 
-			 $.ajax({
-					
-				 url: "<%= request.getContextPath() %>/memberSearch.action",
-				 type: "get",
-				 data: form_data,
-				 dataType: "JSON",
-				 success: function(json){
+						 var len = $("#search_input").val().length;
+													
+						 var str ="";
 						
-					 var html = "";
-					 
-					 if(json.length > 0){
-						 
-						 $.each(json, function(entryIndex, entry){
-							 html += "<li>"+entry.userid+"</li>";
+							 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: #fed189; font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+len) + "</span>"; 
+							
+							 html2 += "<br/><a href='#'><span class='result'>"+str+"</span></a>";
 							 
-							 $("#memberSearch"+entryIndex).html(html);
-							 							
-						 });
-						 
-						 
-					 }
-				 },
-				 error: function(request, status, error){
-						alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
-				 }
-				 						 
-			 });
-			 
-			 
-			 $.ajax({
+						 $("#card_drop2").html(html2);
+							 		 
+					 }); // end of $.each()----------------------------------------------------------------------
+					  
+					 $("#card_drop2").html(html2);
+					 
 					
-				 url: "<%= request.getContextPath() %>/cardSearch.action",
-				 type: "get",
-				 data: form_data,
-				 dataType: "JSON",
-				 success: function(json){
-						
-					 var html = "";
+					 $("#backicon").click(function(){
+							
+							/* alert("확인용:::::::"); */ 
+							dropShow1();
+								 
+					 });
 					 
-					 if(json.length > 0){
-						 
-						 $.each(json, function(entryIndex, entry){
-							 html += "<li>"+entry.card_name+"</li>";
-							 
-							 $("#cardSearch"+entryIndex).html(html);
-							 							
-						 });
-						 
-						 
-					 }
-				 },
-				 error: function(request, status, error){
-						alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
-				 }
-				 						 
-			 }); --%>
-	 
-		 /* }); */
+					 
+				 }); // end of $("#btnMore").click()---------------------------------------------------------------------------
+		 		
+ 
+			 },
+			 error: function(request, status, error){
+					alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
+			 }
+			 						 
+		 }); 
 		 
-	});
+		 
+		 $.ajax({
+				
+			 url: "<%=request.getContextPath()%>/memberSearch.action",
+			 type: "get",
+			 data: form_data,
+			 dataType: "JSON",
+			 success: function(json){
+				
+				 var html = "";
+				
+				 if(json.length > 0){
+					 
+					 $("#member_drop1").show();  
+							
+					 html += "<span class='lite' style='font-weight: bold; font-size: 15pt;'>Members</span>";
+					 
+					 $.each(json, function(entryIndex, entry){
+						 
+						 var word = "";
+						 
+						 if( (entry.userid.trim()).indexOf($("#search_input").val()) != -1 ){
+							 word = entry.userid.trim();
+						 }
+						 else if( (entry.nickname.trim()).indexOf($("#search_input").val()) != -1 ){
+							 word = entry.nickname.trim();
+						 }
+						 else if( (entry.name.trim()).indexOf($("#search_input").val()) != -1 ){
+							 word = entry.name.trim();
+						 }
+						 
+						 
+						 
+						 
+						 // "ajax 프로그래밍"
+							
+						 var index = word.toLowerCase().indexOf( $("#search_input").val().toLowerCase() ); // 해당 문자열을 전부 다 소문자로 바꾸는 자바스크립트 함수 (toUpperCase())
+						 
+						 
+						 var len = $("#search_input").val().length;
+													
+						 var str ="";
+						
+							 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: #fed189; font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+len) + "</span>"; 
+							
+						if(json.length < 2){
+							
+							html += "<br/><img src='<%=request.getContextPath()%>/resources/img/avatar1.jpg' class='avatar'/>";
+							
+							if( (entry.userid.trim()).indexOf($("#search_input").val()) != -1 ){
+								html += "<a href='#'><span class='result'>"+str+"("+entry.nickname+")"+"--"+entry.name+"</span></a>";
+							 }
+							 else if( (entry.nickname.trim()).indexOf($("#search_input").val()) != -1 ){
+								 html += "<a href='#'><span class='result'>"+entry.userid+"("+str+")"+"--"+entry.name+"</span></a>";
+							 }
+							 else if( (entry.name.trim()).indexOf($("#search_input").val()) != -1 ){
+								 html += "<a href='#'><span class='result'>"+entry.userid+"("+entry.nickname+")"+"--"+str+"</span></a>";
+							 }
+													 
+							 $("#member_drop1").html(html); 
+							
+						}	  
+						else{
+							
+							if(entryIndex < 2){
+								
+								html += "<br/><img src='<%=request.getContextPath()%>/resources/img/avatar1.jpg' style='float: left;' class='avatar'/>";
+								
+								if( (entry.userid.trim()).indexOf($("#search_input").val()) != -1 ){
+									html += "<a href='#'><span class='result'>"+str+"("+entry.nickname+")"+"--"+entry.name+"</span></a>";
+								 }
+								 else if( (entry.nickname.trim()).indexOf($("#search_input").val()) != -1 ){
+									 html += "<a href='#'><span class='result'>"+entry.userid+"("+str+")"+"--"+entry.name+"</span></a>";
+								 }
+								 else if( (entry.name.trim()).indexOf($("#search_input").val()) != -1 ){
+									 html += "<a href='#'><span class='result'>"+entry.userid+"("+entry.nickname+")"+"--"+str+"</span></a>";
+								 }
+							}
+							
+							 $("#member_drop1").html(html);
+														
+						
+						}
+						
+						
+						/* $("#member_drop1").html(html); */
+										 
+					 }); // end of $.each()----------------------------------------------------------------------
+					 
+					 if(json.length > 2){ 
+						 html += "<li><a class='btn btn-default btn-sm' id='btnMore5'>More</a></li>";
+					 } 
+					 
+					 html += "<li class='divider'></li>";
+					 
+					 
+					 $("#member_drop1").html(html);
+						 
+				 } // json.length > 0 if()-------------------------------------------------------------------------
+				 else{
+					 
+					 $("#member_drop1").hide();
+					 
+		  		}// json.length > 0 else()--------------------------------------------------------------------------
+		 	
+		  		
+		  		/* $("#drop1").html(html); */
+		  		
+			  	$("#btnMore5").click(function(){
+					 
+			  		 alert("btn5 확인용"); 
+			  		 dropShow2();
+			  		
+					 var html2 = "";
+					 
+					 html2 += "<span class='lite' style='font-weight: bold; font-size: 15pt;'>Members</span>";
+					 html2 += "<span id='backicon'><img src='<%=request.getContextPath() %>/resources/img/left-arrow.png' /></span>";
+					 
+					 $.each(json, function(entryIndex, entry){
+						 
+						 var word = "";
+						 
+						 if( (entry.userid.trim()).indexOf($("#search_input").val()) != -1 ){
+							 word = entry.userid.trim();
+						 }
+						 else if( (entry.nickname.trim()).indexOf($("#search_input").val()) != -1 ){
+							 word = entry.nickname.trim();
+						 }
+						 else if( (entry.name.trim()).indexOf($("#search_input").val()) != -1 ){
+							 word = entry.name.trim();
+						 }
+							
+						 var index = word.toLowerCase().indexOf( $("#search_input").val().toLowerCase() ); // 해당 문자열을 전부 다 소문자로 바꾸는 자바스크립트 함수 (toUpperCase())
+						 
+						 
+						 var len = $("#search_input").val().length;
+													
+						 var str ="";
+						
+							 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: #fed189; font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+len) + "</span>"; 
+							
+							 html += "<br/><img src='<%=request.getContextPath()%>/resources/img/avatar1.jpg' style='float: left;' class='avatar'/>";
+							 
+							 if( (entry.userid.trim()).indexOf($("#search_input").val()) != -1 ){
+									html2 += "<a href='#'><span class='result'>"+str+"("+entry.nickname+")"+"--"+entry.name+"</span></a>";
+							 }
+							 else if( (entry.nickname.trim()).indexOf($("#search_input").val()) != -1 ){
+								 html2 += "<a href='#'><span class='result'>"+entry.userid+"("+str+")"+"--"+entry.name+"</span></a>";
+							 }
+							 else if( (entry.name.trim()).indexOf($("#search_input").val()) != -1 ){
+								 html2 += "<a href='#'><span class='result'>"+entry.userid+"("+entry.nickname+")"+"--"+str+"</span></a>";
+							 }
+							 
+						 $("#member_drop2").html(html2);
+							 		 
+					 }); // end of $.each()----------------------------------------------------------------------
+					  
+					 $("#member_drop2").html(html2);
+					 
+					
+					 $("#backicon").click(function(){
+							
+							/* alert("확인용:::::::"); */ 
+							dropShow1();
+								 
+					 });
+					 
+					 
+				 }); // end of $("#btnMore").click()---------------------------------------------------------------------------
+		 		
+ 
+			 },
+			 error: function(request, status, error){
+					alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
+			 }
+			 						 
+		 }); // end of $.ajax memberSearch.action-------------------------------------------------------------------
+	 	 
+		 	 
+	}); // $("#search_input").keyup()-------------------------------------------------------------------
+		  
+		  
 		
+		 
+	}); // $(document).ready()--------------------------------------------------------------------------------
 		
+	
+	function dropShow1(){
+		
+	 $("#drop1").show();
+	 $("#drop2").hide();
+		
+	}
+	
+	function dropShow2(){
+		
+		 $("#drop2").show();
+		 $("#drop1").hide();
+			
+	}	
 	
 
 	// 팀 리스트와 프로젝트 리스트를 보여주는 함수
@@ -385,7 +780,7 @@
 		$("#project_dropdown").empty();
 		
 		$.ajax({
-			url: "<%= request.getContextPath()%>/teamlist.action",
+			url: "<%=request.getContextPath()%>/teamlist.action",
 			type: "get",
 			dataType: "json",
 			success: function(json){
@@ -404,7 +799,7 @@
 						
 						$.ajax({
 							
-							url: "<%= request.getContextPath() %>/projectlist.action",
+							url: "<%=request.getContextPath()%>/projectlist.action",
 							type: "get",
 							data: form_data,
 							dataType: "json",
@@ -463,46 +858,56 @@
 	}
 	
 
+
+		
  
 </script>
 
 
 <body>
-  <!-- container section start -->
-  <section id="container" class="">
-  
- <c:if test="${sessionScope.loginuser == null }"> 
-	 <header class="header dark-bg">
+	<!-- container section start -->
+	<section id="container" class="">
 
-	  
-	  <div style="padding-left: 50%; border: 0px solid red;">   
-	  <!-- logo start -->
-      <a href="index.action" class="logo" style="font-size: 20pt;"> FINAL <span class="lite">INS</span></a>
-      <!-- logo end -->	 
-	  </div> 
-	    
-    </header>
- </c:if> 
-  
+		<c:if test="${sessionScope.loginuser == null }">
+			<header class="header dark-bg">
 
- <c:if test="${sessionScope.loginuser != null }"> 
 
-    <header class="header dark-bg">      
-     
-	   <div class="container" style="border: 0px solid yellow; width: 150px; float: left;  padding-top: 2px;">                                  
-		  <div class="dropdown" style="border: 0px solid yellow;">
-		  	 	  	 
-		     <button class="btn btn-default dropdown-toggle" type="button" id="project_button" data-toggle="dropdown" style=" background-color: black; margin-top:1px; color: black; border-color: black;"> 
-	    	 	<span class="icon_cloud-upload_alt logo" style="margin-right: 10px; font-size: 20pt; color: #ffc61a;"></span><span style="font-size: 16pt;" class="lite">Project</span>
-	   		 </button>  
-	   		    
-		     <ul class="dropdown-menu" id="project_dropdown" style="width: 300px;">
-		     </ul> 
-		     
-		  </div>
-	    </div>      
-	  
-	  	<%-- <c:if test="${sessionScope.teamList == null }" >
+				<div style="padding-left: 50%; border: 0px solid red;">
+					<!-- logo start -->
+					<a href="index.action" class="logo" style="font-size: 20pt;">
+						FINAL <span class="lite">INS</span>
+					</a>
+					<!-- logo end -->
+				</div>
+
+			</header>
+		</c:if>
+
+
+		<c:if test="${sessionScope.loginuser != null }">
+
+			<header class="header dark-bg">
+
+				<div class="container"
+					style="border: 0px solid yellow; width: 150px; float: left; padding-top: 2px;">
+					<div class="dropdown" style="border: 0px solid yellow;">
+
+						<button class="btn btn-default dropdown-toggle" type="button"
+							id="project_button" data-toggle="dropdown"
+							style="background-color: black; margin-top: 1px; color: black; border-color: black;">
+							<span class="icon_cloud-upload_alt logo"
+								style="margin-right: 10px; font-size: 20pt; color: #ffc61a;"></span><span
+								style="font-size: 16pt;" class="lite">Project</span>
+						</button>
+
+						<ul class="dropdown-menu" id="project_dropdown"
+							style="width: 300px;">
+						</ul>
+
+					</div>
+				</div>
+
+				<%-- <c:if test="${sessionScope.teamList == null }" >
 		    		<li><span style="color: #ff9900;">${sessionScope.loginuser.userid} 님의 가입한 팀이 없습니다.</span></li>
 		    	</c:if>
 		    	
@@ -525,42 +930,56 @@
 				      		      
 			      	</c:forEach>
 		      	</c:if> --%>
-	  
-	  
-	       
-	    
-	  <!--  search form start -->
-      <div class="nav search-row" id="top_menu" style="float: left; padding-top: 1px; padding-left: 1px; padding-bottom: 2px; width: 500px; border: 0px solid yellow; ">
-        <!--  search form start -->
-        <ul class="nav top-menu">
-           <li>
-	           <div style="border : 0px solid red; width: 300px;"> 
-		            <form class="navbar-form">
-		              <input class="form-control" id="search_input" name="search_input" data-toggle="dropdown" placeholder="Search" type="text" style="height: 35px;">
-			        </form>
-		        </div> 
-	       </li>      
-          
-         <!-- <div class="container">
+
+
+
+
+				<!--  search form start -->
+				<div class="nav search-row" id="top_menu"
+					style="float: left; padding-top: 1px; padding-left: 1px; padding-bottom: 2px; width: 500px; border: 0px solid yellow;">
+					<!--  search form start -->
+					<ul class="nav top-menu">
+						<li>
+							<div style="border: 0px solid red; width: 300px;">
+								<form class="navbar-form">
+									<input class="form-control" id="search_input"
+										name="search_input" data-toggle="dropdown"
+										placeholder="Search" type="text" style="height: 35px;">
+								</form>
+							</div>
+						</li>
+
+						<!-- <div class="container">
 		  <div class="list-group drop dropdown-menu" id="drop" style="border: 1px solid yellow;">
 		    <span class='searchGroup' id='teamSearch'>Team<br/></span>
 		  </div>
 		</div> -->
-		
-		<div class="container" >
-		  <ul class="list-group drop dropdown-menu" id="drop">
-		   <!--  <li class="list-group-item">First item</li>
-		    <li class="list-group-item">Second item</li>
-		    <li class="list-group-item">Third item</li> -->
-		  </ul>
+
+		<div class="container">
+			<ul class="list-group drop dropdown-menu" id="drop1">
+				<li id="team_drop1"></li>
+				<li id="project_drop1"></li>
+				<li id="list_drop1"></li>
+				<li id="card_drop1"></li>
+				<li id="member_drop1"></li>
+			</ul>
 		</div>
-		
-		<!-- <a href="#" class="list-group-item">Second item</a>
+		<div class="container">
+			<ul class="list-group drop dropdown-menu" id="drop2">
+				<li id="team_drop2"></li>
+				<li id="project_drop2"></li>
+				<li id="list_drop2"></li>
+				<li id="card_drop2"></li>
+				<li id="member_drop2"></li>
+			</ul>
+		</div>
+
+						<!-- <a href="#" class="list-group-item">Second item</a>
 		    <a href="#" class="list-group-item">Third item</a> -->
-		    <%-- <c:if test="${teamList != null}">
+						<%-- <c:if test="${teamList != null}">
 	     		<span class="searchGroup" id="teamSearch">Team<br/></span>
 	     	</c:if> --%>
-	     	<%-- <c:if test="${projectList != null}">
+						<%-- <c:if test="${projectList != null}">
 	     		<li>Project</li>
 	     		<c:forEach var="projectvo" items="${projectList}" varStatus="status">
 	     			<li id="projectSearch${status.index}"></li>
@@ -584,16 +1003,16 @@
 	     			<li id="teamSearch${status.index}"></li>
 	     		</c:forEach>
 	     	</c:if> --%>
-          
-          
-           <!-- <div class="container" style="border: 1px solid yellow; width: 150px; float: left;  padding-top: 2px;">                                   
+
+
+						<!-- <div class="container" style="border: 1px solid yellow; width: 150px; float: left;  padding-top: 2px;">                                   
 		  	<div class="dropdown" id="dropdown_input" style="border: 1px solid yellow;">
 		  	 <ul class="dropdown-menu" id="searchFrm_dropdown" style="width: 300px; border: 1px solid yellow;">
 		  	  <li><span style="color: red;">부트스트랩 되는지 확인</span></li>
 		  	  <li><span style="color: red;">부트스트랩 되는지 확인22222222222222</span></li>
-		  	 </ul>	 -->		   		    
-								  				   		    
-		     <%-- <ul class="dropdown-menu" id="searchFrm_dropdown" style="width: 300px;">
+		  	 </ul>	 -->
+
+						<%-- <ul class="dropdown-menu" id="searchFrm_dropdown" style="width: 300px;">
 		     	<c:if test="${teamList != null}">
 		     		<li>Team</li>
 		     		<c:forEach var="teamvo" items="${teamList}" varStatus="status">
@@ -624,98 +1043,72 @@
 		     			<li id="teamSearch${status.index}"></li>
 		     		</c:forEach>
 		     	</c:if>     
-		     </ul> --%> 
-		     
-		 <!--  </div>
+		     </ul> --%>
+
+						<!--  </div>
 	   </div> -->
-			
-        </ul> 
-        <!--  search form end -->
-      </div> 
-	  
-	  <div style="padding-left: 50%;">  
-	  <!--logo start--> 
-      <a href="index.action" class="logo"> FINAL <span class="lite">INS</span></a>
-      <!--logo end-->
-      <a href="mj_project.action" class="logo">mj_project</a>	 
-	  </div>	
-		
-	  <div class="top-nav notification-row">
-	
-        <!-- notificatoin dropdown start-->
-        <ul class="nav pull-right top-menu">
-	
-	      <!-- inbox notificatoin start-->
-          <li id="mail_notificatoin_bar" class="dropdown">
-            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                            <i class="icon-envelope-l"></i>
-                            <!-- <span class="badge bg-important">5</span> -->
-                        </a>
-            <ul class="dropdown-menu extended inbox">
-              <div class="notify-arrow notify-arrow-blue"></div>
-              <li>
-                <p class="blue">You have 5 new messages</p>
-              </li>
-              <li>
-                <a href="#">
-                                    <span class="photo"><img alt="avatar" src="./img/avatar-mini.jpg"></span>
-                                    <span class="subject">
-                                    <span class="from">Greg  Martin</span>
-                                    <span class="time">1 min</span>
-                                    </span>
-                                    <span class="message">
-                                        I really like this admin panel.
-                                    </span>
-                                </a>
-              </li>
-              <li>
-                <a href="#">
-                                    <span class="photo"><img alt="avatar" src="./img/avatar-mini2.jpg"></span>
-                                    <span class="subject">
-                                    <span class="from">Bob   Mckenzie</span>
-                                    <span class="time">5 mins</span>
-                                    </span>
-                                    <span class="message">
-                                     Hi, What is next project plan?
-                                    </span>
-                                </a>
-              </li>
-              <li>
-                <a href="#">
-                                    <span class="photo"><img alt="avatar" src="./img/avatar-mini3.jpg"></span>
-                                    <span class="subject">
-                                    <span class="from">Phillip   Park</span>
-                                    <span class="time">2 hrs</span>
-                                    </span>
-                                    <span class="message">
-                                        I am like to buy this Admin Template.
-                                    </span>
-                                </a>
-              </li>
-              <li>
-                <a href="#">
-                                    <span class="photo"><img alt="avatar" src="./img/avatar-mini4.jpg"></span>
-                                    <span class="subject">
-                                    <span class="from">Ray   Munoz</span>
-                                    <span class="time">1 day</span>
-                                    </span>
-                                    <span class="message">
-                                        Icon fonts are great.
-                                    </span>
-                                </a>
-              </li>
-              <li>
-                <a href="#">See all messages</a>
-              </li>
-            </ul>
-          </li>
-          <!-- inbox notificatoin end -->
-          
-          
-          
-          <!-- alert notification start-->
-          <li id="alert_notificatoin_bar" class="dropdown">
-   <!--           <div class="dropdown" style="width: 5%; padding-left:0.2px; padding-top: 7px; float: left;">
+
+					</ul>
+					<!--  search form end -->
+				</div>
+
+				<div style="padding-left: 50%;">
+					<!--logo start-->
+					<a href="index.action" class="logo"> FINAL <span class="lite">INS</span></a>
+					<!--logo end-->
+					<a href="mj_project.action" class="logo">mj_project</a>
+				</div>
+
+				<div class="top-nav notification-row">
+
+					<!-- notificatoin dropdown start-->
+					<ul class="nav pull-right top-menu">
+
+						<!-- inbox notificatoin start-->
+						<li id="mail_notificatoin_bar" class="dropdown"><a
+							data-toggle="dropdown" class="dropdown-toggle" href="#"> <i
+								class="icon-envelope-l"></i> <!-- <span class="badge bg-important">5</span> -->
+						</a>
+							<ul class="dropdown-menu extended inbox">
+								<div class="notify-arrow notify-arrow-blue"></div>
+								<li>
+									<p class="blue">You have 5 new messages</p>
+								</li>
+								<li><a href="#"> <span class="photo"><img
+											alt="avatar" src="./img/avatar-mini.jpg"></span> <span
+										class="subject"> <span class="from">Greg Martin</span>
+											<span class="time">1 min</span>
+									</span> <span class="message"> I really like this admin panel.
+									</span>
+								</a></li>
+								<li><a href="#"> <span class="photo"><img
+											alt="avatar" src="./img/avatar-mini2.jpg"></span> <span
+										class="subject"> <span class="from">Bob Mckenzie</span>
+											<span class="time">5 mins</span>
+									</span> <span class="message"> Hi, What is next project plan? </span>
+								</a></li>
+								<li><a href="#"> <span class="photo"><img
+											alt="avatar" src="./img/avatar-mini3.jpg"></span> <span
+										class="subject"> <span class="from">Phillip Park</span>
+											<span class="time">2 hrs</span>
+									</span> <span class="message"> I am like to buy this Admin
+											Template. </span>
+								</a></li>
+								<li><a href="#"> <span class="photo"><img
+											alt="avatar" src="./img/avatar-mini4.jpg"></span> <span
+										class="subject"> <span class="from">Ray Munoz</span> <span
+											class="time">1 day</span>
+									</span> <span class="message"> Icon fonts are great. </span>
+								</a></li>
+								<li><a href="#">See all messages</a></li>
+							</ul></li>
+						<!-- inbox notificatoin end -->
+
+
+
+						<!-- alert notification start-->
+						<li id="alert_notificatoin_bar" class="dropdown">
+							<!--           <div class="dropdown" style="width: 5%; padding-left:0.2px; padding-top: 7px; float: left;">
 	             <a data-toggle="dropdown" class="dropdown-toggle" id="menu1" href="#">           
 	                                         
 	                            <i class="icon-bell-l"></i>         
@@ -736,23 +1129,22 @@
 				 </ul>
 			 
 	 		</div>  -->
-	 		
-	 			   <div class="dropdown" style="width: 5%; padding-left:0.2px; padding-top: 7px; float: left; border: 0px solid yellow;"> 
-	 			   	     
-					    <!-- <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown" style=" background-color: black; margin-top:1px; color: black; border-color: black;"> 
+
+							<div class="dropdown"
+								style="width: 5%; padding-left: 0.2px; padding-top: 7px; float: left; border: 0px solid yellow;">
+
+								<!-- <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown" style=" background-color: black; margin-top:1px; color: black; border-color: black;"> 
 					    	<span class="icon_cloud-upload_alt logo" style="margin-right: 10px; font-size: 20pt; color: #ffc61a;"></span><span style="font-size: 16pt;" class="lite">Project</span>
 					    <span class="caret"></span></button> -->
-					    
-					    <a data-toggle="dropdown" class="dropdown-toggle" id="menu1" href="#">               
-	                                         
-	                            <i class="icon-bell-l"></i>         
-	                            <!-- <span class="badge bg-important" style="margin-left: 30pt;">7</span> -->
-	             		</a>	
-					       <div class="dropdown" style="border: 1px solid yellow; ">                        
-							    <ul class="dropdown-menu" role="menu" aria-labelledby="menu1" style="width: 500px;">
-							      <c:forEach var="team" items="${teamList}">
-							      	<li role="presentation"><a role="menuitem" tabindex="-1">${team}</a></li>
-							      		<%-- <c:forEach items="">
+
+								<a data-toggle="dropdown" class="dropdown-toggle" id="menu1"
+									href="#"> <i class="icon-bell-l"></i> <!-- <span class="badge bg-important" style="margin-left: 30pt;">7</span> -->
+								</a>
+								<div class="dropdown" style="border: 1px solid yellow;">
+									<ul class="dropdown-menu" role="menu" aria-labelledby="menu1" style="width: 500px;">
+										<c:forEach var="team" items="${teamList}">
+											<li role="presentation"><a role="menuitem" tabindex="-1">${team}</a></li>
+											<%-- <c:forEach items="">
 							      			<c:if test="${team != null}">
 							      				&nbsp;<li role="presentation"><a role="menuitem" tabindex="-1" href="#">project name</a></li>
 							      			</c:if test="${team == null}">
@@ -760,40 +1152,35 @@
 							      				&nbsp;<li role="presentation"><a role="menuitem" tabindex="-1">no project</a></li>
 							      			</c:if>
 							      		</c:forEach> --%>
-							      </c:forEach>						      
-							    </ul>
-					   		</div>
-					</div> 
-	 		
-          </li>                       
-          <!-- alert notification end-->     
-         
-          <!-- user login dropdown start-->         
-          <li class="dropdown">
-            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                            <span class="profile-ava">
-                                <img alt="" src="img/avatar1_small.jpg">
-                            </span>
-                            <span class="username">${sessionScope.loginuser.userid}</span> 
-                            <b class="caret"></b>
-            </a>
-            <ul class="dropdown-menu extended logout">
-              <div class="log-arrow-up"></div>
-              <li class="eborder-top">
-                <a href="#"><i class="icon_profile"></i> My Profile</a>
-              </li>
-              <li>
-                <a href="login.html"><i class="icon_key_alt"></i> Log Out</a>
-              </li>
-            </ul>
-          </li> 
-          
-          <li>
-          <img src="<%=request.getContextPath() %>/resources/img/avatar1.jpg" alt="Avatar" class="avatar" />
-          </li>
-          <!-- user login dropdown end -->
-                    <!-- task notificatoin start -->
-<!--           <li id="task_notificatoin_bar" class="dropdown">
+										</c:forEach>
+									</ul>
+								</div>
+							</div>
+
+						</li>
+						<!-- alert notification end-->
+
+						<!-- user login dropdown start-->
+						<li class="dropdown"><a data-toggle="dropdown"
+							class="dropdown-toggle" href="#"> <span class="profile-ava">
+									<img alt="" src="img/avatar1_small.jpg">
+							</span> <span class="username">${sessionScope.loginuser.userid}</span> <b
+								class="caret"></b>
+						</a>
+							<ul class="dropdown-menu extended logout">
+								<div class="log-arrow-up"></div>
+								<li class="eborder-top"><a href="#"><i
+										class="icon_profile"></i> My Profile</a></li>
+								<li><a href="login.html"><i class="icon_key_alt"></i>
+										Log Out</a></li>
+							</ul></li>
+
+						<li><img
+							src="<%=request.getContextPath()%>/resources/img/avatar1.jpg"
+							alt="Avatar" class="avatar" /></li>
+						<!-- user login dropdown end -->
+						<!-- task notificatoin start -->
+						<!--           <li id="task_notificatoin_bar" class="dropdown">
             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                             <i class="icon-task-l"></i>
                             <span class="badge bg-important">6</span>
@@ -876,12 +1263,11 @@
               </li>
             </ul>
           </li> -->
-          <!-- task notificatoin end -->
-          
-        </ul>
-        <!-- notificatoin dropdown end-->
-      </div>
-    </header>
-    </c:if>  
-    <!--header end-->
-	
+						<!-- task notificatoin end -->
+
+					</ul>
+					<!-- notificatoin dropdown end-->
+				</div>
+			</header>
+		</c:if>
+		<!--header end-->

@@ -44,14 +44,14 @@ public class MinjaeDAO implements InterMinjaeDAO {
 		return teamList;
 	}
 
-	/*@Override
+	@Override
 	public List<ProjectVO> getSearch_project(HashMap<String, String> map) {
 	
 		List<ProjectVO> projectList = sqlsession.selectList("mj.getSearch_project", map);
 		
 		return projectList;
 	}
-
+	
 	@Override
 	public List<ListVO> getSearch_list(HashMap<String, String> map) {
 		
@@ -59,12 +59,28 @@ public class MinjaeDAO implements InterMinjaeDAO {
 		
 		return listList;
 	}
-
+	
 	@Override
 	public List<CardVO> getSearch_card(HashMap<String, String> map) {
 		
 		List<CardVO> cardList = sqlsession.selectList("mj.getSearch_card", map);
 		
 		return cardList;
-	}*/
+	}
+
+	@Override
+	public List<HashMap<String, String>> getSearch_member(String search_input) {
+		
+		List<HashMap<String, String>> memberList = sqlsession.selectList("mj.getSearch_member", search_input);
+		
+		return memberList;
+	}
+
+	@Override
+	public int leaveProject(String userid) {
+		
+		int n = sqlsession.update("mj.leaveProject", userid);
+		
+		return n;
+	}
 }
