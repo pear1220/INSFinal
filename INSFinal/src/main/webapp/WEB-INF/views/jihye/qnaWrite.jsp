@@ -73,10 +73,6 @@ table, th, td, input, textarea {border: solid gray 1px;}
            
          // form 전송하기
          var frm = document.WriteFrm;
-         
-         
-         
-         
          frm.action= "<%= request.getContextPath() %>/writeEnd.action";
          frm.method= "post";
          frm.submit();
@@ -116,10 +112,19 @@ table, th, td, input, textarea {border: solid gray 1px;}
                            <tr>
                            <th>카테고리</th>
                            <td>
+                         <%--      <c:if test="!sessionScope.loginuser.userid.equals('admin')">   --%>
                                <select name="fk_qna_category_idx">
                                   <option selected value="1">기술문의</option>
                                   <option value="2">기타</option>
                                </select>
+                   <%--             </c:if> --%>
+                               
+                           <%--      <c:if test="sessionScope.loginuser.userid.equals('admin')">  
+                               <select name="fk_qna_category_idx">
+                                  <option selected value="1">답변</option>
+                                 <!--  <option value="2">기타</option> -->
+                               </select>
+                               </c:if>  --%>
                            </td>
                         </tr>
                         <tr>

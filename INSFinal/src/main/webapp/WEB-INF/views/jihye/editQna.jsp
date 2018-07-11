@@ -69,6 +69,9 @@
            var editFrm = document.editFrm;
    		   editFrm.qna_title.value = subjectval;
    		   editFrm.qna_content.value = content.value;
+   		   editFrm.fk_qna_category_idx.value = fk_qna_category_idx.value;
+   		   editFrm.qna_orgfilename.value = qna_orgfilename.value;
+  
    	   
 	   	   editFrm.action = "editQnaEnd.action";
 	   	   editFrm.method = "POST";
@@ -83,13 +86,32 @@
 
 <div style="padding-left: 10%;">
    <h1 style="margin-bottom: 30px;">글 내용 보기</h1>
+
    
    <table id="table">
 
         <tr>
             <th  style="width: 70px; text-align: center;">글번호</th>
             <td>${qnavo.qna_idx}</td>
-        </tr>     
+        </tr>  
+         <tr>
+            <th  style="width: 70px; text-align: center;">카테고리</th>
+            <td>
+                         <%--      <c:if test="!sessionScope.loginuser.userid.equals('admin')">   --%>
+                               <select id="fk_qna_category_idx" name="fk_qna_category_idx">
+                                  <option selected value="1">기술문의</option>
+                                  <option value="2">기타</option>
+                               </select>
+                   <%--             </c:if> --%>
+                               
+                           <%--      <c:if test="sessionScope.loginuser.userid.equals('admin')">  
+                               <select name="fk_qna_category_idx">
+                                  <option selected value="1">답변</option>
+                                 <!--  <option value="2">기타</option> -->
+                               </select>
+                               </c:if>  --%>
+                           </td>
+                        </tr>   
         <tr>
             <th  style="width: 70px; text-align: center;">성명</th>
             <td>${sessionScope.loginuser.name}</td>
@@ -931,23 +953,24 @@
           <%-- ==== #135. 파일첨부 타입 추가하기  ==== --%>
             <tr>
                 <th>파일첨부</th>
-                <td><input type="file" name="attach"  value="${qnavo.qna_orgfilename}"/></td> <%--name은 db컬럼과 똑같이 해야 한다. --%>
+                <td><input type="file" name="attach" id="qna_orgfilename" value="${qnavo.qna_orgfilename}"/></td> <%--name은 db컬럼과 똑같이 해야 한다. --%>
             </tr>
             
    </table>
 
-	
+
    
    <br/>
    <button type="button" id="btnUpdate">완료</button>
    <button type="button" onClick="javascript:history.back();" >취소</button>  
   
-   <form name="editFrm">
+<form name="editFrm">
       <input type="hidden" name="qna_idx" value="${qnavo.qna_idx}" />
       <input type="hidden" name="qna_title" />
       <input type="hidden" name="qna_content" />
- 
-      
+      <input type="hidden" name="fk_qna_category_idx" />
+      <input type="hidden" name="qna_orgfilename" />
+
    </form>
    
 </div>

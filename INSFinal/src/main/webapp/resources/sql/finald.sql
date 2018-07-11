@@ -515,8 +515,9 @@ values(seq_qna_category.nextval, '기타');
 commit;
 
 -- qna  글 목록
-insert into ins_QnA(qna_idx, fk_userid, fk_qna_category_idx, qna_title, qna_content, qna_date, qna_fk_idx, qna_depthno,  qna_filename, qna_orgfilename, qna_byte)
-values(seq_qna.nextval, 'jihye', 1, 'qna 테스트입니다.', 'qna 테스트 내용물입니다.' , default, seq_qna.nextval, default, default, default, 0 );
+insert into ins_QnA(qna_idx, fk_userid, fk_qna_category_idx, qna_title, qna_content, qna_date, qna_fk_idx, qna_depthno, qna_groupno)
+values(seq_qna.nextval, #{fk_userid}, #{fk_qna_category_idx}, #{qna_title}, #{qna_content}, default, default, default, #{qna_groupno}) 
+
 
 select *
 from ins_QnA_category
@@ -527,11 +528,6 @@ from ins_QnA
 commit;
 
 -- qna 목록 불러오기
-select qna_idx, fk_userid, qna_category , qna_title, qna_content, qna_date, qna_fk_idx, qna_depthno,  qna_filename, qna_orgfilename, qna_byte
-from ins_QnA A join ins_QnA_category B
-on A.fk_qna_category_idx = B.qna_category_idx
-where fk_userid = 'jihye';
-
 
 
 -- **** 페이징 처리를 위해서 목록에 글쓰기를 많이 한다 *** ---
@@ -539,8 +535,8 @@ declare
    v_cnt number(3) := 1;
  begin
    loop
-     insert into ins_QnA(qna_idx, fk_userid, fk_qna_category_idx, qna_title, qna_content, qna_date, qna_fk_idx, qna_depthno,  qna_filename, qna_orgfilename, qna_byte)
-     values(seq_qna.nextval,'jihye', 1,  'qna 테스트'||v_cnt ||'입니다.', '안녕하세요? 안지혜입니다. 하하하하하'|| v_cnt,  default, seq_qna.nextval, default, default, default, 0);
+     insert into ins_QnA(qna_idx, fk_userid, fk_qna_category_idx, qna_title, qna_content, qna_date, qna_fk_idx, qna_depthno, qna_groupno)
+     values(seq_qna.nextval,'jihye', 1,  'qna 테스트'||v_cnt ||'입니다.', '안녕하세요? 안지혜입니다. 하하하하하'|| v_cnt,  default, default, default, v_cnt);
      v_cnt := v_cnt + 1;
    exit when v_cnt > 10;
    end loop;
@@ -551,9 +547,115 @@ commit;
 
 -- QnA 글 삭제하기(답글이 없을 경우 qna_depthno 가 0일 경우)
 delete from ins_QnA 
-where qna_idx = 2  and qna_depthno = 0 
+where qna_idx = 21  and qna_depthno = 0 
 
 rollback;
 
+commit;
+
+-- 글 1개 보기
+
+   select qna_idx, fk_userid, fk_qna_category_idx , qna_title, qna_content, qna_date, qna_groupno,qna_fk_idx, qna_depthno,   qna_filename, qna_orgfilename, qna_byte
+	from ins_QnA
+	where fk_userid = 'jihye' or fk_userid = 'admin' 
+  start with qna_fk_idx = 0
+  connect by prior qna_idx = qna_fk_idx
+  order siblings by qna_groupno desc, qna_idx asc 
+  
+    select *
+  	from ins_QnA
+
+-- 검색어가 없는 qna목록 보여주기(페이징 처리)
+
+ select  rno, qna_idx, fk_userid, qna_title, qna_date
+              , qna_groupno, qna_fk_idx, qna_depthno
+              , qna_fileName, qna_orgFilename, qna_byte
+		from 
+		(
+		select rownum as RNO
+		     , V.qna_idx, V.fk_userid, V.qna_title, V.qna_content,  V.qna_date
+         , V.qna_groupno, V.qna_fk_idx, V.qna_depthno
+        , V.qna_fileName, V.qna_orgFilename, V.qna_byte
+		from 
+		(
+		select qna_idx, fk_userid 
+		     , case when length(qna_title) > 20 then substr(qna_title, 1, 18)||'..'
+		       else qna_title end as qna_title
+		     , qna_content 
+		     , to_char(qna_date, 'yyyy-mm-dd hh24:mi:ss') as qna_date
+         , qna_groupno, qna_fk_idx, qna_depthno
+         , qna_fileName, qna_orgFilename, qna_byte
+		from ins_QnA 
+    where fk_userid = 'jihye' or fk_userid = 'admin'
+     start with qna_fk_idx = 0
+    connect by prior qna_idx = qna_fk_idx
+		order siblings by qna_groupno desc, qna_idx asc 
+	    ) V
+    start with qna_fk_idx = 0
+    connect by prior qna_idx = qna_fk_idx
+		order siblings by qna_groupno desc, qna_idx asc 
+		) T  
+--    where T.RNO <![CDATA[>=]]> #{startRno} and T.RNO <![CDATA[<=]]> #{endRno} 
+    where T.RNO >= 1 and T.RNO <= 20
+    order by rno desc
+    
+   
+         
+          
+-- 답글이 달렸을 경우 삭제하지 않기          
+select *
+from (
+        select *
+        from ins_QnA 
+        where fk_userid = 'admin'  ) A join (  select *
+                                                from ins_QnA 
+                                                where fk_userid = 'jihye') B
+on A.qna_fk_idx = B.qna_idx 
+
+
+select *
+from
+(
+select qna_idx,qna_groupno, qna_fk_idx
+from ins_QnA
+group by qna_groupno,qna_idx, qna_fk_idx
+having qna_groupno = 1)
+where qna_fk_idx = 0
+
+
+-- 업데이트 qna_depthno
+update ins_QnA set qna_depthno = 1
+where qna_idx = 18
+
+commit;
+
+rollback;
+
+
+
+
+
+
+
+
+-- 총 갯수를 구하기 위함
+
+		select count(*)
+		from 
+		(
+		select qna_idx, fk_userid 
+		     , case when length(qna_title) > 20 then substr(qna_title, 1, 18)||'..'
+		       else qna_title end as qna_title
+		     , qna_content 
+		     , to_char(qna_date, 'yyyy-mm-dd hh24:mi:ss') as qna_date
+             , qna_groupno, qna_fk_idx, qna_depthno
+             , qna_fileName, qna_orgFilename, qna_byte
+             , fk_qna_category_idx
+		from ins_QnA
+--	        where fk_userid = 'jihye' or fk_userid = 'admin'
+	    ) V
+	     start with qna_fk_idx = 0
+         connect by prior qna_idx = qna_fk_idx
+		order siblings by qna_groupno desc, qna_idx asc
 
 

@@ -21,7 +21,7 @@ public class QnaDAO implements InterQnaDAO {
 	
 		
 		// 회원인 경우  QnA목록 보여주기
-		@Override
+	/*	@Override
 		public List<QnaVO> getQnaList(String userid) {
 			List<QnaVO> qnaList= sqlsession.selectList("qna.getQnaList", userid);
 			return qnaList;
@@ -31,7 +31,7 @@ public class QnaDAO implements InterQnaDAO {
 		public List<QnaVO> getQnaList() {
 			List<QnaVO> qnaList= sqlsession.selectList("qna.getQnaListAll");
 			return qnaList;
-		}
+		}*/
 	
 		 // ======  글쓰기(파일첨부가 없는 글쓰기) ====== 
 	    @Override
@@ -77,7 +77,63 @@ public class QnaDAO implements InterQnaDAO {
 			int n = sqlsession.delete("qna.del", qna_idx);
 			return n;
 		}
+		
+		
+		
+		/////////////////////////////////////////////////////////////////////////////////////////
+		// ===== #115. 검색어가 있는 총 게시물 건수 =====
+		/*@Override
+		public int getTotalCount2(HashMap<String, String> map) {
+		int totalCount = sqlsession.selectOne("qna.getTotalCount2", map);
+		return totalCount;
+		}*/
+		
+		
+		// ===== #115. 검색어가 없는 총 게시물 건수 =====
+		@Override
+		public int getTotalCount(HashMap<String,String> map) {
+		int totalCount = sqlsession.selectOne("qna.getTotalCount", map);
+		return totalCount;
+		}
+		////////////////////////////////////////////////////////////////////////////////////////////////
+		
+		
+		// ===== #108. 글목록 보여주기(검색어가 있는 것) =====
+	/*	@Override
+		public List<QnaVO> qnaList2(HashMap<String, String> map) {
+			List<QnaVO> qnaList = sqlsession.selectList("qna.qnaList2", map);
+			return qnaList ;
+		}
+		*/
+		// ===== #108. 글목록 보여주기(검색어가 없는 것) =====
+		@Override
+		public List<HashMap<String,String>> qnaList(HashMap<String, String> map) {
+			
+			
+			System.out.println("확인용 "+map.get("userid"));
+			
+			List<HashMap<String,String>> qnaList = sqlsession.selectList("qna.qnaList", map);
+			return qnaList ;
+		}
+	    ///////////////////////////////////////////////////////////////////////////////////////
 
+		@Override
+		public QnaVO qnaupdate(String qna_groupno) {
+			
+	         QnaVO qnaupdate = sqlsession.selectOne("qna.qnaupdate", qna_groupno);
+	         
+	         qnaupdate.getQna_idx();
+	         
+	         System.out.println("원글 번호"+qnaupdate.getQna_idx());
+			
+			return qnaupdate;
+		}
 
-	
+		@Override
+		public int depthnoUpdate(String qna_idx) {
+			int m = sqlsession.update("qna.depthnoUpdate", qna_idx);
+			return m;
+		}
+		
+		
 }

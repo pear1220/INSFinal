@@ -7,7 +7,7 @@
 	 
 	  alert("글수정 성공!!");
 	  
-	  location.href="<%= request.getContextPath() %>/view.action?qna_idx=${qna_idx}";
+	  location.href="<%= request.getContextPath() %>/qna.action";
        
   }
   else {

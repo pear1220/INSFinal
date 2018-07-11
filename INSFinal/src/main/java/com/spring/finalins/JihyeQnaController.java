@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.spring.finalins.common.FileManager;
+import com.spring.finalins.common.MyUtil;
 import com.spring.finalins.model.MemberVO;
 import com.spring.finalins.model.PhotoVO;
 import com.spring.finalins.qna.model.QnaVO;
@@ -52,17 +54,101 @@ public class JihyeQnaController {
 		MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
 		
 		String userid = loginuser.getUserid(); 
-		List<QnaVO> qnaList = null;
+		List<HashMap<String,String>> qnaList = null;
+		
+		
+		HashMap<String, String> map = new HashMap<String, String>();
 
-		//QnA목록 보여주기
-		if ( !userid.equalsIgnoreCase("admin") ) { // 회원인 경우
-        	qnaList = service.qnaList(userid);  
-		}
-		else { // admin인 경우
-		     qnaList = service.qnaList();
-		}
+				// ===== #110. 페이징 처리 하기 =====
+				String str_currentShowPageNo = req.getParameter("currentShowPageNo");
 
-		req.setAttribute("qnaList", qnaList);
+				int totalCount = 0; // 총 게시물 건 수 알기
+				int sizePerPage = 5; // 한 페이지당 보여줄 게시물 건수
+				int currentShowPageNo = 0; // 현재 보여주는 페이지 번호로서, 초기값은 1페이지로 설정함.
+				int totalPage = 0; // 총페이지수(웹브라우저상에 보여줄 총 페이지 갯수)
+
+				int startRno = 0;// 시작행 번호
+				int endRno = 0;// 끝행 번호
+
+				int blockSize = 3;// "페이지바" 에 보여줄 페이지의 갯수
+
+				/*
+				 * ==== 총 페이지 수 구하기 ==== 검색 조건이 없을 때의 총 페이지 수와 검색 조건이 있을 때의 총 페이지 수를 구해야 한다.
+				 * 
+				 * 검색 조건이 없을 때의 총 페이지 수 ==> colname과 search가 null 인 것이고, 검색 조건이 있을 때의 총 페이지 수
+				 * ==> colname과 search가 null 이 아닌 것이다.
+				 */
+				map.put("userid", userid);
+				
+				totalCount = service.getTotalCount(map); // 검색어가 없는 총 게시물 건수
+				
+				System.out.println("총 게시물 수"+totalCount);
+
+				// 구해온 totalCount로 totalPage를 만든다.
+				// 정수 / 정수 (정수 나누기 정수는 실수) ==> 형번환 해준다.
+				totalPage = (int)Math.ceil((double)totalCount / sizePerPage);
+				
+				System.out.println("총 페이지 수"+totalPage);
+
+
+				// 맨 처음에 목록보기를 눌렀을 때
+				// 뷰단에서 자바로 넘어올 때 get방식이라서 장난치는 것을 다 막아줘야 한다. get방식의 주소창은 다 드러나기 때문에 유효성 검사
+				if (str_currentShowPageNo == null) {
+					// 게시판 초기 화면에 보여지는 것은
+					// req.getParameter("currentShowPageNo"); 값이 없으므로
+					// str_currentShowPageNo 은 null 이 된다.
+
+					currentShowPageNo = 1;
+				} else { // null이 아니라면 int로 바꿔주는데 존재하지 않는 음수 페이지거나 토탈페이지보다 더 많으면 currentShowPageNo = 1; 로
+							// 설정하겠다.
+					try { // 숫자만 Integer로 바꿀 수 있고 똘똘이와 같은 건 안되기 때문에 numberformat exception이 발생
+						currentShowPageNo = Integer.parseInt(str_currentShowPageNo);
+
+						if (currentShowPageNo < 1 || currentShowPageNo > totalPage) { // ==> 존재하지 않는 페이지가 있다면
+							currentShowPageNo = 1;
+						}
+
+					} catch (NumberFormatException e) {
+						currentShowPageNo = 1;
+					}
+				}
+
+				// **** 가져올 게시글의 범위를 구한다.(공식임!!) ****
+				/*
+				 * // 1페이지당 5개씩 보여준다고 가정한다면 currentShowPageNo startRno endRno
+				 * ------------------------------------------------ 1 page ==> 1 5 2 page ==> 6
+				 * 10 3 page ==> 11 15 4 page ==> 16 20 5 page ==> 21 25 6 page ==> 26 30 7 page
+				 * ==> 31 35
+				 */
+
+				// ****** 공식!공식!공식! *******
+				startRno = (currentShowPageNo - 1) * sizePerPage + 1;
+				endRno = startRno + sizePerPage - 1;
+
+				// totalCount 는 검색어의 유무에 따라 게시물의 총 갯수가 달라진다
+				// ===== #111. 페이징 처리를 위한 startRno, endRno 를 map에 추가하여
+				// 파라미터로 넘겨서 select 되도록 한다.
+				// --> totalCount 구하기(DB에서 데이터 갯수 알아오기)
+
+				// 처음에 검색도 안했을때 현재 페이지는 1이고 페이지에서 시작값은 1이고 마지막 값은 5이다. 그것을 map에 넣어준다.
+
+				map.put("startRno", String.valueOf(startRno));
+				map.put("endRno", String.valueOf(endRno));
+				
+				map.put("userid", userid);
+				
+				qnaList = service.qnaList(map);
+
+				// =====  페이지바 만들기(먼저, 페이지바에 나타낼 총 페이지 갯수(totalPage) 구해야 한다.) =====
+				String pagebar = "<ul>";
+				pagebar += MyUtil.getSearchPageBar("qna.action", currentShowPageNo, sizePerPage, totalPage, blockSize,
+						map.get("colname"), map.get("search"), null); // period는 없으니까 null 을 넣어준다.
+				pagebar += "</ul>";
+
+				req.setAttribute("pagebar", pagebar);
+
+				req.setAttribute("qnaList", qnaList);
+		
 		
 		return "jihye/qna.tiles";
 	}
@@ -70,31 +156,20 @@ public class JihyeQnaController {
 	
 	
 	 // ======= #61. 글 1개를 보여주는 페이지 요청하기 =====
-    @RequestMapping(value = "/view.action", method = { RequestMethod.GET})
+    @RequestMapping(value = "/view.action", method = { RequestMethod.POST})
     public String requireLogin_view(HttpServletRequest req,  HttpServletResponse res) {
 
         HttpSession session = req.getSession();
  		MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
  		String userid = loginuser.getUserid();
 
+ 		System.out.println("로그인한 유저"+userid);
+ 		
  	    String qna_idx = req.getParameter("qna_idx"); // 글번호 받아오기
  	    QnaVO qnavo = service.getView(qna_idx);
- 		
- 	      if(!qnavo.getFk_userid().equals(userid) && !userid.equalsIgnoreCase("admin")) {
- 			
- 	    	 String msg = "경로가 잘못되었습니다.</br>다른 사용자의 문의 글을 볼 수 없습니다.";
-			String loc = "javascript:history.back();";
+ 	
+ 	    req.setAttribute("qnavo", qnavo);  
 
-			req.setAttribute("msg", msg);
-			req.setAttribute("loc", loc);
-
-			return "msg.notiles";
-			
-         }else if(qnavo.getFk_userid().equals(userid) || userid.equals("admin")) {
- 	         qnavo = service.getView(qna_idx);
- 	         req.setAttribute("qnavo", qnavo);  
-         }
- 	      
  	     return "jihye/view.tiles"; 
         
     }
@@ -118,9 +193,9 @@ public class JihyeQnaController {
          String qna_groupno = req.getParameter("qna_groupno");
          String qna_depthno = req.getParameter("qna_depthno");
          
-         System.out.println("qna_fk_idx"+qna_fk_idx);
-         System.out.println("qna_groupno"+qna_groupno);
-         System.out.println("qna_depthno"+qna_depthno);
+     //    System.out.println("qna_fk_idx"+qna_fk_idx);
+    //     System.out.println("qna_groupno"+qna_groupno);
+     //    System.out.println("qna_depthno"+qna_depthno);
 
          req.setAttribute("qna_fk_idx", qna_fk_idx);
          req.setAttribute("qna_groupno", qna_groupno);
@@ -135,14 +210,14 @@ public class JihyeQnaController {
 		
       // =======  글쓰기 완료 요청 =======
       @RequestMapping(value = "/writeEnd.action", method = { RequestMethod.POST })
-      public String writeEnd(QnaVO qnavo,MultipartHttpServletRequest req,  HttpSession session, HttpServletResponse res) {
+      public String writeEnd(QnaVO qnavo,MultipartHttpServletRequest req,  HttpSession session, HttpServletResponse res) throws Throwable{
 	  //requireLogin_
     	  
     	   String qna_fk_idx = req.getParameter("qna_fk_idx");
            String qna_groupno = req.getParameter("qna_groupno");
            String qna_depthno = req.getParameter("qna_depthno");
            
-           System.out.println("qna_fk_idx"+qna_fk_idx);
+           System.out.println("글쓸 때 qna_fk_idx"+qna_fk_idx);
            System.out.println("qna_groupno"+qna_groupno);
            System.out.println("qna_depthno"+qna_depthno);
 
@@ -254,7 +329,7 @@ public class JihyeQnaController {
     		         qnavo.setQna_fk_idx(qna_fk_idx);
     		         qnavo.setQna_groupno(qna_groupno);
     		         
-    		         System.out.println("qnavo 그룹넘버"+qnavo.getQna_groupno());
+    		   //      System.out.println("qnavo 그룹넘버"+qnavo.getQna_groupno());
     		         
 
     		         int n = 0;
@@ -268,8 +343,25 @@ public class JihyeQnaController {
     		           n = service.write_withFile(qnavo); // insert니까 리턴타입은 int
     		         }
 
-    		         req.setAttribute("n", n);
     		        
+
+    		        // n==1 이고 qna_fk_idx 가 0이라면 이것은 원글에 답글이 없는 경우이다.
+    		        // 답글이 달린 원글에 qna_depthno  
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+    		         int m = 0;
+    		         if(n==1 && qna_fk_idx =="") {
+    		        	 
+    		        /*	 qnavo = service.getView(qna_idx);*/
+    		        	 
+    		        	 System.out.println("답글이 성공적으로 써져서 트랜잭션 처리를 하겠습니다.");
+    		        	 
+    		        	 String qna_idx = qnavo.getQna_idx();
+    		        //	 qna_depthono를 업데이트하기
+    		        	 m = service.updateQnaDepthno(qnavo);
+    		         }	 
+
+    		         req.setAttribute("n", n);
+
     		         return "writeEnd.notiles";
 
     			}
@@ -292,7 +384,7 @@ public class JihyeQnaController {
       
       
   	// ====== #70. 글수정 페이지 요청 =====
-  	@RequestMapping(value = "/editQna.action", method = { RequestMethod.GET })
+  	@RequestMapping(value = "/editQna.action", method = { RequestMethod.GET})
   	public String requiredLogin_editQna(HttpServletRequest req, HttpServletResponse res) { // LoginCheck.java에서 로그인 유무 검사할
   																						// 때 파라미터가 2개라서 지금 이 메소드에도 파라미터
   																						// 2개 넣은 것임.
@@ -331,8 +423,8 @@ public class JihyeQnaController {
   	// ====== #71. 글수정 페이지 완료하기=====
   	@RequestMapping(value = "/editQnaEnd.action", method = { RequestMethod.POST })
   	public String editQnaEnd(QnaVO qnavo, HttpServletRequest req,  HttpServletResponse res) {
-
-
+        	
+  		
   		HttpSession session = req.getSession();
   		 MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
    
@@ -340,6 +432,13 @@ public class JihyeQnaController {
    			
    				String qna_content = qnavo.getQna_content().replaceAll("\r\n", "<br/>");
    		  		qnavo.setQna_content(qna_content);
+   		  		
+   		  		String fk_qna_category_idx = req.getParameter("fk_qna_category_idx");
+   		  		qnavo.setFk_qna_category_idx(Integer.parseInt(fk_qna_category_idx));
+   		  		
+   		  		String qna_orgfilename = req.getParameter("qna_orgfilename");
+   		  		qnavo.setQna_orgfilename(qna_orgfilename);
+   		  		
    		  		/*
    		  		 * 글 수정을 하려면 원본 글의 암호화 수정시 입력해주는 암호가 일치할 때만 글수정이 가능하도록 해야 한다.
    		  		 */

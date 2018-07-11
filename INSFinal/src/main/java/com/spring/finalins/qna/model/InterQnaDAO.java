@@ -10,8 +10,8 @@ public interface InterQnaDAO {
 	
 	
 	// QnA목록 보여주기
-	List<QnaVO> getQnaList(String userid); // 회원인 경우
-	List<QnaVO> getQnaList(); // admin인 경우
+//	List<QnaVO> getQnaList(String userid); // 회원인 경우
+//	List<QnaVO> getQnaList(); // admin인 경우
 	
    int write(QnaVO qnavo);// 글쓰기(파일첨부가 없는 글쓰기)
 
@@ -24,6 +24,19 @@ public interface InterQnaDAO {
 	int editQna(QnaVO qnavo); // 글 1개 수정하기
 
 	int del(String qna_idx); // 글 1개 삭제하기
+	
+	
+//	int getTotalCount2(HashMap<String, String> map); //검색어가 있는 총 게시물 수
+	int getTotalCount(HashMap<String,String> map); // 검색어가 없는 총 게시물 수
+	
+	
+	
+//	List<QnaVO> qnaList2(HashMap<String, String> map); // 글목록 보여주기(검색어가 있는 것)
+	List<HashMap<String, String>> qnaList(HashMap<String, String> map); // 글목록 보여주기(검색어가 없는 것)
+
+	
+	QnaVO qnaupdate(String qna_groupno); //원글 qna_idx찾아오기
+	int depthnoUpdate(String qna_idx); // 원글 qna_depthno 업데이트 하기
 
 	
 

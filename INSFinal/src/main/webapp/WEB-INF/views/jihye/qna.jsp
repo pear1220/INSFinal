@@ -73,8 +73,9 @@ $(document).ready(function(){
    
 
 }); // end of $(document).ready(function()
+		
 
-/*  function goView(qna_idx){ // 파라미터 글 번호 == seq
+ function goView(qna_idx){ // 파라미터 글 번호 == seq
    
    console.log(qna_idx);
    
@@ -82,9 +83,11 @@ $(document).ready(function(){
     frm.qna_idx.value = qna_idx; // form 에 value값 넣어주기
    
     frm.action = "view.action"; // 글 한 개 보기
-   frm.method = "GET";
+   frm.method = "POST";
    frm.submit();
-} // end of function goView() */
+} // end of function goView() 
+
+
 
 function goWrite(){
 	
@@ -148,9 +151,9 @@ function goWrite(){
                           <th style="text-align: center; white-space: pre;" >제목</th>
                           <th style="text-align: center; white-space: pre;" >작성일자</th>
                           <th style="text-align: center; white-space: pre;" >작성자</th>
-                          <th style="text-align: center; white-space: pre;" >답변상태</th>
+                         <!--  <th style="text-align: center; white-space: pre;" >답변상태</th> -->
                           <!-- ==== #144. 파일여부를 보여주도록 수정 ==== -->
-				          <th  style="width: 70px; text-align: center;">첨부파일</th>
+				          <th style="text-align: center; white-space: pre;">첨부파일</th>
 <!-- 				          <th  style="width: 100px; text-align: center;">크기(bytes)</th> -->
 				        
                         </tr>
@@ -158,45 +161,52 @@ function goWrite(){
                    
                   <tbody id="QnAListResult" style="width:100%;">
                        <c:if test="${qnaList.size() == 0}">
-                            <tr><td colspan="6" style="text-align: center;">작성된 QnA가 없습니다.</td></tr><!-- align="center"  -->
+                            <tr><td colspan="6" style="text-align: center;">작성된 QnA가 없습니다.</td></tr>
                        </c:if> 
                        
                         <c:if test="${qnaList.size() > 0}">  
-                             <c:forEach var="qnavo" items="${qnaList}">
+                             <c:forEach var="map" items="${qnaList}">
                                 <tr style="text-align: center;">
-                                      <td>${qnavo.qna_idx}</td>      
-                                <c:if test="${qnavo.fk_qna_category_idx == 1}">  
+                                      <td>${map.rno}</td>      
+                                <c:if test="${map.fk_qna_category_idx == 1}">  
                                       <td>기술문의</td>
                                  </c:if>   
-                                 <c:if test="${qnavo.fk_qna_category_idx == 2}"> 
+                                 <c:if test="${map.fk_qna_category_idx == 2}"> 
                                        <td>기타</td>
                                   </c:if>  
-                                 <c:if test="${qnavo.qna_fk_idx == 0}">   
-                                        <td><a href='<%= request.getContextPath() %>/view.action?qna_idx=${qnavo.qna_idx}'>${qnavo.qna_title}</a></td> 
-                                    <%-- <td><span class="subject" onClick="goView('${qnavo.qna_idx}');">${qnavo.qna_title}</span></td> --%>
+                                 <c:if test="${map.qna_fk_idx == 0}">   
+                                       <%--  <td style="text-align: left; padding-left: 40px;"><a href='<%= request.getContextPath() %>/view.action?qna_idx=${map.qna_idx}'>${map.qna_title}</a></td>  --%>
+                                    <td style="text-align: left; padding-left: 40px;"><span class="subject" onClick="goView('${map.qna_idx}');">${map.qna_title}
+                                    <c:if test="">
+                                    <span style="color: red; font-size: 5px; font-style: italic; font-size: smaller; vertical-align: sub;">답변완료</span>
+                                    </c:if>
+                                    </span></td> 
                                    </c:if>
                                    <!-- 답변글인 경우  -->
-		                         <c:if test="${qnavo.qna_fk_idx > 0}">
-				                         <td><a href='<%= request.getContextPath() %>/view.action?qna_idx=${qnavo.qna_idx}'><span style="color: red; font-style: italic; padding-left: ${qnavo.qna_depthno * 20}px;">└Re&nbsp;&nbsp;</span> ${qnavo.qna_title}<span style="color: red; font-size: 5px; font-style: italic; font-size: smaller; vertical-align: sub;">답변</span></a>
+		                         <c:if test="${map.qna_fk_idx > 0}">
+				                        <%--  <td style="text-align: left; padding-left: 40px;" ><a href='<%= request.getContextPath() %>/view.action?qna_idx=${map.qna_idx}'><span style="color: red; font-style: italic; padding-left: ${map.qna_depthno * 20}px;">└Re&nbsp;&nbsp;</span> ${map.qna_title}<span style="color: red; font-size: 5px; font-style: italic; font-size: smaller; vertical-align: sub;">답변완료</span></a> --%>
+				                         <td style="text-align: left; padding-left: 40px;"><span class="subject" onClick="goView('${map.qna_idx}');"><span style="color: red; font-style: italic; padding-left: ${map.qna_depthno * 20}px;">└Re&nbsp;&nbsp;</span> ${map.qna_title}<span style="color: red; font-size: 5px; font-style: italic; font-size: smaller; vertical-align: sub;">답변완료</span></span></td> 
 				                 </c:if>      
-		                                <td>${qnavo.qna_date}</td>
-		                                <td>${qnavo.fk_userid}</td>
-	                              <c:if test="${qnavo.qna_depthno == 0}">
+		                                <td>${map.qna_date}</td>
+		                                <td>${map.fk_userid}</td>
+		                                
+		                                
+	                            <%--   <c:if test="${map.qna_depthno == 0}">
 	                                     <td><span style="color: blue; ">대기중</span></td>
 	                              </c:if>
-	                              <c:if test="${qnavo.qna_depthno == 1}">
+	                              <c:if test="${map.qna_depthno == 1}">
 	                                     <td><span style="color: red; text-size: bold;">답변완료</span></td>
-	                              </c:if>
+	                              </c:if> --%>
 	                              
-	                                 <%-- ==== #145. 첨부파일 여부 표시하기 ==== --%>
+	                             <%-- ==== #145. 첨부파일 여부 표시하기 ==== --%>
 				                 <td align="center" >
-				                     <c:if test="${not empty qnavo.qna_filename}">
+				                     <c:if test="${not empty map.qna_filename}">
 				                        <img src="<%= request.getContextPath() %>/resources/jihye/disk.gif">
 				                     </c:if>   
 				                 </td> 
 				              <%--    <td align="center" >
-				                      <c:if test="${not empty qnavo.qna_byte}">
-				                        ${qnavo.qna_byte}
+				                      <c:if test="${not empty map.qna_byte}">
+				                        ${map.qna_byte}
 				                     </c:if>   
 				                  </td> 
 	                               --%>
@@ -206,13 +216,28 @@ function goWrite(){
                           </c:if>  
                   </tbody>
                </table>
-               </div>
+              
                
                
-               <!-- 페이징 처리하기 -->
-               <div style="margin-top: 20px; margin-bottom:20px; text-align:center;">
-               </div> 
-               
+                
+			   <%-- #117. 페이지바 보여주기 --%>
+			   <div align="center" style="width: 70%; margin-top: 20px; margin-left: -180px; margin-right: auto;">
+			       ${pagebar}
+			   </div>
+			   
+			   <%-- ==== #105. 글검색 폼 추가하기 : 글제목, 글내용, 글쓴이로 검색하도록 한다. ==== --%> 
+				<!-- <div style="margin-top: 30px;">
+				<form name="searchFrm">
+					<select name="colname" id="colname" style="height: 26px;"> 
+						<option value="subject">글제목</option>
+						<option value="content">글내용</option>
+						<option value="name">글쓴이</option>
+					</select>
+					<input type="text" name="search" id="search" size="40" />
+					<button type="button" onClick="goSearch();">검색</button>
+				</form>
+				</div> -->
+                </div>
             </div>
          </div>
       </div>
@@ -232,9 +257,9 @@ function goWrite(){
  
  <%-- qna 글쓰기 --%>
  <form name="qnaWriteFrm">
-  <input type="hidden" name="fk_qna_category_idx" value="${fk_qna_category_idx}" />
-  <input type="hidden" name="qna_groupno" value="${qna_groupno}" />
-  <input type="hidden" name="qna_depthno" value="${qna_depthno}" />
+  <input type="hidden" name="fk_qna_category_idx" value="${map.fk_qna_category_idx}" />
+  <input type="hidden" name="qna_groupno" value="${map.qna_groupno}" />
+  <input type="hidden" name="qna_depthno" value="${map.qna_depthno}" />
  <%--  <input type="hidden" name="qna_idx" value="${qna_idx}" /> --%>
 </form>
 
