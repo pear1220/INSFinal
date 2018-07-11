@@ -46,94 +46,36 @@ public class MinjaeService implements InterMinjaeServie {
 
 	// ========================================================== SEARCH ========================================================================================
 	// header : 검색을 위해 teamList 를 얻음
-	/*	@Override
-	public List<HashMap<String, String>> getSearch_team(HashMap<String, String> map) {
+	@Override
+	public List<TeamVO> getSearch_team(String search_input) {
 		
-		List<HashMap<String, String>> teamList = dao.getSearch_team(map);
+		List<TeamVO> teamList = dao.getSearch_team(search_input);
 		
 		return teamList;
 	}
-	
-	// header : 검색을 위해 projectList 를 얻음
-	@Override
-	public List<HashMap<String, String>> getSearch_project(HashMap<String, String> map) {
+
+	/*@Override
+	public List<ProjectVO> getSearch_project(HashMap<String, String> map) {
 		
-		List<HashMap<String, String>> projectList = dao.getSearch_project(map);
+		List<ProjectVO> projectList = dao.getSearch_project(map);
 		
 		return projectList;
 	}
 
-	// header : 검색을 위해 listList 를 얻음
 	@Override
-	public List<HashMap<String, String>> getSearch_list(HashMap<String, String> map) {
+	public List<ListVO> getSearch_list(HashMap<String, String> map) {
 		
-		List<HashMap<String, String>> listList = dao.getSearch_list(map);
+		List<ListVO> listList = dao.getSearch_list(map);
 		
 		return listList;
 	}
 
-	// header : 검색을 위해 cardList 를 얻음
 	@Override
-	public List<HashMap<String, String>> getSearch_card(HashMap<String, String> map) {
+	public List<CardVO> getSearch_card(HashMap<String, String> map) {
 		
-		List<HashMap<String, String>> cardList = dao.getSearch_card(map);
+		List<CardVO> cardList = dao.getSearch_card(map);
 		
 		return cardList;
 	}*/
-
-	// header : 검색을 위해 memberList 를 얻음
-	@Override
-	public List<HashMap<String, String>> getSearch_member(HashMap<String, String> map) {
-		
-		List<HashMap<String, String>> memberList = dao.getSearch_member(map);
-		
-		return memberList;
-	}
-
-	// header : 더보기를 위해 검색된 team 의 수를 얻어오는 함수
-	/*	@Override
-	public int getSearch_team_count(String search_input) {
-		
-		int teamListCount = dao.getSearch_team_count(search_input);
-		
-		return teamListCount;
-	}
-
-	// header : 더보기를 위해 검색된 project 의 수를 얻어오는 함수
-	@Override
-	public int getSearch_project_count(HashMap<String, String> map) {
-
-		int projectListCount = dao.getSearch_project_count(map);
-		
-		return projectListCount;
-	}
-
-	// header : 더보기를 위해 검색된 list 의 수를 얻어오는 함수
-	@Override
-	public int getSearch_list_count(HashMap<String, String> map) {
-
-		int listListCount = dao.getSearch_list_count(map);
-		
-		return listListCount;
-	}
-
-	// header : 더보기를 위해 검색된 card의 수를 얻어오는 함수
-	@Override
-	public int getSearch_card_count(HashMap<String, String> map) {
-
-		int cardListCount = dao.getSearch_card_count(map);
-		
-		return cardListCount;
-	}*/
-	
-	// header : 더보기를 위해 검색된 member 의 수를 얻어오는 함수
-	@Override
-	public int getSearch_member_count(String search_input) {
-		
-		int memberListCount = dao.getSearch_member_count(search_input);
-		
-		return memberListCount;
-	}
-
 	
 }
