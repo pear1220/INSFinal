@@ -21,30 +21,9 @@ import com.spring.finalins.qna.model.QnaVO;
 @Service
 public class QnaService implements InterQnaService {
 
-	// ======= #31. 의존객체 주입하기(DI: Dependency Injection)
-	@Autowired
-	private InterQnaDAO dao;
-
-	
-	
-	
-	    // QnA목록 보여주기
-	    // 회원인 경우
-		/*@Override
-		public List<QnaVO> qnaList(String userid) {
-			List<QnaVO> qnaList= dao.getQnaList(userid);
-			return qnaList;
-		}
-		
-		// admin 인 경우
-		@Override
-		public List<QnaVO> qnaList() {
-			List<QnaVO> qnaList= dao.getQnaList();
-			return qnaList;
-		}*/
-	
-
-
+		// ======= #31. 의존객체 주입하기(DI: Dependency Injection)
+		@Autowired
+		private InterQnaDAO dao;
 		
 	   @Override
 	   public int write(QnaVO qnavo) {
@@ -63,12 +42,6 @@ public class QnaService implements InterQnaService {
 	      }
  
 	      int n = dao.write(qnavo);
-	      
-	      if(n>0) {
-	    	  System.out.println("확인용 qna_idx"+qnavo.getQna_idx()+"///"+qnavo.getQna_fk_idx());
-	    	  
-	      }
-	      
 	      return n;
 	   }
 
@@ -107,62 +80,41 @@ public class QnaService implements InterQnaService {
 	      return qnavo;
 	   }
 
-
-	// 글 1개 수정하기   
-	@Override
-	public int editQna(QnaVO qnavo) {
-		int n = dao.editQna(qnavo);
-		return n;
-	}
-
-   // 글 1개 삭제하기
-	@Override
-	public int del(String qna_idx) {
-		int n = dao.del(qna_idx);
-		return n;
-	}
-
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// ===== #114.   검색어가 있는 총 게시물 건수   =====
-/*	@Override
-	public int getTotalCount2(HashMap<String, String> map) {
-	int totalCount = dao.getTotalCount2(map);
-	return totalCount;
-	}*/
 	
+		// 글 1개 수정하기   
+		@Override
+		public int editQna(QnaVO qnavo) {
+			int n = dao.editQna(qnavo);
+			return n;
+		}
+
+	   // 글 1개 삭제하기
+		@Override
+		public int del(String qna_idx) {
+			int n = dao.del(qna_idx);
+			return n;
+		}
+
+
+		// ===== #114.   검색어가 없는 총 게시물 건수   =====
+		@Override
+		public int getTotalCount(HashMap<String,String> map) {
+		int totalCount = dao.getTotalCount(map);
+		return totalCount;
+		}
+
+
+		// ===== #107. 글목록 보여주기(검색어가 없는 것) =====
+		@Override
+		public List<HashMap<String,String>> qnaList(HashMap<String, String> map) {
 	
-	// ===== #114.   검색어가 없는 총 게시물 건수   =====
-	@Override
-	public int getTotalCount(HashMap<String,String> map) {
-	int totalCount = dao.getTotalCount(map);
-	return totalCount;
-	}
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// ===== #107. 글목록 보여주기(검색어가 없는 것) =====
-/*	@Override
-	public List<QnaVO> qnaList2(HashMap<String, String> map) {
-	
-	List<QnaVO> qnaList = dao.qnaList2(map);
-	
-	return qnaList;
-	
-	}*/
-	
-	// ===== #107. 글목록 보여주기(검색어가 있는 것) =====
-	@Override
-	public List<HashMap<String,String>> qnaList(HashMap<String, String> map) {
-
-		List<HashMap<String,String>> qnaList =  dao.qnaList(map);
-	return qnaList;
-	}
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-	// 글쓰기(트랜잭션 처리함)
+			List<HashMap<String,String>> qnaList =  dao.qnaList(map);
+		return qnaList;
+		}
+		
+		
+		
+		// 글쓰기(트랜잭션 처리함)
 		/*
 		   >>>> 트랜잭션처리를 해야 할 메소드에 @Transactional 어노테이션을 설정하면 된다. 
 		   rollbackFor= {Throwable.class} 은 롤백을 해야 할 범위를 말한다.
@@ -171,28 +123,22 @@ public class QnaService implements InterQnaService {
 		     
 		   isolation=Isolation.READ_COMMITTED  커밋되어진다.
 		 */
-	@Override
-	@Transactional( propagation=Propagation.REQUIRED,  isolation=Isolation.READ_COMMITTED, rollbackFor= {Throwable.class})   // 트랜잭션 처리를 위해 @Transactional를 한다.
-	// 체크제약에 위배되면 throws throwable한다. 던져버린 것을 spring container가 처리하고 이것을 여기서...
-	public int updateQnaDepthno(QnaVO qnavo) throws Throwable{
+		@Override
+		@Transactional( propagation=Propagation.REQUIRED,  isolation=Isolation.READ_COMMITTED, rollbackFor= {Throwable.class})   // 트랜잭션 처리를 위해 @Transactional를 한다.
+		// 체크제약에 위배되면 throws throwable한다. 던져버린 것을 spring container가 처리하고 이것을 여기서...
+		public int updateQnaDepthno(QnaVO qnavo) throws Throwable{
+	
+			String qna_groupno = qnavo.getQna_groupno();
+			QnaVO qnaupdate = dao.qnaupdate(qna_groupno);
+			
+			String qna_idx = qnaupdate.getQna_idx();
+		    int m = dao.depthnoUpdate(qna_idx);	
 
-		String qna_groupno = qnavo.getQna_groupno();
-		QnaVO qnaupdate = dao.qnaupdate(qna_groupno);
-		
-		String qna_idx = qnaupdate.getQna_idx();
-	    int m = dao.depthnoUpdate(qna_idx);	
-		
-	
-		
-		return m;
-	}
+			return m;
+		}
 		
 	
 	
-	
-	
-	
-
 	
 
 }

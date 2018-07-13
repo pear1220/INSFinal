@@ -17,21 +17,7 @@ public class QnaDAO implements InterQnaDAO {
 		// root-context.xml 의 의존객체 설정하기에서 어떤 클래스에 주입할지 알 수 있음
 		@Autowired
 		private SqlSessionTemplate sqlsession;
-		
-	
-		
-		// 회원인 경우  QnA목록 보여주기
-	/*	@Override
-		public List<QnaVO> getQnaList(String userid) {
-			List<QnaVO> qnaList= sqlsession.selectList("qna.getQnaList", userid);
-			return qnaList;
-		}
-		// admin인 경우 QnA목록 보여주기
-		@Override
-		public List<QnaVO> getQnaList() {
-			List<QnaVO> qnaList= sqlsession.selectList("qna.getQnaListAll");
-			return qnaList;
-		}*/
+
 	
 		 // ======  글쓰기(파일첨부가 없는 글쓰기) ====== 
 	    @Override
@@ -79,23 +65,12 @@ public class QnaDAO implements InterQnaDAO {
 		}
 		
 		
-		
-		/////////////////////////////////////////////////////////////////////////////////////////
-		// ===== #115. 검색어가 있는 총 게시물 건수 =====
-		/*@Override
-		public int getTotalCount2(HashMap<String, String> map) {
-		int totalCount = sqlsession.selectOne("qna.getTotalCount2", map);
-		return totalCount;
-		}*/
-		
-		
 		// ===== #115. 검색어가 없는 총 게시물 건수 =====
 		@Override
 		public int getTotalCount(HashMap<String,String> map) {
 		int totalCount = sqlsession.selectOne("qna.getTotalCount", map);
 		return totalCount;
 		}
-		////////////////////////////////////////////////////////////////////////////////////////////////
 		
 		
 		// ===== #108. 글목록 보여주기(검색어가 있는 것) =====
@@ -115,7 +90,7 @@ public class QnaDAO implements InterQnaDAO {
 			List<HashMap<String,String>> qnaList = sqlsession.selectList("qna.qnaList", map);
 			return qnaList ;
 		}
-	    ///////////////////////////////////////////////////////////////////////////////////////
+	  
 
 		@Override
 		public QnaVO qnaupdate(String qna_groupno) {

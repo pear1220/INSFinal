@@ -178,52 +178,84 @@
 
     display: block;
     }
+    
+    
+    	#orgFile {
+	 display:none;
+	}
+	#newFile {
+	 background-color:black;
+	 color:white;
+	 cursor:pointer;
+	}
 </style>
 
 <script>
 
- $(document).ready(function(){
+/*  $(document).ready(function(){
 	 
 	 var sBtn = $(".ccc > li");    //  ul > li 이를 sBtn으로 칭한다. (클릭이벤트는 li에 적용 된다.)
 	  sBtn.find("a").click(function(){   // sBtn에 속해 있는  a 찾아 클릭 하면.
 	   sBtn.removeClass("active");     // sBtn 속에 (active) 클래스를 삭제 한다.
 	   $(this).parent().addClass("active"); // 클릭한 a에 (active)클래스를 넣는다.
-	  })
-    
-/*     $("li").click(function(){
+	  }); */
+	  
 
-       $(this).addClass("active");
-    }); 
-     */
-   /*  $("#a").click(function(){
-       $("#clickActive1").addClass("active");
-    });
-    
-    $("#b").click(function(){
-       $("#clickActive2").addClass("active");
-    }); */
- });
- 
-/* function changeImg(){
-   alert("클릭하셨습니다.");
-}
- */
-
+	/**이벤트 발생 (크롬,파이어폭스,사파이어 OK!) **/
+	function eventOccur(evEle, evType){
+		 if (evEle.fireEvent) {
+		 evEle.fireEvent('on' + evType);
+		 } else {
+		 //MouseEvents가 포인트 그냥 Events는 안됨~ ??
+		 var mouseEvent = document.createEvent('MouseEvents');
+		 /* API문서 initEvent(type,bubbles,cancelable) */
+		 mouseEvent.initEvent(evType, true, false);
+		 var transCheck = evEle.dispatchEvent(mouseEvent);
+		 if (!transCheck) {
+		 //만약 이벤트에 실패했다면
+		 console.log("클릭 이벤트 발생 실패!");
+		 }
+		 }
+		}
+		/** 대체버튼 클릭시 강제 이벤트 발생**/
+		
+		function check(){
+		 eventOccur(document.getElementById('orgFile'),'click');
+		 /* alert(orgFile.value); 이벤트 처리가 끝나지 않은 타이밍이라 값 확인 안됨! 시간차 문제 */
+	
+		}
+		
+		
+		function goModal(){
+			
+	      	
+		}
+		
+		
+		/* function goImg(){
+			 var frm = document.orgFile;
+			 frm.action= "/finalins/image/upload.action"; 
+			 frm.method="post";
+			 frm.submit();	
+		
+		} */
+		
+	
 
 </script>
 
 
 
+
+
 <div class="grid-container" style="border: 0px solid black; margin_bottom: 100px;">
   <div class="grid-item item1"> <!--grid-item  -->
-     <div class="avatar2" style="border: 3px solid black;"> <!-- 이미지가 있을 div 공간을 동그랗게 만드는 방법 -->
-        <img src="<%= request.getContextPath() %>/resources/img/Spain.png" alt="Avatar2"  class="avatar2">
-        <span>야 야야야</span>
-     <%--  이미지를 라운드 크기로 만드는 방법 
-        <img src="<%= request.getContextPath() %>/resources/img/Spain.png" alt="Avatar" class="avatar"> --%>
-       <div class="attach1" style="3px solid red; " >
-       <a type="file" onclick="changeImg();" ><span > 사진첨부하세요</span></a> 
-       </div>
+     <div class="avatar2" style="border: 3px solid black;" onclick="goModal();"> 
+     <!--  <form name="orgFile" enctype="multipart/form-data">
+       <input type="file" id="orgFile" name="attach">
+      </form> -->
+     <img src="<%= request.getContextPath() %>/resources/jihye/KakaoTalk_20180710_122630078.jpg" alt="Avatar2"  class="avatar2">
+       
       </div> 
   </div>
   <div class="grid-item item2">
@@ -238,23 +270,6 @@
   </div>
  </div>  
 
-<!-- 
-<h2 style="text-align:center">User Profile Card</h2>
-
-<div class="card">
-  <img src="/w3images/team2.jpg" alt="John" style="width:100%">
-  <h1>John Doe</h1>
-  <p class="title">CEO & Founder, Example</p>
-  <p>Harvard University</p>
-  <div style="margin: 24px 0;">
-    <a href="#"><i class="fa fa-dribbble"></i></a> 
-    <a href="#"><i class="fa fa-twitter"></i></a>  
-    <a href="#"><i class="fa fa-linkedin"></i></a>  
-    <a href="#"><i class="fa fa-facebook"></i></a> 
- </div>
- <p><button>Contact</button></p>
-</div> -->
-  
 
  <%-- 상단에 탭메뉴이다. 탭을 클릭하면 링크타고 페이지 이동한다. --%> 
 <div class="navtab" align="center">        
@@ -277,13 +292,16 @@
 
 
     
+ <button type="button" onClick="goImg();" >등록</button> <!-- value="summit버튼" -->
+ 
+ 
+ 
+<!--  <form action="upload.action" method="post" enctype="multipart/form-data">
+		 <input type="file" multiple id="orgFile" name="userfile">
+ </form>
 
 
-
-
-
-
-
+<input type="submit" value="summit버튼" -->>
 
 
 

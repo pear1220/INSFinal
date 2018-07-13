@@ -166,9 +166,10 @@ public class JihyeQnaController {
  		System.out.println("로그인한 유저"+userid);
  		
  	    String qna_idx = req.getParameter("qna_idx"); // 글번호 받아오기
- 	    QnaVO qnavo = service.getView(qna_idx);
+ 	 	    QnaVO qnavo = service.getView(qna_idx);
  	
  	    req.setAttribute("qnavo", qnavo);  
+ 	   
 
  	     return "jihye/view.tiles"; 
         
@@ -176,35 +177,35 @@ public class JihyeQnaController {
 
 	
 		
-	  // 글쓰기 페이지 요청하기
+	  // ============== 글쓰기 페이지 요청하기
       @RequestMapping(value="/goWrite.action", method={RequestMethod.POST})
       public String requireLogin_writeQna(HttpServletRequest req, HttpServletResponse res) {
          
-         // 처음에 글쓰기(원글)은 아래 fk_seq/groupno/depthno 값이 없다.
+         // 처음에 글쓰기(원글)은 아래 qna_fk_idx/qna_groupno/qna_depthno 값이 없다.
          // 원글일 경우 뷰단에서 값을 넘기는 것은 DB에 insert가 아니기 때문에 null이다.
          // 그러나 답변 글쓰기 경우 위의 세가지 값을 뷰단에서 받아서 컨트롤러로 넘긴다.
-      //   System.out.println("확인용입니다.");
 
     	  String qnavo = req.getParameter("qnavo");
-    	  
-    	  
+    	      	  
          // ===== #121. 답변글쓰기 추가 되었으므로 아래와 같이 한다(시작). =======
          String qna_fk_idx = req.getParameter("qna_fk_idx");
          String qna_groupno = req.getParameter("qna_groupno");
          String qna_depthno = req.getParameter("qna_depthno");
+         String replyChk = req.getParameter("replyChk");
          
      //    System.out.println("qna_fk_idx"+qna_fk_idx);
     //     System.out.println("qna_groupno"+qna_groupno);
      //    System.out.println("qna_depthno"+qna_depthno);
+         
 
          req.setAttribute("qna_fk_idx", qna_fk_idx);
          req.setAttribute("qna_groupno", qna_groupno);
          req.setAttribute("qna_depthno", qna_depthno);
+         req.setAttribute("replyChk", replyChk);
 
          // ==== 답변글쓰기 추가 되었으므로 아래와 같이 한다(끝).
          
-         return "jihye/qnaWrite.tiles";
-         
+         return "jihye/qnaWrite.tiles";         
       }
 
 		
@@ -216,13 +217,13 @@ public class JihyeQnaController {
     	   String qna_fk_idx = req.getParameter("qna_fk_idx");
            String qna_groupno = req.getParameter("qna_groupno");
            String qna_depthno = req.getParameter("qna_depthno");
+           String replyChk = req.getParameter("replyChk");
            
-           System.out.println("글쓸 때 qna_fk_idx"+qna_fk_idx);
-           System.out.println("qna_groupno"+qna_groupno);
-           System.out.println("qna_depthno"+qna_depthno);
-
-   
-    	  
+           System.out.println("qna_fk_idx"+qna_fk_idx); // 원글의 qna_idx
+           System.out.println("qna_groupno"+qna_groupno); // 원글의 qna_groupno
+           System.out.println("글쓸 때 qna_depthno"+qna_depthno); //0
+           System.out.println("답글용체크"+replyChk);
+ 	  
           MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
           String userid = null;
           if (loginuser != null) {
@@ -287,6 +288,8 @@ public class JihyeQnaController {
     		            try {
     		               bytes = qnavo.getAttach().getBytes(); // 실제 파일의 내용물들을 읽어온 것. 리턴타입은 byte[]
     		               // getBytes() 는 첨부된 파일을 바이트 단위로 파일을 다 읽어오는 것이다.
+    		               
+    		               System.out.println("확인용>>>>>>>>>>>>>>>"+bytes);
 
     		               newFileName = fileManager.doFileUpload(bytes, qnavo.getAttach().getOriginalFilename(), path);
     		               // getOriginalFilename() 은 우리가 만든 것이 아니라 MultipartFile에서 제공해주는 것이다.
@@ -325,8 +328,8 @@ public class JihyeQnaController {
     		         String qna_content = qnavo.getQna_content().replaceAll("\r\n", "<br/>");
     		         qnavo.setQna_content(qna_content);
     		         
-    		         qnavo.setQna_depthno(qna_depthno);
-    		         qnavo.setQna_fk_idx(qna_fk_idx);
+    		         qnavo.setQna_depthno(qna_depthno); // qna_depthno
+    		         qnavo.setQna_fk_idx(qna_fk_idx);  // qnaWrite.jsp에서 원글의 qna_idx를 넣어준 값이다.
     		         qnavo.setQna_groupno(qna_groupno);
     		         
     		   //      System.out.println("qnavo 그룹넘버"+qnavo.getQna_groupno());
@@ -337,26 +340,20 @@ public class JihyeQnaController {
     		         if (qnavo.getAttach().isEmpty()) {
     		            // 파일첨부가 없다면
     		            n = service.write(qnavo); // insert니까 리턴타입은 int
+    		
     		         }      
     		         if (!qnavo.getAttach().isEmpty()) {
     		            // 파일첨부가 있다면
     		           n = service.write_withFile(qnavo); // insert니까 리턴타입은 int
     		         }
 
-    		        
-
-    		        // n==1 이고 qna_fk_idx 가 0이라면 이것은 원글에 답글이 없는 경우이다.
-    		        // 답글이 달린 원글에 qna_depthno  
-////////////////////////////////////////////////////////////////////////////////////////////////////////
+    		        // 글을 성공적으로 쓰고 난 후 qna_groupno 갯수를 구한다.// 원글일 경우 입력 전의 qna_idx를 넣기 때문에 null이 될 것이고 
+    		         // 답글일 경우 qna_idx가 생성됐기 때문에 null이 아닌가?
     		         int m = 0;
-    		         if(n==1 && qna_fk_idx =="") {
-    		        	 
-    		        /*	 qnavo = service.getView(qna_idx);*/
-    		        	 
-    		        	 System.out.println("답글이 성공적으로 써져서 트랜잭션 처리를 하겠습니다.");
-    		        	 
-    		        	 String qna_idx = qnavo.getQna_idx();
-    		        //	 qna_depthono를 업데이트하기
+    		         if(n==1 && !replyChk.equals("")) { // groupno 갯수를 구한다.   		        	 
+    		       	 
+    		        	// String qna_idx = qnavo.getQna_idx();
+    		       
     		        	 m = service.updateQnaDepthno(qnavo);
     		         }	 
 
@@ -370,7 +367,7 @@ public class JihyeQnaController {
     			
     			session.invalidate();
     			
-    			String msg = "문의 하려면 로그인을 해주세요";
+    			String msg = "QnA에 문의하려면 로그인을 해주세요";
     			String loc = "index.action";
 
     			req.setAttribute("msg", msg);
@@ -587,22 +584,9 @@ public class JihyeQnaController {
   		
   		
 
- 
   	
   	
-  	
-  	
-  	
-  	
-  	
-  	
-  	
-  	
-  	
-  	
-  	
-  	
- 
+  
       
     // ************************************************************************************************************************************
   	// //
@@ -610,12 +594,13 @@ public class JihyeQnaController {
  	@RequestMapping(value = "/image/photoUpload.action", method = { RequestMethod.POST })
  	public String photoUpload(PhotoVO photovo, HttpServletRequest req) {
 
- 		System.out.println("확인용 스마트 에디트");
  		
  		String callback = photovo.getCallback();
  		String callback_func = photovo.getCallback_func();
  		String file_result = "";
-
+ 		
+ 		
+ 	
  		if (!photovo.getFiledata().isEmpty()) {
  			// 파일이 존재한다라면
 
@@ -630,7 +615,7 @@ public class JihyeQnaController {
  			String path = root + "resources" + File.separator + "photo_upload";
  			// path 가 첨부파일들을 저장할 WAS(톰캣)의 폴더가 된다.
 
- 			// System.out.println(">>>> 확인용 path ==> " + path);
+ 			 System.out.println(">>>> 확인용 path ==> " + path);
  			// >>>> 확인용 path ==>
  			// C:\INSFinal\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\INSFinal\resources\photo_upload
 
@@ -643,6 +628,9 @@ public class JihyeQnaController {
 
  			try {
  				bytes = photovo.getFiledata().getBytes();
+ 				
+ 				
+ 				System.out.println("네이버 용량"+bytes);
  				// getBytes()는 첨부된 파일을 바이트단위로 파일을 다 읽어오는 것이다.
  				/*
  				 * 2-1. 첨부된 파일을 읽어오는 것 첨부한 파일이 강아지.png 이라면 이파일을 WAS(톰캣) 디스크에 저장시키기 위해 byte[]
@@ -695,7 +683,7 @@ public class JihyeQnaController {
  		String path = root + "resources" + File.separator + "photo_upload";
  		// path 가 첨부파일들을 저장할 WAS(톰캣)의 폴더가 된다.
 
- 		 System.out.println(">>>> 확인용 path ==> " + path);
+ 		 //System.out.println(">>>> 확인용 path ==> " + path);
  		// >>>> 확인용 path ==>
  		// C:\springworkspace\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\Board\resources\photo_upload
 
@@ -749,6 +737,12 @@ public class JihyeQnaController {
 
  	}// end of void multiplePhotoUpload(HttpServletRequest req, HttpServletResponse
  		// res)----------------
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
 
  	
       

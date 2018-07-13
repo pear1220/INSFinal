@@ -96,8 +96,13 @@ table, th, td, input, textarea {border: solid gray 1px;}
             <div class="col" >
             
                <div class="row" >
-                  <div class="col">            
+                  <div class="col">  
+                    <c:if test="${!sessionScope.loginuser.userid.equals('admin')}">         
                      <div class="cart_title">QnA 문의하기</div>
+                     </c:if> 
+                     <c:if test="${sessionScope.loginuser.userid.equals('admin')}">         
+                     <div class="cart_title">QnA 답변하기</div>
+                     </c:if> 
                      <br/>
                   </div>
                </div>
@@ -978,13 +983,14 @@ table, th, td, input, textarea {border: solid gray 1px;}
       <br/>
       
 				      <%-- ==== #122. 답변글쓰기인 경우 부모글의 seq값이 fk_seq값, 부모글의  groupno 값과 부모글의 depthno 값을 hidden 타입으로 보내준다. =====   --%>
-				      <input type="text" id="qna_fk_idx" name="qna_fk_idx"   value="${qna_fk_idx}"  />   
-				      <input type="text"  id="qna_groupno" name="qna_groupno"  value="${qna_groupno}" />
-				      <input type="text" name="qna_depthno"  value="${qna_depthno}" />
+				      <input type="hidden" id="qna_fk_idx" name="qna_fk_idx"   value="${qna_fk_idx}"  />   
+				      <input type="hidden"  id="qna_groupno" name="qna_groupno"  value="${qna_groupno}" />
+				      <input type="hidden" name="qna_depthno"  value="${qna_depthno}" />
+				      <input type="hidden" name="replyChk" value="${replyChk}" />
 				      
 				      <div id="writeqna">
-				      <button type="button" class="btn btn-dark btn-sm"  id="btnWrite">쓰기</button>
-				      <button type="button" class="btn btn-dark btn-sm"  onClick="javascript:history.back();">취소</button>
+				      <button type="button" class="btn btn-primary btn-sm"  id="btnWrite">쓰기</button>
+				      <button type="button" class="btn btn-primary btn-sm"  onClick="javascript:history.back();">취소</button>
 				       </div>
                  </form>  
    

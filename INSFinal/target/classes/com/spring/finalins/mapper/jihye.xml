@@ -8,7 +8,8 @@
 
   <!-- 개인정보 수정을 위한 로그인한 유저의 정보를 불러오기 -->
   <select id="getMyProfile" parameterType="String"   resultType="com.spring.finalins.model.MemberVO">
-     select userid, pwd, name, nickname, email, tel1, tel2, tel3, leave_status, job, birthday, profilejpg, ins_personal_alarm
+     select userid, pwd, name, nickname, email, tel1, tel2, tel3, leave_status, job, birthday, org_filename, ins_personal_alarm, server_filename
+           ,file_size
      from ins_member
      where userid = #{userid}
   </select>
@@ -26,5 +27,21 @@
      update ins_member set leave_status = 1
      where userid = #{userid}
    </update>
-	
+   
+   
+   <!-- 내가 속한 팀목록 보여주기 -->
+<!--    <select id="getTeamList" parameterType="String" resultType="com.spring.finalins.model.TeamVO">
+	    select team_name
+		from ins_team A join ins_team_member B
+		on A.team_idx = B.fk_team_idx
+		where team_userid = #{userid}   
+   </select> -->
+   
+   
+   <!-- 프로필 이미지 변경하기 -->
+<!--    <update id="insertProfileImg" parameterType="HashMap">
+      update ins_member set org_filename = #{org_filename} ,server_filename = #{server_filename} ,file_size = #{file_size}
+       where userid = #{userid}
+   </update> 
+	 -->
 </mapper>

@@ -31,8 +31,12 @@ public class FileManager {
 
 	// path : 파일을 저장할 경로
 	// 리턴 : 서버에 저장된 새로운 파일명
+	//public String doFileUpload() {
 	public String doFileUpload(byte[] bytes, String originalFilename, String path) throws Exception {
-		                     // 실제 파일        , 오리지널 파일 이름                   ,      경로
+		                     //            , 오리지널 파일 이름                   ,      경로
+		
+		System.out.println("실행되었습니다.");
+		
 		String newFilename = null;
 
 		if(bytes == null)
@@ -67,9 +71,19 @@ public class FileManager {
 		fos.close();
 		
 		return newFilename;  // 파일을 업로드 해주고 돌려준다 for DB에 입력
+	
+	   // return "모르겠다";	
+	}
+	
+	public void test() {
+		System.out.println("나와라");
 	}
 
 	public String doFileUpload(InputStream is, String originalFilename, String path) throws Exception {
+		
+	//	System.out.println("확인용!!!!!!!!!!!!!!!!");
+		
+		
 		String newFilename = null;
 
 		// 클라이언트가 업로드한 파일의 이름

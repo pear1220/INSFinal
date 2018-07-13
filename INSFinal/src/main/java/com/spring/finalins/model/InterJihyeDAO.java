@@ -1,8 +1,10 @@
 package com.spring.finalins.model;
 
+import java.util.HashMap;
 import java.util.List;
 
 import com.spring.finalins.qna.model.QnaVO;
+import com.spring.finalins.model.TeamVO;
 
 public interface InterJihyeDAO {
 
@@ -11,6 +13,12 @@ public interface InterJihyeDAO {
 	int updateMyProfile(MemberVO membervo); // 회원정보수정 업데이트 하기
 
 	int deleteMyAccount(String userid); // 회원탈퇴(leave_status 업데이트 하기)
+
+//	List<TeamVO> getTeamList(String userid); // 내가 속한 팀목록 불러오기
+
+//	int insertProfileImg(HashMap<String, String> map); // 프로필 이미지 변경하기
+
+//	int insertProfileImg(HashMap<String,String> map);
 
 
  

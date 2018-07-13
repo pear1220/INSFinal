@@ -1,8 +1,14 @@
 package com.spring.finalins.model;
 
+import java.util.HashMap;
+import java.util.List;
+
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import com.spring.finalins.model.TeamVO;
 
 //===== #.28 DAO 선언
 @Repository
@@ -37,6 +43,46 @@ public class JihyeDAO implements InterJihyeDAO{
 		int n = sqlsession.update("jihye.deleteMyAccount", userid);	
 		return n;
 	}
+
+	// 내가 속한 팀목록 불러오기
+/*	@Override
+	public List<TeamVO> getTeamList(String userid) {
+		
+		List<TeamVO> teamList = sqlsession.selectList("jihye.getTeamList", userid);
+		
+		for(int i = 0; i<teamList.size(); i++) {
+		System.out.println("teamName"+teamList.get(i).getTeam_name());
+		
+		}
+		return teamList;
+	}*/
+
+	/*@Override
+	public int insertProfileImg(HashMap<String,String> map) {
+		
+		
+
+		
+           int n = sqlsession.insert("jihye.insertProfileImg",map);
+		
+		
+		if(n==1) {
+			System.out.println("프로필 사진 입력에 성공하셨습니다.");
+		}
+		return n;
+	}*/
+
+	
+	// 프로필 이미지 변경하기
+	/*@Override
+	public int insertProfileImg(HashMap<String, String> map) {
+		int n = sqlsession.update("jihye.insertProfileImg",map);
+		
+		if(n==1) {
+			System.out.println("프로필 사진 입력에 성공하셨습니다.");
+		}
+		return n;
+	}*/
 
 	
 }

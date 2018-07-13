@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>     
+    
 <jsp:include page="top.jsp" /> 
    
 <%--     
@@ -15,60 +17,74 @@
    </div>     
 
  --%>
+ 
+ 
+<div class="super_container"> 
+   <div class="cart_container" style="padding-top: 20px;">
+      <div class="container" >
+         <div class="row" >
+            <div class="col" > 
 
-  <div class="tab-content">
-	    <div id="profile" class="tab-pane fade in active">
-	           <!-- 팀목록 -->
-		       <div>
-		        <table class="table table-hover">
-		          <thead>
-		            <tr>
-		              <th>Teams</th>
-		            </tr>
-		          </thead>
-		          <tbody>
-		            <tr>
-		              <td><a href="#team1">John</a></td>      
-		            </tr>
-		            <tr>
-		              <td><a href="#team2">Mary</a></td>      
-		            </tr>
-		           <%--  <c:forEach items="">
-		            <tr>
-		              <td>John</td>      
-		            </tr>
-		          </c:forEach>    --%> 
-		           </tbody>
-		         </table> 
-		       </div>
-	              
-	          <!-- activity 기록 목록 -->
-		       <div>
-		        <table class="table table-hover">
-		          <thead>
-		            <tr>
-		              <th>Activity</th>
-		            </tr>
-		          </thead>
-		          <tbody class="activity">
-		            <tr>
-		              <td><a href="#team1">내용</a></td>      
-		            </tr>
-		            <tr>
-		              <td><a href="#team2">내용</a></td>      
-		            </tr>
-		           <%--  <c:forEach items="">
-		            <tr>
-		              <td>John</td>      
-		            </tr>
-		          </c:forEach>    --%> 
-		           </tbody>
-		         </table> 
-		       </div>
-        </div>
-  </div>
+					  <div class="tab-content">
+						    <div id="profile" class="tab-pane fade in active">
+						           <!-- 팀목록 -->
+							       <div>
+							        <table class="table table-hover">
+							          <thead>
+							            <tr>
+							              <th>Teams</th>
+							            </tr>
+							          </thead>
+							          <tbody>
+							              <c:if test="${teamList.size() > 0}">  
+                                             <c:forEach var="teamvo" items="${teamList}">
+									            <tr>
+									              <td><a href="#팀페이지로 이동하기">${teamvo.team_name}</a></td>      
+									            </tr>
+							 
+							                </c:forEach>
+							             </c:if> 
+							           </tbody>
+							         </table> 
+							       </div>
+						              
+						          <!-- activity 기록 목록 -->
+							       <div>
+							        <table class="table table-hover">
+							          <thead>
+							            <tr>
+							              <th>Activity</th>
+							            </tr>
+							          </thead>
+							          <tbody class="table table-hover">
+							            <tr>
+							              <td><a href="#team1">내용</a></td>      
+							            </tr>
+							            <tr>
+							              <td><a href="#team2">내용</a></td>      
+							            </tr>
+							           <%--  <c:forEach items="">
+							            <tr>
+							              <td>John</td>      
+							            </tr>
+							          </c:forEach>    --%> 
+							           </tbody>
+							         </table> 
+							       </div>
+					        </div>
+					  </div>
+
+            </div>
+         </div>
+      </div>
+   </div> 
+</div>
 
 
-
+<script src="resources/jihye/bootstrap4/popper.js"></script> 
+<script src="resources/jihye/bootstrap4/bootstrap.min.js"></script>
+<script src="resources/jihye/plugins/easing/easing.js"></script>
+<script src="resources/jihye/plugins/parallax-js-master/parallax.min.js"></script>
+<script src="resources/jihye/checkout_custom.js"></script>
 
 

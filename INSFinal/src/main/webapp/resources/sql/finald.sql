@@ -479,6 +479,12 @@ from ins_member
 insert into ins_member(userid, pwd, name, nickname, email, tel1, tel2, tel3, leave_status, job, birthday, profilejpg, ins_personal_alarm)
 values('jihye', 'qwer1234$', '안지혜', '지혜', 'jihye86@gmail.com', 010, 5640, 6983, default, 'IT', to_date('19860301', 'yyyy-mm-dd'), default, default);
 
+-- 개인정보 불러오기
+select userid, pwd, name, nickname, email, tel1, tel2, tel3, leave_status, job, birthday, org_filename, ins_personal_alarm, server_filename
+      ,file_size
+from ins_member
+where userid = 'jihye'
+
 
 -- 개인정보 업데이트
 update ins_member set pwd='asdf1234$', nickname='lg그램', tel1='010',tel2='1111', tel3='1111',job='기타'
@@ -624,8 +630,8 @@ where qna_fk_idx = 0
 
 
 -- 업데이트 qna_depthno
-update ins_QnA set qna_depthno = 1
-where qna_idx = 18
+update ins_QnA set qna_depthno = 0
+where qna_idx = 24
 
 commit;
 
@@ -657,5 +663,60 @@ rollback;
 	     start with qna_fk_idx = 0
          connect by prior qna_idx = qna_fk_idx
 		order siblings by qna_groupno desc, qna_idx asc
+
+
+-- 팀목록 보여주기
+select team_name
+from ins_team A join ins_team_member B
+on A.team_idx = B.fk_team_idx
+where team_userid = 'jihye'
+
+
+-- 차트 불러오기(선생님 것)
+
+
+
+select rank() over(order by sum(A.oqty) desc) as RANKING
+     , C.jepumname 
+     , sum(A.oqty) as TOTALQTY
+     , trunc( sum(A.oqty)/(select sum(oqty) from chart_orderDetail) * 100, 1) as PERCENTAGE
+from chart_orderDetail A left join chart_jepumDetail B
+on A.fk_jepumDetailno = B.jepumDetailno
+left join chart_jepum C
+on B.fk_jepumno = C.jepumno
+group by C.jepumname;
+
+
+select D.jepumname 
+     , sum(B.oqty) as TOTALQTY
+     , trunc( sum(B.oqty)/(select sum(oqty) from chart_orderDetail) * 100, 1) as PERCENTAGE
+from chart_order A join chart_orderDetail B 
+on A.orderno = B.fk_orderno
+join chart_jepumDetail C
+on B.fk_jepumDetailno = C.jepumDetailno
+left join chart_jepum D
+on C.fk_jepumno = D.jepumno
+where A.userid = 'hansk'
+group by D.jepumname
+order by TOTALQTY desc;
+
+
+select ranking, jepumname, typename, totalqty, percentage
+from
+(
+select rank() over(order by sum(A.oqty) desc) as RANKING
+     , D.jepumname, C.typename, sum(A.oqty) as TOTALQTY
+     , trunc( sum(A.oqty)/(select sum(oqty) from chart_orderDetail) * 100, 1) as PERCENTAGE
+from chart_orderDetail A left join chart_jepumDetail B
+on A.fk_jepumDetailno = B.jepumDetailno
+left join chart_jepumType C
+on B.fk_typecode = C.typecode
+left join chart_jepum D
+on B.fk_jepumno = D.jepumno
+group by D.jepumname, C.typename
+) V
+where V.jepumname = '감자깡';
+
+
 
 

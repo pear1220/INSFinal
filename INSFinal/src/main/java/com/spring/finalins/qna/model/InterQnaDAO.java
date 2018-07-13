@@ -8,11 +8,6 @@ import com.spring.finalins.model.MemberVO;
 // ====== model단 (DAO)의 인터페이스 생성 ======
 public interface InterQnaDAO {
 	
-	
-	// QnA목록 보여주기
-//	List<QnaVO> getQnaList(String userid); // 회원인 경우
-//	List<QnaVO> getQnaList(); // admin인 경우
-	
    int write(QnaVO qnavo);// 글쓰기(파일첨부가 없는 글쓰기)
 
    int write_withFile(QnaVO qnavo);// 글쓰기(파일첨부가 있는 글쓰기)
@@ -25,13 +20,8 @@ public interface InterQnaDAO {
 
 	int del(String qna_idx); // 글 1개 삭제하기
 	
-	
-//	int getTotalCount2(HashMap<String, String> map); //검색어가 있는 총 게시물 수
 	int getTotalCount(HashMap<String,String> map); // 검색어가 없는 총 게시물 수
 	
-	
-	
-//	List<QnaVO> qnaList2(HashMap<String, String> map); // 글목록 보여주기(검색어가 있는 것)
 	List<HashMap<String, String>> qnaList(HashMap<String, String> map); // 글목록 보여주기(검색어가 없는 것)
 
 	
