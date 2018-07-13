@@ -76,11 +76,83 @@ public class MinjaeDAO implements InterMinjaeDAO {
 		return memberList;
 	}
 
+	// project 탈퇴시 project_member의 userid 와 admin_status 를 얻어옴
 	@Override
-	public int leaveProject(String userid) {
+	public List<ProjectMemeberVO> getProjectCorrect(String fk_project_idx) {
 		
-		int n = sqlsession.update("mj.leaveProject", userid);
+		List<ProjectMemeberVO> projectmemberList = sqlsession.selectList("mj.getProjectCorrect", fk_project_idx);
+		
+		return projectmemberList;
+	}
+
+	@Override
+	public int generalProjectLeave(HashMap<String, String> map) {
+		
+		int n = sqlsession.update("mj.generalProjectLeave", map);
 		
 		return n;
 	}
+
+	@Override
+	public int adminProjectLeave(HashMap<String, String> map) {
+		
+		int n = sqlsession.update("mj.adminProjectLeave", map);
+		
+		return n;
+	}
+
+	@Override
+	public String adminProjectNextPerson1(HashMap<String, String> map) {
+		
+		String project_member_idxMin = sqlsession.selectOne("mj.adminProjectNextPerson1", map);
+		
+		return project_member_idxMin;
+	}
+
+	@Override
+	public int adminProjectNextPerson2(String project_member_idxMin) {
+		
+		int m = sqlsession.update("mj.adminProjectNextPerson2", project_member_idxMin);
+		
+		return m;
+	}
+
+	
+	 // 삭제하기 위해 adminList를 갖고옴
+	@Override
+	public List<HashMap<String, String>> getAdminList() {
+		
+		List<HashMap<String, String>> adminList = sqlsession.selectList("mj.getAdminList");
+		
+		return adminList;
+	}
+
+	@Override
+	public int deleteProject(String fk_project_idx) {
+		
+		int n = sqlsession.update("mj.deleteProject", fk_project_idx);
+		
+		return n;
+	}
+
+	@Override
+	public int deleteProjectMember(String fk_project_idx) {
+		
+		int n = sqlsession.update("mj.deleteProjectMember", fk_project_idx);
+		
+		return n;
+	}
+
+	@Override
+	public List<HashMap<String, String>> projectRecordView(HashMap<String, String> map) {
+	
+		List<HashMap<String, String>> projectRecordList = sqlsession.selectList("mj.projectRecordView", map);
+	
+		return projectRecordList;
+	}
+
+	
+	
+	
+
 }

@@ -6,6 +6,7 @@ import java.util.List;
 import com.spring.finalins.model.CardVO;
 import com.spring.finalins.model.ListVO;
 import com.spring.finalins.model.MemberVO;
+import com.spring.finalins.model.ProjectMemeberVO;
 import com.spring.finalins.model.ProjectVO;
 import com.spring.finalins.model.TeamVO;
 
@@ -25,7 +26,19 @@ public interface InterMinjaeServie {
 
 	List<HashMap<String, String>> getSearch_member(String search_input); // header : 검색을 위해 memberList 를 얻음
 
-	int leaveProject(String userid); // project_bar: 프로젝트를 탈퇴
+	List<ProjectMemeberVO> getProjectCorrect(String fk_project_idx); // project : project 탈퇴시 project_member의 userid 와 admin_status 를 얻어옴
+
+	int generalProjectLeave(HashMap<String, String> map); // project : 프로젝트의 일반 유저일 경우 프로젝트 탈퇴
+
+	int adminProjectLeave(HashMap<String, String> map) throws Throwable; // project :  프로젝트의 관리자일 경우 프로젝트 탈퇴
+
+	List<HashMap<String, String>> getAdminList(); // project : 삭제하기 위해 adminList를 갖고옴
+
+	int deleteProject(String fk_project_idx); // project : 프로젝트의 관리자일 경우 프로젝트 삭제 
+
+	List<HashMap<String, String>> projectRecordView(HashMap<String, String> map); // project : 프로젝트 기록을 얻어옴
+
+	
 
 	 
 }

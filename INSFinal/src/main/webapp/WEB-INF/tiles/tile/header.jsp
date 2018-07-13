@@ -61,7 +61,19 @@ input[type=text]:focus {
 
 <script type="text/javascript">
 
-	
+/* $(document).click(function(event){
+	 
+	  if(!$(event.target).closet(".dropSearch").length){
+		  
+		  if($('#drop1').is(":visible")){
+			  $("#drop1").hide();
+		  }
+		  else if($('#drop2').is(":visible")){
+			  $("#drop2").hide();
+		  }
+	  }
+	  
+}); */
 
 	$(document).ready(function(){
 		
@@ -71,148 +83,279 @@ input[type=text]:focus {
 			
 		}); 
 		 
-		
-		 
-		 
 		  $("#search_input").keyup(function(){
 		
-			 dropShow1();
-			
-			 var form_data = {search_input:$("#search_input").val()}
-			
-			/*  function imgclick(){
-				 var form_data = {search_input: $("#search_input").val(${sessionScope.search_input})}
-				 alert("확인용");
-			 } */
-			
+			  if($("#search_input").val().trim() != ""){
+				  searchTotal(); 
+			  }
+			  else if($("#search_input").val().trim() == ""){
+				  $("#drop1").hide();
+			  }
 			 
-			 $.ajax({
-					
-				 url: "<%=request.getContextPath()%>/teamSearch.action",
-				 type: "get",
-				 data: form_data,
-				 dataType: "JSON",
-				 success: function(json){
-					
-					 var html = "";
-					
-					 if(json.length > 0){
-						 
-						 $("#team_drop1").show();  
-								
-						 html += "<span class='lite' style='font-weight: bold; font-size: 15pt;'>Teams</span>";
-						 
-						 $.each(json, function(entryIndex, entry){
-							 												
-							 var word = entry.team_name.trim();
-							 // "ajax 프로그래밍"
-								
-							 var index = word.toLowerCase().indexOf( $("#search_input").val().toLowerCase() ); // 해당 문자열을 전부 다 소문자로 바꾸는 자바스크립트 함수 (toUpperCase())
+		   }); // $("#search_input").keyup()-------------------------------------------------------------------
+		 
+		   /* $("#")
+		    */
+		  function searchTotal(){
+			 
+			  dropShow1(); 
+			   
+			  var form_data = {search_input:$("#search_input").val()}
+				 
+				 $.ajax({
+						
+					 url: "<%=request.getContextPath()%>/teamSearch.action",
+					 type: "get",
+					 data: form_data,
+					 dataType: "JSON",
+					 success: function(json){
+											  
+						 var html = "";
+						
+						 if(json.length > 0){
 							 
-							 
-							 var len = $("#search_input").val().length;
-														
-							 var str ="";
-							
-								 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: #fed189; font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+len) + "</span>"; 
-								
-							if(json.length < 2){
-								
-								 html += "<br/><a href='#'><span class='result'>"+str+"</span></a>";
-								 
-								 $("#team_drop1").html(html);
-								
-							}	  
-							else{
-								
-								if(entryIndex < 2){
-									html += "<br/><a href='#'><span class='result'>"+str+"</span></a>";
+							 $("#team_drop1").show();  
 									
-								}
-								
-								$("#team_drop1").html(html);
-							
-							}
-											 
-						 }); // end of $.each()----------------------------------------------------------------------
-						 
-						 if(json.length > 2){ 
-							 html += "<li><a class='btn btn-default btn-sm' id='btnMore1'>More</a></li>";
-						 } 
-						 
-						 html += "<li class='divider'></li>";
-						 
-						 
-						 $("#team_drop1").html(html);
+							 html += "<span class='lite' style='font-weight: bold; font-size: 15pt;'>Teams</span>";
 							 
-					 } // json.length > 0 if()-------------------------------------------------------------------------
-					 else{
-						 
-						 $("#team_drop1").hide();
-						 
-			  		}// json.length > 0 else()--------------------------------------------------------------------------
-			 	
-			  		
-			  		/* $("#drop1").html(html); */
-			  		
-				  	$("#btnMore1").click(function(){
-						 
-				  		 alert("btn1 확인용"); 
-				  		 dropShow2();
-				  		
-						 var html2 = "";
-						 
-						 html2 += "<span class='lite' style='font-weight: bold; font-size: 15pt;'>Teams</span>";
-						 html2 += "<span id='backicon'><img src='<%=request.getContextPath() %>/resources/img/left-arrow.png' /></span>";
-						 
-						 $.each(json, function(entryIndex, entry){
-							 				
-							 var word = entry.team_name.trim();
-							 // "ajax 프로그래밍"
-								
-							 var index = word.toLowerCase().indexOf( $("#search_input").val().toLowerCase() ); // 해당 문자열을 전부 다 소문자로 바꾸는 자바스크립트 함수 (toUpperCase())
-							 
-							 
-							 var len = $("#search_input").val().length;
-														
-							 var str ="";
-							
-								 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: #fed189; font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+len) + "</span>"; 
-								
-								 html2 += "<br/><a href='#'><span class='result'>"+str+"</span></a>";
+							 $.each(json, function(entryIndex, entry){
+								 												
+								 var word = entry.team_name.trim();
+								 // "ajax 프로그래밍"
+									
+								 var index = word.toLowerCase().indexOf( $("#search_input").val().toLowerCase() ); // 해당 문자열을 전부 다 소문자로 바꾸는 자바스크립트 함수 (toUpperCase())
 								 
+								 
+								 var len = $("#search_input").val().length;
+															
+								 var str ="";
+								
+									 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: #fed189; font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+len) + "</span>"; 
+									
+								if(json.length < 2){
+									
+									 html += "<br/><a href='#'><span class='result'>"+str+"</span></a>";
+									 
+									 $("#team_drop1").html(html);
+									
+								}	  
+								else{
+									
+									if(entryIndex < 2){
+										html += "<br/><a href='#'><span class='result'>"+str+"</span></a>";
+										
+									}
+									
+									$("#team_drop1").html(html);
+								
+								}
+												 
+							 }); // end of $.each()----------------------------------------------------------------------
+							 
+							 if(json.length > 2){ 
+								 html += "<li><a class='btn btn-default btn-sm' id='btnMore1'>More</a></li>";
+							 } 
+							 
+							 html += "<li class='divider'></li>";
+							 
+							 
+							 $("#team_drop1").html(html);
+								 
+						 } // json.length > 0 if()-------------------------------------------------------------------------
+						 else{
+							 
+							 $("#team_drop1").hide();
+							 
+				  		}// json.length > 0 else()--------------------------------------------------------------------------
+				 	
+				  		
+				  		/* $("#drop1").html(html); */
+				  		
+					  	$("#btnMore1").click(function(){
+							 
+					  		/* $("#drop2").empty(); */
+					  		
+					  		 dropShow2();
+					  		 
+					  		
+					  		
+							 var html2 = "";
+							 
+							 html2 += "<span class='lite' style='font-weight: bold; font-size: 15pt;'>Teams</span>";
+							 html2 += "<span id='backicon'><img src='<%=request.getContextPath() %>/resources/img/left-arrow.png' /></span>";
+							 
+							 $.each(json, function(entryIndex, entry){
+								 				
+								 var word = entry.team_name.trim();
+								 // "ajax 프로그래밍"
+									
+								 var index = word.toLowerCase().indexOf( $("#search_input").val().toLowerCase() ); // 해당 문자열을 전부 다 소문자로 바꾸는 자바스크립트 함수 (toUpperCase())
+								 
+								 
+								 var len = $("#search_input").val().length;
+															
+								 var str ="";
+								
+									 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: #fed189; font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+len) + "</span>"; 
+									
+									 html2 += "<br/><a href='#'><span class='result'>"+str+"</span></a>";
+									 
+								 $("#team_drop2").html(html2);
+									 		 
+							 }); // end of $.each()----------------------------------------------------------------------
+							  
 							 $("#team_drop2").html(html2);
-								 		 
-						 }); // end of $.each()----------------------------------------------------------------------
-						  
-						 $("#team_drop2").html(html2);
-						 
-						
-						 $("#backicon").click(function(){
-								
-								/* alert("확인용:::::::"); */ 
-								dropShow1();
-									 
-						 });
-						 
-						 
-					 }); // end of $("#btnMore").click()---------------------------------------------------------------------------
-			 		
+							 
+							
+							 $("#backicon").click(function(){
+									
+									/* alert("확인용:::::::"); */ 
+									dropShow1();
+										 
+							 });
+							 
+							 
+						 }); // end of $("#btnMore").click()---------------------------------------------------------------------------
+				 		
 
-					 
-					 
-				 },
-				 error: function(request, status, error){
-						alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
-				 }
-				 						 
-			 });  
-			 
-			 
-			 
-			 $.ajax({
+						 
+						 
+					 },
+					 error: function(request, status, error){
+							alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
+					 }
+					 						 
+				 });  
+				 
+				 
+				 
+				 $.ajax({
+						
+					 url: "<%=request.getContextPath()%>/projectSearch.action",
+					 type: "get",
+					 data: form_data,
+					 dataType: "JSON",
+					 success: function(json){
+						
+						 var html = "";
+						
+						 if(json.length > 0){
+							 
+							 $("#project_drop1").show();  
+									
+							 html += "<span class='lite' style='font-weight: bold; font-size: 15pt;'>Projects</span>";
+							 
+							 $.each(json, function(entryIndex, entry){
+								 												
+								 var word = entry.project_name.trim();
+								 // "ajax 프로그래밍"
+									
+								 var index = word.toLowerCase().indexOf( $("#search_input").val().toLowerCase() ); // 해당 문자열을 전부 다 소문자로 바꾸는 자바스크립트 함수 (toUpperCase())
+								 
+								 
+								 var len = $("#search_input").val().length;
+															
+								 var str ="";
+								
+									 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: #fed189; font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+len) + "</span>"; 
+									
+								if(json.length < 2){
+									
+									 html += "<br/><a href='#'><span class='result'>"+str+"</span></a>";
+									 
+									 $("#project_drop1").html(html);
+									
+								}	  
+								else{
+									
+									if(entryIndex < 2){
+										html += "<br/><a href='#'><span class='result'>"+str+"</span></a>";
+										
+									}
+									$("#project_drop1").html(html);
+								
+								}
+												 
+							 }); // end of $.each()----------------------------------------------------------------------
+							 
+							 if(json.length > 2){ 
+								 html += "<li><a class='btn btn-default btn-sm' id='btnMore2'>More</a></li>";
+							 } 
+							 
+							 html += "<li class='divider'></li>";
+							 
+							 
+							 $("#project_drop1").html(html);
+								 
+						 } // json.length > 0 if()-------------------------------------------------------------------------
+						 else{
+							 
+							 $("#project_drop1").hide();
+							 
+				  		}// json.length > 0 else()--------------------------------------------------------------------------
+				 	
+				  		
+				  		/* $("#drop1").html(html); */
+				  		
+					  	$("#btnMore2").click(function(){
+							 
+					  		/* $("#drop2").empty();
+					  		 */
+					  		 dropShow2();
+					  		 
+					  		
+					  		
+							 var html3 = "";
+							 
+							 html3 += "<span class='lite' style='font-weight: bold; font-size: 15pt;'>Projects</span>";
+							 html3 += "<span id='backicon'><img src='<%=request.getContextPath() %>/resources/img/left-arrow.png' /></span>";
+							 
+							 $.each(json, function(entryIndex, entry){
+								 				
+								 var word = entry.project_name.trim();
+								 // "ajax 프로그래밍"
+									
+								 var index = word.toLowerCase().indexOf( $("#search_input").val().toLowerCase() ); // 해당 문자열을 전부 다 소문자로 바꾸는 자바스크립트 함수 (toUpperCase())
+								 
+								 
+								 var len = $("#search_input").val().length;
+															
+								 var str ="";
+								
+									 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: #fed189; font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+len) + "</span>"; 
+									
+									 html3 += "<br/><a href='#'><span class='result'>"+str+"</span></a>";
+									 
+								 $("#project_drop2").html(html3);
+									 		 
+							 }); // end of $.each()----------------------------------------------------------------------
+							  
+							 $("#project_drop2").html(html3);
+							 
+							
+							 $("#backicon").click(function(){
+									
+									/* alert("확인용:::::::"); */ 
+									dropShow1();
+										 
+							 });
+							 
+							 
+						 }); // end of $("#btnMore").click()---------------------------------------------------------------------------
+				 		
+
+						 
+						 
+					 },
+					 error: function(request, status, error){
+							alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
+					 }
+					 						 
+				 });  
+				 
+			 	 $.ajax({
 					
-				 url: "<%=request.getContextPath()%>/projectSearch.action",
+				 url: "<%=request.getContextPath()%>/listSearch.action",
 				 type: "get",
 				 data: form_data,
 				 dataType: "JSON",
@@ -222,13 +365,13 @@ input[type=text]:focus {
 					
 					 if(json.length > 0){
 						 
-						 $("#project_drop1").show();  
+						 $("#list_drop1").show();  
 								
-						 html += "<span class='lite' style='font-weight: bold; font-size: 15pt;'>Projects</span>";
+						 html += "<span class='lite' style='font-weight: bold; font-size: 15pt;'>Lists</span>";
 						 
 						 $.each(json, function(entryIndex, entry){
 							 												
-							 var word = entry.project_name.trim();
+							 var word = entry.list_name.trim();
 							 // "ajax 프로그래밍"
 								
 							 var index = word.toLowerCase().indexOf( $("#search_input").val().toLowerCase() ); // 해당 문자열을 전부 다 소문자로 바꾸는 자바스크립트 함수 (toUpperCase())
@@ -244,7 +387,7 @@ input[type=text]:focus {
 								
 								 html += "<br/><a href='#'><span class='result'>"+str+"</span></a>";
 								 
-								 $("#project_drop1").html(html);
+								 $("#list_drop1").html(html);
 								
 							}	  
 							else{
@@ -253,44 +396,47 @@ input[type=text]:focus {
 									html += "<br/><a href='#'><span class='result'>"+str+"</span></a>";
 									
 								}
-								$("#project_drop1").html(html);
+								$("#list_drop1").html(html);
 							
 							}
 											 
 						 }); // end of $.each()----------------------------------------------------------------------
 						 
 						 if(json.length > 2){ 
-							 html += "<li><a class='btn btn-default btn-sm' id='btnMore2'>More</a></li>";
+							 html += "<li><a class='btn btn-default btn-sm' id='btnMore3'>More</a></li>";
 						 } 
 						 
 						 html += "<li class='divider'></li>";
 						 
 						 
-						 $("#project_drop1").html(html);
+						 $("#list_drop1").html(html);
 							 
 					 } // json.length > 0 if()-------------------------------------------------------------------------
 					 else{
 						 
-						 $("#project_drop1").hide();
+						 $("#list_drop1").hide();
 						 
 			  		}// json.length > 0 else()--------------------------------------------------------------------------
 			 	
 			  		
 			  		/* $("#drop1").html(html); */
 			  		
-				  	$("#btnMore2").click(function(){
-						 
-				  		 alert("btn2 확인용"); 
+				  	$("#btnMore3").click(function(){
+						
+				  	/* 	$("#drop2").empty();
+				  		 */
 				  		 dropShow2();
 				  		
-						 var html2 = "";
+				  		
+				  		 
+						 var html4 = "";
 						 
-						 html2 += "<span class='lite' style='font-weight: bold; font-size: 15pt;'>Teams</span>";
-						 html2 += "<span id='backicon'><img src='<%=request.getContextPath() %>/resources/img/left-arrow.png' /></span>";
+						 html4 += "<span class='lite' style='font-weight: bold; font-size: 15pt;'>Lists</span>";
+						 html4 += "<span id='backicon'><img src='<%=request.getContextPath() %>/resources/img/left-arrow.png' /></span>";
 						 
 						 $.each(json, function(entryIndex, entry){
 							 				
-							 var word = entry.project_name.trim();
+							 var word = entry.list_name.trim();
 							 // "ajax 프로그래밍"
 								
 							 var index = word.toLowerCase().indexOf( $("#search_input").val().toLowerCase() ); // 해당 문자열을 전부 다 소문자로 바꾸는 자바스크립트 함수 (toUpperCase())
@@ -302,13 +448,13 @@ input[type=text]:focus {
 							
 								 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: #fed189; font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+len) + "</span>"; 
 								
-								 html2 += "<br/><a href='#'><span class='result'>"+str+"</span></a>";
+								 html4 += "<br/><a href='#'><span class='result'>"+str+"</span></a>";
 								 
-							 $("#project_drop2").html(html2);
+							 $("#list_drop2").html(html4);
 								 		 
 						 }); // end of $.each()----------------------------------------------------------------------
 						  
-						 $("#project_drop2").html(html2);
+						 $("#list_drop2").html(html4);
 						 
 						
 						 $("#backicon").click(function(){
@@ -329,316 +475,179 @@ input[type=text]:focus {
 						alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
 				 }
 				 						 
-			 });  
-			 
-		 	 $.ajax({
-				
-			 url: "<%=request.getContextPath()%>/listSearch.action",
-			 type: "get",
-			 data: form_data,
-			 dataType: "JSON",
-			 success: function(json){
-				
-				 var html = "";
-				
-				 if(json.length > 0){
-					 
-					 $("#list_drop1").show();  
-							
-					 html += "<span class='lite' style='font-weight: bold; font-size: 15pt;'>Lists</span>";
-					 
-					 $.each(json, function(entryIndex, entry){
-						 												
-						 var word = entry.list_name.trim();
-						 // "ajax 프로그래밍"
-							
-						 var index = word.toLowerCase().indexOf( $("#search_input").val().toLowerCase() ); // 해당 문자열을 전부 다 소문자로 바꾸는 자바스크립트 함수 (toUpperCase())
-						 
-						 
-						 var len = $("#search_input").val().length;
-													
-						 var str ="";
-						
-							 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: #fed189; font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+len) + "</span>"; 
-							
-						if(json.length < 2){
-							
-							 html += "<br/><a href='#'><span class='result'>"+str+"</span></a>";
-							 
-							 $("#list_drop1").html(html);
-							
-						}	  
-						else{
-							
-							if(entryIndex < 2){
-								html += "<br/><a href='#'><span class='result'>"+str+"</span></a>";
-								
-							}
-							$("#list_drop1").html(html);
-						
-						}
-										 
-					 }); // end of $.each()----------------------------------------------------------------------
-					 
-					 if(json.length > 2){ 
-						 html += "<li><a class='btn btn-default btn-sm' id='btnMore3'>More</a></li>";
-					 } 
-					 
-					 html += "<li class='divider'></li>";
-					 
-					 
-					 $("#list_drop1").html(html);
-						 
-				 } // json.length > 0 if()-------------------------------------------------------------------------
-				 else{
-					 
-					 $("#list_drop1").hide();
-					 
-		  		}// json.length > 0 else()--------------------------------------------------------------------------
-		 	
-		  		
-		  		/* $("#drop1").html(html); */
-		  		
-			  	$("#btnMore3").click(function(){
-					 
-			  		 alert("btn3 확인용"); 
-			  		 dropShow2();
-			  		
-					 var html2 = "";
-					 
-					 html2 += "<span class='lite' style='font-weight: bold; font-size: 15pt;'>Lists</span>";
-					 html2 += "<span id='backicon'><img src='<%=request.getContextPath() %>/resources/img/left-arrow.png' /></span>";
-					 
-					 $.each(json, function(entryIndex, entry){
-						 				
-						 var word = entry.list_name.trim();
-						 // "ajax 프로그래밍"
-							
-						 var index = word.toLowerCase().indexOf( $("#search_input").val().toLowerCase() ); // 해당 문자열을 전부 다 소문자로 바꾸는 자바스크립트 함수 (toUpperCase())
-						 
-						 
-						 var len = $("#search_input").val().length;
-													
-						 var str ="";
-						
-							 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: #fed189; font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+len) + "</span>"; 
-							
-							 html2 += "<br/><a href='#'><span class='result'>"+str+"</span></a>";
-							 
-						 $("#list_drop2").html(html2);
-							 		 
-					 }); // end of $.each()----------------------------------------------------------------------
-					  
-					 $("#list_drop2").html(html2);
-					 
-					
-					 $("#backicon").click(function(){
-							
-							/* alert("확인용:::::::"); */ 
-							dropShow1();
-								 
-					 });
-					 
-					 
-				 }); // end of $("#btnMore").click()---------------------------------------------------------------------------
-		 		
-
+			 }); 
 				 
-				 
-			 },
-			 error: function(request, status, error){
-					alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
-			 }
-			 						 
-		 }); 
-			 
-		
-		 $.ajax({
-				
-			 url: "<%=request.getContextPath()%>/cardSearch.action",
-			 type: "get",
-			 data: form_data,
-			 dataType: "JSON",
-			 success: function(json){
-				
-				 var html = "";
-				
-				 if(json.length > 0){
-					 
-					 $("#card_drop1").show();  
-							
-					 html += "<span class='lite' style='font-weight: bold; font-size: 15pt;'>Cards</span>";
-					 
-					 $.each(json, function(entryIndex, entry){
-						 												
-						 var word = entry.card_title.trim();
-						 // "ajax 프로그래밍"
-							
-						 var index = word.toLowerCase().indexOf( $("#search_input").val().toLowerCase() ); // 해당 문자열을 전부 다 소문자로 바꾸는 자바스크립트 함수 (toUpperCase())
-						 
-						 
-						 var len = $("#search_input").val().length;
-													
-						 var str ="";
-						
-							 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: #fed189; font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+len) + "</span>"; 
-							
-						if(json.length < 2){
-							
-							 html += "<br/><a href='#'><span class='result'>"+str+"</span></a>";
-							 
-							 $("#card_drop1").html(html);
-							
-						}	  
-						else{
-							
-							if(entryIndex < 2){
-								html += "<br/><a href='#'><span class='result'>"+str+"</span></a>";
-								
-							}
-							$("#card_drop1").html(html);
-						
-						}
-										 
-					 }); // end of $.each()----------------------------------------------------------------------
-					 
-					 if(json.length > 2){ 
-						 html += "<li><a class='btn btn-default btn-sm' id='btnMore4'>More</a></li>";
-					 } 
-					 
-					 html += "<li class='divider'></li>";
-					 
-					 
-					 $("#card_drop1").html(html);
-						 
-				 } // json.length > 0 if()-------------------------------------------------------------------------
-				 else{
-					 
-					 $("#card_drop1").hide();
-					 
-		  		}// json.length > 0 else()--------------------------------------------------------------------------
-		 	
-		  		
-		  		/* $("#drop1").html(html); */
-		  		
-			  	$("#btnMore4").click(function(){
-					 
-			  		 alert("btn4 확인용"); 
-			  		 dropShow2();
-			  		
-					 var html2 = "";
-					 
-					 html2 += "<span class='lite' style='font-weight: bold; font-size: 15pt;'>Cards</span>";
-					 html2 += "<span id='backicon'><img src='<%=request.getContextPath() %>/resources/img/left-arrow.png' /></span>";
-					 
-					 $.each(json, function(entryIndex, entry){
-						 				
-						 var word = entry.card_title.trim();
-						 // "ajax 프로그래밍"
-							
-						 var index = word.toLowerCase().indexOf( $("#search_input").val().toLowerCase() ); // 해당 문자열을 전부 다 소문자로 바꾸는 자바스크립트 함수 (toUpperCase())
-						 
-						 
-						 var len = $("#search_input").val().length;
-													
-						 var str ="";
-						
-							 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: #fed189; font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+len) + "</span>"; 
-							
-							 html2 += "<br/><a href='#'><span class='result'>"+str+"</span></a>";
-							 
-						 $("#card_drop2").html(html2);
-							 		 
-					 }); // end of $.each()----------------------------------------------------------------------
-					  
-					 $("#card_drop2").html(html2);
-					 
+			
+			 $.ajax({
 					
-					 $("#backicon").click(function(){
+				 url: "<%=request.getContextPath()%>/cardSearch.action",
+				 type: "get",
+				 data: form_data,
+				 dataType: "JSON",
+				 success: function(json){
+					
+					 var html = "";
+					
+					 if(json.length > 0){
+						 
+						 $("#card_drop1").show();  
+								
+						 html += "<span class='lite' style='font-weight: bold; font-size: 15pt;'>Cards</span>";
+						 
+						 $.each(json, function(entryIndex, entry){
+							 												
+							 var word = entry.card_title.trim();
+							 // "ajax 프로그래밍"
+								
+							 var index = word.toLowerCase().indexOf( $("#search_input").val().toLowerCase() ); // 해당 문자열을 전부 다 소문자로 바꾸는 자바스크립트 함수 (toUpperCase())
+							 
+							 
+							 var len = $("#search_input").val().length;
+														
+							 var str ="";
 							
-							/* alert("확인용:::::::"); */ 
-							dropShow1();
+								 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: #fed189; font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+len) + "</span>"; 
+								
+							if(json.length < 2){
+								
+								 html += "<br/><a href='#'><span class='result'>"+str+"</span></a>";
 								 
-					 });
-					 
-					 
-				 }); // end of $("#btnMore").click()---------------------------------------------------------------------------
-		 		
- 
-			 },
-			 error: function(request, status, error){
-					alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
-			 }
-			 						 
-		 }); 
-		 
-		 
-		 $.ajax({
-				
-			 url: "<%=request.getContextPath()%>/memberSearch.action",
-			 type: "get",
-			 data: form_data,
-			 dataType: "JSON",
-			 success: function(json){
-				
-				 var html = "";
-				
-				 if(json.length > 0){
-					 
-					 $("#member_drop1").show();  
+								 $("#card_drop1").html(html);
+								
+							}	  
+							else{
+								
+								if(entryIndex < 2){
+									html += "<br/><a href='#'><span class='result'>"+str+"</span></a>";
+									
+								}
+								$("#card_drop1").html(html);
 							
-					 html += "<span class='lite' style='font-weight: bold; font-size: 15pt;'>Members</span>";
-					 
-					 $.each(json, function(entryIndex, entry){
+							}
+											 
+						 }); // end of $.each()----------------------------------------------------------------------
 						 
-						 var word = "";
+						 if(json.length > 2){ 
+							 html += "<li><a class='btn btn-default btn-sm' id='btnMore4'>More</a></li>";
+						 } 
 						 
-						 if( (entry.userid.trim()).indexOf($("#search_input").val()) != -1 ){
-							 word = entry.userid.trim();
-						 }
-						 else if( (entry.nickname.trim()).indexOf($("#search_input").val()) != -1 ){
-							 word = entry.nickname.trim();
-						 }
-						 else if( (entry.name.trim()).indexOf($("#search_input").val()) != -1 ){
-							 word = entry.name.trim();
-						 }
+						 html += "<li class='divider'></li>";
 						 
 						 
+						 $("#card_drop1").html(html);
+							 
+					 } // json.length > 0 if()-------------------------------------------------------------------------
+					 else{
 						 
+						 $("#card_drop1").hide();
 						 
-						 // "ajax 프로그래밍"
+			  		}// json.length > 0 else()--------------------------------------------------------------------------
+			 	
+			  		
+			  		/* $("#drop1").html(html); */
+			  		
+				  	$("#btnMore4").click(function(){
+						 
+				  	/* 	$("#drop2").empty(); */
+				  		
+				  		 dropShow2();
+				  		 
+				  		 
+				  		
+						 var html5 = "";
+						 
+						 html2 += "<span class='lite' style='font-weight: bold; font-size: 15pt;'>Cards</span>";
+						 html2 += "<span id='backicon'><img src='<%=request.getContextPath() %>/resources/img/left-arrow.png' /></span>";
+						 
+						 $.each(json, function(entryIndex, entry){
+							 				
+							 var word = entry.card_title.trim();
+							 // "ajax 프로그래밍"
+								
+							 var index = word.toLowerCase().indexOf( $("#search_input").val().toLowerCase() ); // 해당 문자열을 전부 다 소문자로 바꾸는 자바스크립트 함수 (toUpperCase())
+							 
+							 
+							 var len = $("#search_input").val().length;
+														
+							 var str ="";
 							
-						 var index = word.toLowerCase().indexOf( $("#search_input").val().toLowerCase() ); // 해당 문자열을 전부 다 소문자로 바꾸는 자바스크립트 함수 (toUpperCase())
+								 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: #fed189; font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+len) + "</span>"; 
+								
+								 html5 += "<br/><a href='#'><span class='result'>"+str+"</span></a>";
+								 
+							 $("#card_drop2").html(html5);
+								 		 
+						 }); // end of $.each()----------------------------------------------------------------------
+						  
+						 $("#card_drop2").html(html5);
 						 
-						 
-						 var len = $("#search_input").val().length;
-													
-						 var str ="";
 						
-							 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: #fed189; font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+len) + "</span>"; 
-							
-						if(json.length < 2){
-							
-							html += "<br/><img src='<%=request.getContextPath()%>/resources/img/avatar1.jpg' class='avatar'/>";
-							
-							if( (entry.userid.trim()).indexOf($("#search_input").val()) != -1 ){
-								html += "<a href='#'><span class='result'>"+str+"("+entry.nickname+")"+"--"+entry.name+"</span></a>";
+						 $("#backicon").click(function(){
+								
+								/* alert("확인용:::::::"); */ 
+								dropShow1();
+									 
+						 });
+						 
+						 
+					 }); // end of $("#btnMore").click()---------------------------------------------------------------------------
+			 		
+	 
+				 },
+				 error: function(request, status, error){
+						alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
+				 }
+				 						 
+			 }); 
+			 
+			 
+			 $.ajax({
+					
+				 url: "<%=request.getContextPath()%>/memberSearch.action",
+				 type: "get",
+				 data: form_data,
+				 dataType: "JSON",
+				 success: function(json){
+					
+					 var html = "";
+					
+					 if(json.length > 0){
+						 
+						 $("#member_drop1").show();  
+								
+						 html += "<span class='lite' style='font-weight: bold; font-size: 15pt;'>Members</span>";
+						 
+						 $.each(json, function(entryIndex, entry){
+							 
+							 var word = "";
+							 
+							 if( (entry.userid.trim()).indexOf($("#search_input").val()) != -1 ){
+								 word = entry.userid.trim();
 							 }
 							 else if( (entry.nickname.trim()).indexOf($("#search_input").val()) != -1 ){
-								 html += "<a href='#'><span class='result'>"+entry.userid+"("+str+")"+"--"+entry.name+"</span></a>";
+								 word = entry.nickname.trim();
 							 }
 							 else if( (entry.name.trim()).indexOf($("#search_input").val()) != -1 ){
-								 html += "<a href='#'><span class='result'>"+entry.userid+"("+entry.nickname+")"+"--"+str+"</span></a>";
+								 word = entry.name.trim();
 							 }
-													 
-							 $("#member_drop1").html(html); 
-							
-						}	  
-						else{
-							
-							if(entryIndex < 2){
+							 
+							 
+							 
+							 
+							 // "ajax 프로그래밍"
 								
-								html += "<br/><img src='<%=request.getContextPath()%>/resources/img/avatar1.jpg' style='float: left;' class='avatar'/>";
+							 var index = word.toLowerCase().indexOf( $("#search_input").val().toLowerCase() ); // 해당 문자열을 전부 다 소문자로 바꾸는 자바스크립트 함수 (toUpperCase())
+							 
+							 
+							 var len = $("#search_input").val().length;
+														
+							 var str ="";
+							
+								 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: #fed189; font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+len) + "</span>"; 
+								
+							if(json.length < 2){
+								
+								html += "<br/><img src='<%=request.getContextPath()%>/resources/img/avatar1.jpg' class='avatar'/>";
 								
 								if( (entry.userid.trim()).indexOf($("#search_input").val()) != -1 ){
 									html += "<a href='#'><span class='result'>"+str+"("+entry.nickname+")"+"--"+entry.name+"</span></a>";
@@ -649,113 +658,191 @@ input[type=text]:focus {
 								 else if( (entry.name.trim()).indexOf($("#search_input").val()) != -1 ){
 									 html += "<a href='#'><span class='result'>"+entry.userid+"("+entry.nickname+")"+"--"+str+"</span></a>";
 								 }
+														 
+								 $("#member_drop1").html(html); 
+								
+							}	  
+							else{
+								
+								if(entryIndex < 2){
+									
+									html += "<br/><img src='<%=request.getContextPath()%>/resources/img/avatar1.jpg' style='float: left;' class='avatar'/>";
+									
+									if( (entry.userid.trim()).indexOf($("#search_input").val()) != -1 ){
+										html += "<a href='#'><span class='result'>"+str+"("+entry.nickname+")"+"--"+entry.name+"</span></a>";
+									 }
+									 else if( (entry.nickname.trim()).indexOf($("#search_input").val()) != -1 ){
+										 html += "<a href='#'><span class='result'>"+entry.userid+"("+str+")"+"--"+entry.name+"</span></a>";
+									 }
+									 else if( (entry.name.trim()).indexOf($("#search_input").val()) != -1 ){
+										 html += "<a href='#'><span class='result'>"+entry.userid+"("+entry.nickname+")"+"--"+str+"</span></a>";
+									 }
+								}
+								
+								 $("#member_drop1").html(html);
+															
+							
 							}
 							
-							 $("#member_drop1").html(html);
-														
-						
-						}
-						
-						
-						/* $("#member_drop1").html(html); */
-										 
-					 }); // end of $.each()----------------------------------------------------------------------
-					 
-					 if(json.length > 2){ 
-						 html += "<li><a class='btn btn-default btn-sm' id='btnMore5'>More</a></li>";
-					 } 
-					 
-					 html += "<li class='divider'></li>";
-					 
-					 
-					 $("#member_drop1").html(html);
+							
+							/* $("#member_drop1").html(html); */
+											 
+						 }); // end of $.each()----------------------------------------------------------------------
 						 
-				 } // json.length > 0 if()-------------------------------------------------------------------------
-				 else{
-					 
-					 $("#member_drop1").hide();
-					 
-		  		}// json.length > 0 else()--------------------------------------------------------------------------
-		 	
-		  		
-		  		/* $("#drop1").html(html); */
-		  		
-			  	$("#btnMore5").click(function(){
-					 
-			  		 alert("btn5 확인용"); 
-			  		 dropShow2();
+						 if(json.length > 2){ 
+							 html += "<li><a class='btn btn-default btn-sm' id='btnMore5'>More</a></li>";
+						 } 
+						 
+						 html += "<li class='divider'></li>";
+						 
+						 
+						 $("#member_drop1").html(html);
+							 
+					 } // json.length > 0 if()-------------------------------------------------------------------------
+					 else{
+						 
+						 $("#member_drop1").hide();
+						 
+			  		}// json.length > 0 else()--------------------------------------------------------------------------
+			 	
 			  		
-					 var html2 = "";
-					 
-					 html2 += "<span class='lite' style='font-weight: bold; font-size: 15pt;'>Members</span>";
-					 html2 += "<span id='backicon'><img src='<%=request.getContextPath() %>/resources/img/left-arrow.png' /></span>";
-					 
-					 $.each(json, function(entryIndex, entry){
+			  		/* $("#drop1").html(html); */
+			  		
+				  	$("#btnMore5").click(function(){
 						 
-						 var word = "";
+				  		/* $("#drop2").empty(); */
+				  		
+				  		 dropShow2();
+				  		
+				  		
+				  		 
+						 var html2 = "";
 						 
-						 if( (entry.userid.trim()).indexOf($("#search_input").val()) != -1 ){
-							 word = entry.userid.trim();
-						 }
-						 else if( (entry.nickname.trim()).indexOf($("#search_input").val()) != -1 ){
-							 word = entry.nickname.trim();
-						 }
-						 else if( (entry.name.trim()).indexOf($("#search_input").val()) != -1 ){
-							 word = entry.name.trim();
-						 }
-							
-						 var index = word.toLowerCase().indexOf( $("#search_input").val().toLowerCase() ); // 해당 문자열을 전부 다 소문자로 바꾸는 자바스크립트 함수 (toUpperCase())
+						 html2 += "<span class='lite' style='font-weight: bold; font-size: 15pt;'>Members</span>";
+						 html2 += "<span id='backicon'><img src='<%=request.getContextPath() %>/resources/img/left-arrow.png' /></span>";
 						 
-						 
-						 var len = $("#search_input").val().length;
-													
-						 var str ="";
-						
-							 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: #fed189; font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+len) + "</span>"; 
-							
-							 html += "<br/><img src='<%=request.getContextPath()%>/resources/img/avatar1.jpg' style='float: left;' class='avatar'/>";
+						 $.each(json, function(entryIndex, entry){
+							 
+							 var word = "";
 							 
 							 if( (entry.userid.trim()).indexOf($("#search_input").val()) != -1 ){
-									html2 += "<a href='#'><span class='result'>"+str+"("+entry.nickname+")"+"--"+entry.name+"</span></a>";
+								 word = entry.userid.trim();
 							 }
 							 else if( (entry.nickname.trim()).indexOf($("#search_input").val()) != -1 ){
-								 html2 += "<a href='#'><span class='result'>"+entry.userid+"("+str+")"+"--"+entry.name+"</span></a>";
+								 word = entry.nickname.trim();
 							 }
 							 else if( (entry.name.trim()).indexOf($("#search_input").val()) != -1 ){
-								 html2 += "<a href='#'><span class='result'>"+entry.userid+"("+entry.nickname+")"+"--"+str+"</span></a>";
+								 word = entry.name.trim();
 							 }
+								
+							 var index = word.toLowerCase().indexOf( $("#search_input").val().toLowerCase() ); // 해당 문자열을 전부 다 소문자로 바꾸는 자바스크립트 함수 (toUpperCase())
 							 
-						 $("#member_drop2").html(html2);
-							 		 
-					 }); // end of $.each()----------------------------------------------------------------------
-					  
-					 $("#member_drop2").html(html2);
-					 
-					
-					 $("#backicon").click(function(){
+							 
+							 var len = $("#search_input").val().length;
+														
+							 var str ="";
 							
-							/* alert("확인용:::::::"); */ 
-							dropShow1();
+								 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: #fed189; font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+len) + "</span>"; 
+								
+								 html += "<br/><img src='<%=request.getContextPath()%>/resources/img/avatar1.jpg' style='float: left;' class='avatar'/>";
 								 
-					 });
-					 
-					 
-				 }); // end of $("#btnMore").click()---------------------------------------------------------------------------
-		 		
- 
-			 },
-			 error: function(request, status, error){
-					alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
-			 }
-			 						 
-		 }); // end of $.ajax memberSearch.action-------------------------------------------------------------------
-	 	 
+								 if( (entry.userid.trim()).indexOf($("#search_input").val()) != -1 ){
+										html2 += "<a href='#'><span class='result'>"+str+"("+entry.nickname+")"+"--"+entry.name+"</span></a>";
+								 }
+								 else if( (entry.nickname.trim()).indexOf($("#search_input").val()) != -1 ){
+									 html2 += "<a href='#'><span class='result'>"+entry.userid+"("+str+")"+"--"+entry.name+"</span></a>";
+								 }
+								 else if( (entry.name.trim()).indexOf($("#search_input").val()) != -1 ){
+									 html2 += "<a href='#'><span class='result'>"+entry.userid+"("+entry.nickname+")"+"--"+str+"</span></a>";
+								 }
+								 
+							 $("#member_drop2").html(html2);
+								 		 
+						 }); // end of $.each()----------------------------------------------------------------------
+						  
+						 $("#member_drop2").html(html2);
+						 
+						
+						 $("#backicon").click(function(){
+								
+								/* alert("확인용:::::::"); */ 
+								dropShow1();
+									 
+						 });
+						 
+						 
+					 }); // end of $("#btnMore").click()---------------------------------------------------------------------------
+			 		
+	 
+				 },
+				 error: function(request, status, error){
+						alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
+				 }
+				 						 
+			 }); // end of $.ajax memberSearch.action-------------------------------------------------------------------
 		 	 
-	}); // $("#search_input").keyup()-------------------------------------------------------------------
 		  
-		  
-		
+			$("#drop1").click(function(event){
+				var word = "";
+				
+				var $target = $(event.target); // 무엇을 클릭하는지 알기 위해서 
+				
+				
+				if($target.is(".first")){
+					word = $target.text() + $target.next().text() + $target.next().next().text();
+				}
+				else if($target.is(".second")){
+					word = $target.prev().text() + $target.text() + $target.next().text();
+				}
+				else if($target.is(".third")){
+					word = $target.prev().prev().text() + $target.prev().text() + $target.text();
+				}
+				
+				$("#search_input").val(word);
+				// 텍스트 박스에 검색된 결과의 문자열을 입력해준다. 
+				
+				$("#drop1").hide();
+				
+				// goSearch(word);
+				
+				
+			});
+			 
+			 
+			 
+			 
+			$("#drop2").click(function(event){
+				var word = "";
+				
+				var $target = $(event.target); // 무엇을 클릭하는지 알기 위해서 
+				
+				
+				if($target.is(".first")){
+					word = $target.text() + $target.next().text() + $target.next().next().text();
+				}
+				else if($target.is(".second")){
+					word = $target.prev().text() + $target.text() + $target.next().text();
+				}
+				else if($target.is(".third")){
+					word = $target.prev().prev().text() + $target.prev().text() + $target.text();
+				}
+				
+				$("#search_input").val(word);
+				// 텍스트 박스에 검색된 결과의 문자열을 입력해준다. 
+				
+				$("#drop2").hide();
+				
+				// goSearch(word);
+				
+				
+			}); 
+	   
 		 
+		   
+		   
+		   
+		}	 
+	 
 	}); // $(document).ready()--------------------------------------------------------------------------------
 		
 	
@@ -857,7 +944,31 @@ input[type=text]:focus {
 		
 	}
 	
-
+	/*  $(document).click(function(event){
+		 
+		  if(!$(event.target).closet('#drop1').length){
+			  
+			  if($('#drop1').is(":visible")){
+				  $('#drop1').hide();
+			  }
+			  
+		  }
+		  
+	  }); 
+	 
+	 $(document).click(function(event){
+		 
+		  if(!$(event.target).closet('#drop2').length){
+			  
+			  if($('#drop2').is(":visible")){
+				  $('#drop2').hide();
+			  }
+			  
+		  }
+		  
+	  });  */
+	
+	
 
 		
  
@@ -955,7 +1066,7 @@ input[type=text]:focus {
 		  </div>
 		</div> -->
 
-		<div class="container">
+		<div class="container dropSearch">
 			<ul class="list-group drop dropdown-menu" id="drop1">
 				<li id="team_drop1"></li>
 				<li id="project_drop1"></li>
@@ -964,7 +1075,7 @@ input[type=text]:focus {
 				<li id="member_drop1"></li>
 			</ul>
 		</div>
-		<div class="container">
+		<div class="container dropSearch">
 			<ul class="list-group drop dropdown-menu" id="drop2">
 				<li id="team_drop2"></li>
 				<li id="project_drop2"></li>
@@ -1171,12 +1282,11 @@ input[type=text]:focus {
 								<div class="log-arrow-up"></div>
 								<li class="eborder-top"><a href="#"><i
 										class="icon_profile"></i> My Profile</a></li>
-								<li><a href="login.html"><i class="icon_key_alt"></i>
+								<li><a href="<%= request.getContextPath() %>/logout.action"><i class="icon_key_alt"></i>
 										Log Out</a></li>
 							</ul></li>
 
-						<li><img
-							src="<%=request.getContextPath()%>/resources/img/avatar1.jpg"
+						<li><img src="<%=request.getContextPath()%>/resources/img/avatar1.jpg"
 							alt="Avatar" class="avatar" /></li>
 						<!-- user login dropdown end -->
 						<!-- task notificatoin start -->

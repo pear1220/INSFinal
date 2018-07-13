@@ -13,14 +13,20 @@ public class MemberVO {
 	private String leave_status;
 	private String job;
 	private String birthday;
-	private String profilejpg;
+	private String org_filename;
 	private String ins_personal_alarm;
+	private String server_filename;
+	private String file_size;
 	
 	public MemberVO() {}
+	
+	
+	
 
 	public MemberVO(String userid, String pwd, String name, String nickname, String email, String tel1, String tel2,
-			String tel3, String leave_status, String job, String birthday, String profilejpg,
-			String ins_personal_alarm) {
+			String tel3, String leave_status, String job, String birthday, String org_filename,
+			String ins_personal_alarm, String server_filename, String file_size) {
+		super();
 		this.userid = userid;
 		this.pwd = pwd;
 		this.name = name;
@@ -32,8 +38,10 @@ public class MemberVO {
 		this.leave_status = leave_status;
 		this.job = job;
 		this.birthday = birthday;
-		this.profilejpg = profilejpg;
+		this.org_filename = org_filename;
 		this.ins_personal_alarm = ins_personal_alarm;
+		this.server_filename = server_filename;
+		this.file_size = file_size;
 	}
 
 	public String getUserid() {
@@ -124,13 +132,6 @@ public class MemberVO {
 		this.birthday = birthday;
 	}
 
-	public String getProfilejpg() {
-		return profilejpg;
-	}
-
-	public void setProfilejpg(String profilejpg) {
-		this.profilejpg = profilejpg;
-	}
 
 	public String getIns_personal_alarm() {
 		return ins_personal_alarm;
@@ -138,6 +139,33 @@ public class MemberVO {
 
 	public void setIns_personal_alarm(String ins_personal_alarm) {
 		this.ins_personal_alarm = ins_personal_alarm;
+	}
+
+
+	public String getOrg_filename() {
+		return org_filename;
+	}
+
+	public void setOrg_filename(String org_filename) {
+		this.org_filename = org_filename;
+	}
+
+	public String getServer_filename() {
+		return server_filename;
+	}
+
+
+	public void setServer_filename(String server_filename) {
+		this.server_filename = server_filename;
+	}
+
+
+	public String getFile_size() {
+		return file_size;
+	}
+
+	public void setFile_size(String file_size) {
+		this.file_size = file_size;
 	}
 	
 	

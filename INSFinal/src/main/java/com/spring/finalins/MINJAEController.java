@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.spring.finalins.model.CardVO;
 import com.spring.finalins.model.ListVO;
 import com.spring.finalins.model.MemberVO;
+import com.spring.finalins.model.ProjectMemeberVO;
 import com.spring.finalins.model.ProjectVO;
 import com.spring.finalins.model.TeamVO;
 import com.spring.finalins.service.InterMinjaeServie;
@@ -33,7 +34,7 @@ public class MINJAEController {
 	
 	// mj_project.jsp 페이지를 여는 메소드
 	@RequestMapping(value="/mj_project.action", method= {RequestMethod.GET})
-	public String mj_project(HttpServletRequest req,  HttpServletResponse res) {
+	public String requireLogin_mj_project(HttpServletRequest req,  HttpServletResponse res) {
 		
 		return "minjae/mj_project.tiles";
 				
@@ -344,6 +345,7 @@ public class MINJAEController {
 				
 			}
 			
+			
 			String str_jsonArr = jsonArr.toString();
 			req.setAttribute("str_jsonArr", str_jsonArr);
 			
@@ -354,31 +356,201 @@ public class MINJAEController {
 	}
 	
 	@RequestMapping(value="/leaveProject.action", method= {RequestMethod.GET})
-	public String requireLogin_leaveProject(HttpServletRequest req,  HttpServletResponse res) {
+	public String requireLogin_leaveProject(HttpServletRequest req,  HttpServletResponse res) throws Throwable  {
+		
+		/*String fk_project_idx = req.getParameter("fk_project_idx");*/
+		String fk_project_idx = "31";
+		System.out.println("fk_project_idx>>>>>>>>>>>>>>>>>>>>>>>>>" + fk_project_idx);
+		
+		
+		// project 탈퇴시 project_member의 userid 와 admin_status 를 얻어옴
+		List<ProjectMemeberVO> projectmemberList = service.getProjectCorrect(fk_project_idx);
+		for(ProjectMemeberVO projectmembervo:projectmemberList) {
+			System.out.println("project_member userid, admin_status" + projectmembervo.getProject_member_userid());
+		}
+		
 		
 		HttpSession session = req.getSession();
 		MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
 		
-		int n = service.leaveProject(loginuser.getUserid());
+		HashMap<String, String> map = new HashMap<String, String>(); 
+		map.put("userid", loginuser.getUserid());
+		map.put("fk_project_idx", fk_project_idx);
+		
+		int n =0;
+		
+		for(ProjectMemeberVO projectvo:projectmemberList) {
+			
+			if(projectvo.getProject_member_userid().equalsIgnoreCase(loginuser.getUserid())) {
+				
+				if("0".equals(projectvo.getProject_member_admin_status())) {
+					// 일반유저 경우 
+					n = service.generalProjectLeave(map);
+					System.out.println("일반 유저의 탈퇴     >>>>>>>>>" + n);
+				}
+				else if("1".equals(projectvo.getProject_member_admin_status())) {
+					// 프로젝트 관리자 경우
+					
+					n = service.adminProjectLeave(map); // 프로젝트 관리자의 상태를 바꿈
+					System.out.println("프로젝트 관리자 유저의 탈퇴     >>>>>>>>>" + n);
+					
+				}
+				
+			}
+		}
 		
 		String msg = "";
 		String loc = "";
-					
+		
 		if(n == 1) {
-			msg ="프로젝트 탈퇴가 되었습니다.";
-			loc = "/leaveProject.action";
+			msg = loginuser.getUserid() + "님의 프로젝트 탈퇴가 성공적으로 되었습니다.";
+			loc = "index.action";		
 		}
 		else {
-			msg = "프로젝트 탈퇴에 실패하였습니다.";
+			msg = loginuser.getUserid() + "님의 프로젝트 탈퇴를 실패하였습니다.";
 			loc = "javascript:history.back();";
 		}
 		
+		req.setAttribute("msg", msg);
+		req.setAttribute("loc", loc);
+							
 		return "msg.notiles";
+				
+	}
+	
+	@RequestMapping(value="/deleteProject.action", method=RequestMethod.GET)
+	public String requireLogin_deleteProject(HttpServletRequest req, HttpServletResponse res) throws Throwable {
+		
+		String fk_project_idx = req.getParameter("fk_project_idx");
+		
+		fk_project_idx = "31";
+		
+		// project의 adminList를 갖고 옴
+		List<HashMap<String, String>> adminList = service.getAdminList();
+		
+		HttpSession session = req.getSession();
+		MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
+		
+		int n = 0;
+		
+		String msg = "";
+		String loc = "";
+		
+		if( adminList != null || adminList.size() > 0 ) {
+			for(int i =0; i<adminList.size(); i++) {
+				String adminuserid = adminList.get(i).get("project_member_userid");
+				System.out.println("adminuserid>>>>>>>>>" + adminuserid);
+				
+				
+				if(adminuserid.equals(loginuser.getUserid())){
+					
+					n = service.deleteProject(fk_project_idx);
+					System.out.println("deleteProject.action>>>>>>>>>>>>>>>>>>>>> " + n);
+				}
+				
+				
+			}
+		}
+		else {
+			msg = "관리자 권한을 가진 사람만 가능합니다";
+			loc = "javascript:history.back();";
+					
+		}
 
+
+		
+		if(n > 0) {
+			msg = "프로젝트의 삭제가 성공했습니다.";
+			loc = "index.action";
+		}
+		else {
+			msg = "프로젝트의 삭제를 실패했습니다.";
+			loc = "javascript:history.back();";
+		}
+		
+		req.setAttribute("msg", msg);
+		req.setAttribute("loc", loc);
+		
+		
+		return "msg.notiles";
+		
 	}
 	
 	
+	@RequestMapping(value="/projectRecordView.action", method=RequestMethod.GET)
+	public String requireLogin_projectRecordView(HttpServletRequest req, HttpServletResponse res) {
+				
+	//	String fk_project_idx = req.getParameter("fk_project_idx");
+		String sel1Val = req.getParameter("sel1Val");
+		
+		String fk_project_idx = "3";
+		
+		HttpSession session = req.getSession();
+		MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
+		
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("fk_project_idx", fk_project_idx);
+		map.put("sel1Val", sel1Val);
+		map.put("userid", loginuser.getUserid());
+		
+				
+		List<HashMap<String, String>> projectRecordList = service.projectRecordView(map);
+		
+		for (int i = 0; i < projectRecordList.size(); i++) {
+			
+			System.out.println("Controller>>>>>>>>>>>>> projectRecordList >>>>>>>>>>>>>" + projectRecordList.get(i).get("card_title"));
+			
+		}
+		
+		JSONArray jsonArr = new JSONArray();
+		
+		if(projectRecordList != null && projectRecordList.size() > 0  ) {
+			
+			for(HashMap<String, String> projectRecordMap : projectRecordList) {
+				
+				JSONObject jsonObj = new JSONObject();
+				
+				jsonObj.put("org_filename", projectRecordMap.get("org_filename"));
+				jsonObj.put("userid", projectRecordMap.get("userid"));
+				jsonObj.put("project_record_idx", projectRecordMap.get("project_record_idx"));
+				jsonObj.put("fk_project_idx", projectRecordMap.get("fk_project_idx"));
+				jsonObj.put("project_record_time", projectRecordMap.get("project_record_time"));
+				jsonObj.put("fk_list_idx", projectRecordMap.get("fk_list_idx"));
+				jsonObj.put("list_name", projectRecordMap.get("list_name"));
+				jsonObj.put("fk_card_idx", projectRecordMap.get("fk_card_idx"));
+				jsonObj.put("card_title", projectRecordMap.get("card_title"));
+				jsonObj.put("record_dml_status", projectRecordMap.get("record_dml_status"));
+				
+				
+				jsonArr.put(jsonObj);
+			}
+		}
+		
+		
+		
+		String str_jsonArr = jsonArr.toString();
+		req.setAttribute("str_jsonArr", str_jsonArr);
+		System.out.println("projectRecordList>>>>>>>>" + str_jsonArr);
+		
+		/*req.setAttribute("projectRecordList", projectRecordList);
+		req.setAttribute("sel1Val", sel1Val);*/
+		
+		return "projectRecordView.notiles";
+		
+	}
 	
+	
+/*	@RequestMapping(value="/sel1.action", method=RequestMethod.GET)
+	public String requireLogin_sel1(HttpServletRequest req, HttpServletResponse res) {
+		
+		String sel1Val = req.getParameter("sel1Val");
+			
+		req.setAttribute("sel1Val", sel1Val);
+		
+		return "minjae/mj_project.tiles";
+		
+	}
+	*/
 	
 	
 	

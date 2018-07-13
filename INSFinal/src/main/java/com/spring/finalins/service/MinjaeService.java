@@ -5,11 +5,15 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.spring.finalins.model.CardVO;
 import com.spring.finalins.model.InterMinjaeDAO;
 import com.spring.finalins.model.ListVO;
 import com.spring.finalins.model.MemberVO;
+import com.spring.finalins.model.ProjectMemeberVO;
 import com.spring.finalins.model.ProjectVO;
 import com.spring.finalins.model.TeamVO;
 
@@ -86,13 +90,79 @@ public class MinjaeService implements InterMinjaeServie {
 		return memberList;
 	}
 
+	// project 탈퇴시 project_member의 userid 와 admin_status 를 얻어옴
 	@Override
-	public int leaveProject(String userid) {
+	public List<ProjectMemeberVO> getProjectCorrect(String fk_project_idx) {
 		
-		int n = dao.leaveProject(userid);
+		List<ProjectMemeberVO> projectmemberList = dao.getProjectCorrect(fk_project_idx);
+		
+		return projectmemberList;
+	}
+
+	// 프로젝트의 일반 유저일 경우 프로젝트 탈퇴
+	@Override
+	public int generalProjectLeave(HashMap<String, String> map) {
+		
+		int n = dao.generalProjectLeave(map);
 		
 		return n;
 	}
+
+	
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor= {Throwable.class})
+	public int adminProjectLeave(HashMap<String, String> map) throws Throwable {
+		
+		int n = dao.adminProjectLeave(map); // 프로젝트의 관리자일 경우 프로젝트 탈퇴
+		
+		int m = 0;
+		
+		if(n==1) {
+			String project_member_idxMin = dao.adminProjectNextPerson1(map); // 프로젝트의 관리자일 경우 프로젝트 탈퇴 할 때 해당하는 프로젝트의 다른사람 목록을 알아 온다.
+			
+			m = dao.adminProjectNextPerson2(project_member_idxMin); // 프로젝트의 관리자일 경우 프로젝트를 탈퇴 할 때 다음 사람에게 권한을 위임함.
+			
+		}
+		
+		return m;
+	}
+
+	// 삭제하기 위해 adminList를 갖고옴
+	@Override
+	public List<HashMap<String, String>> getAdminList() {
+		
+		List<HashMap<String, String>> adminList = dao.getAdminList();
+		
+		return adminList;
+	}
+
+	@Override
+	public int deleteProject(String fk_project_idx) {
+		
+		int n = dao.deleteProject(fk_project_idx); // ins_project 테이블에서의 project_delete_status = 0 
+		System.out.println("service 단nnnnnn :" +n);
+				
+		int m =0;
+		
+		if(n == 1) {
+			m = dao.deleteProjectMember(fk_project_idx); // ins_project_member 테이블에서의 project_member_status = 1 project_favorite_status = 0
+			System.out.println("service 단 mmmmmmm :" +m);
+			return n+m;
+		}
+		else {
+			return -1;
+		}
+		
+	}
+
+	@Override
+	public List<HashMap<String, String>> projectRecordView(HashMap<String, String> map) {
+		
+		List<HashMap<String, String>> projectRecordList = dao.projectRecordView(map);
+		
+		return projectRecordList;
+	}
+
 	
 	
 	
