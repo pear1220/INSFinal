@@ -8,7 +8,7 @@
 
 	<!-- 로그인하기 위해 멤버테이블에서 유저정보 select -->
 	<select id="getLogin" parameterType="HashMap" resultType="com.spring.finalins.model.MemberVO">
-		select userid, pwd, name, nickname, email, tel1, tel2, tel3, leave_status, job, birthday, profilejpg, ins_personal_alarm
+		select userid, pwd, name, nickname, email, tel1, tel2, tel3, leave_status, job, birthday, org_filename, ins_personal_alarm
 		  from ins_member
 		 where userid = #{userid} and pwd = #{pwd} and leave_status = 0
 	</select>
@@ -30,7 +30,7 @@
 		
 	<!-- 회원가입하기 위해 멤버테이블에 insert -->
 	<insert id="signupEnd" parameterType="com.spring.finalins.model.MemberVO">
-		insert into ins_member(userid, pwd, name, nickname, email, leave_status, job, birthday, profilejpg, ins_personal_alarm, tel1, tel2, tel3)
+		insert into ins_member(userid, pwd, name, nickname, email, leave_status, job, birthday, org_filename, ins_personal_alarm, tel1, tel2, tel3)
 		values(#{userid}, #{pwd}, #{name}, #{nickname}, #{email}, default, #{job}, to_date(#{birthday}, 'yyyy-mm-dd'), default, default, #{tel1}, #{tel2}, #{tel3})
 	</insert>
 	
@@ -112,6 +112,13 @@
 		 where project_idx = #{project_idx} and project_member_status = 0 and project_member_userid = #{userid}
 	</select>
 	
+	
+	<!-- 유저가 접속한 프로젝트의 배경이미지명을 select -->
+	<select id="getBackgroundIMG" parameterType="String" resultType="String">
+		select project_image_name
+		  from ins_project_image 
+		 where project_image_idx = (select fk_project_image_idx from ins_project where project_idx = #{project_idx})
+	</select>
 
 	<!-- 프로젝트의 즐겨찾기 상태를 update -->
 	<update id="updateFavoriteStatus" parameterType="HashMap">
@@ -123,6 +130,21 @@
 		</if>
 		 	where fk_project_idx = #{project_idx} and project_member_userid = #{userid}
 	</update>
+	
+	
+	<!-- 프로젝트의 리스트 목록을 select -->
+	<select id="getListInfo" parameterType="String" resultType="com.spring.finalins.model.ListVO">
+		select list_idx, fk_project_idx, list_name, list_delete_status
+		  from ins_list 
+		 where fk_project_idx = #{project_idx}
+	</select>
+	
+	
+	<select id="emailCheck" parameterType="HashMap" resultType="Integer">
+		select count(*)
+		  from ins_member
+		 where userid = #{userid} and email = #{email}
+	</select>
 	
 </mapper>
  

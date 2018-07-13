@@ -1,7 +1,9 @@
 package com.spring.finalins;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.google.gson.JsonObject;
+import com.spring.finalins.model.ListVO;
 import com.spring.finalins.model.MemberVO;
 import com.spring.finalins.service.InterProjectService;
 
@@ -182,9 +185,22 @@ public class ProjectController {
 			map.put("project_idx", project_idx);
 			map.put("project_name", project_name);
 			
+			//project_idx로 배경이미지 테이블에서 프로젝트의 배경이미지명을 가져오는 메소드
+			String project_image_name = service.getBackgroundIMG(project_idx);
+			
 			//유저가 접속한 프로젝트의 정보를 가져오는 메소드
 			HashMap<String, String> projectInfo = service.getProjectInfo(map);
+			
+			//프로젝트의 리스트 목록을 가져오는 메소드
+			List<ListVO> listvo = null;
+			listvo = service.getListInfo(project_idx);
+			for(int i=0; i<listvo.size(); i++) {
+				System.out.println("확인용 " + i + "번째 리스트 제목: " + listvo.get(i).getList_name());
+			}
+			
 			session.setAttribute("projectInfo", projectInfo);
+			request.setAttribute("project_image_name", project_image_name);
+			request.setAttribute("listvo", listvo);
 		}
 		return "project/project.tiles";
 	} // end of showProjectPage(HttpServletRequest request)
@@ -241,8 +257,77 @@ public class ProjectController {
 		session.setAttribute("projectInfo", projectInfo);
 		request.setAttribute("str_jsonObj", str_jsonObj);
 		
-		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~str_jsonObj => " + str_jsonObj);
+	//	System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~str_jsonObj => " + str_jsonObj);
 		
 		return "project/updateFavoriteStatusJSON";
 	} // end of updateFavoriteStatus(HttpServletRequest request)
+	
+	
+	//비밀번호찾기에서 이메일과 id로 일치하는 회원이 있는지 확인하는 메소드
+	@RequestMapping(value="emailCheck.action", method= {RequestMethod.POST})
+	public String emailCheck(HttpServletRequest request) {
+		String userid = request.getParameter("userid");
+		String email = request.getParameter("email");
+		
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("userid", userid);
+		map.put("email", email);
+		
+		int n = service.emailCheck(map);
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("n", n);
+		
+		String msg = "";
+		if(n==1) {
+			msg = "회원정보가 일치합니다. 위 메일로 인증코드를 발송합니다.";
+		}
+		else {
+			msg = "일치하는 회원정보가 없습니다.";
+		}
+		jsonObj.put("msg", msg);
+
+		String str_jsonObj = jsonObj.toString();
+		request.setAttribute("str_jsonObj", str_jsonObj);
+		return "project/emailCheckJSON";
+	} // end of emailCheck(HttpServletRequest request)
+	
+	
+	//비밀번호 찾기를 위해 메일로 인증코드 발송하는 메소드 
+	@RequestMapping(value="findPassword.action", method= {RequestMethod.POST})
+	public String findPassword(HttpServletRequest request) {
+		String email = request.getParameter("email");
+		
+		GoogleMail mail = new GoogleMail();
+		Random rnd = new Random();
+		
+		String certificationCode = "";// 인증코드 => 문자 5글자 숫자 7글자를 조합해서 보내준다.
+		char randcher = ' ';
+		
+		//랜덤 인증코드 생성
+		for(int i=0; i<5; i++) { // 문자 5개
+			randcher = (char)(rnd.nextInt('z'-'a'+1)+'a');// char, short 타입은 연산이 되면서 int 타입으로 변함
+			certificationCode += randcher;
+		}// end of for()-----------------------
+		
+		int randnum=0;
+		for(int i=0; i<7; i++) { // 숫자 7개
+			randnum = (rnd.nextInt(10-0+1)+0);
+			certificationCode +=randnum;
+		}// end of for()-----------------------
+		
+		JSONObject jsonObj = new JSONObject();
+		try {
+			mail.sendmail(email, certificationCode);// 인증키는 랜덤으로 가져온다.
+			jsonObj.put("certificationCode", certificationCode);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			request.setAttribute("sendFailmsg", "메일발송에 실패했습니다.");
+		}// end of try-------------------
+		
+		String str_jsonObj = jsonObj.toString();
+		request.setAttribute("str_jsonObj", str_jsonObj);
+		
+		return "project/findPasswordJSON";
+	}
 }

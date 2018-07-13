@@ -51,7 +51,8 @@
   ======================================================= -->
   <style type="text/css">
  
-	#mycontent		{min-height:800px; padding-top: 40px; border: 0px red solid;}
+	/* #mycontent		{min-height:800px; padding-top: 40px; border: 0px red solid;} */
+	#mycontent		{min-height:950px; padding-top: 40px; border: 0px red solid;}
 
 
 	.avatar {

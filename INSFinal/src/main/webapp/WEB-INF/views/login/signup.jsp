@@ -116,8 +116,8 @@ text, select{
 		$( "#btn-submit" ).click(function() {
 			blankCheck();
 			if(check != 0){
-				alert("check확인: " + check);
-				//	alert("공백을 채우시오");
+			//	alert("check확인: " + check);
+				alert("공백을 모두 채워주세요.");
 			}
 			else{
 				var frm = document.registerFrm;

@@ -100,5 +100,28 @@ public class ProjectDAO implements InterProjectDAO{
 	} // end of updateFavoriteStatus(HashMap<String, String> map)
 
 
+	//project_idx로 배경이미지 테이블에서 프로젝트의 배경이미지명을 가져오는 메소드
+	@Override
+	public String getBackgroundIMG(String project_idx) {
+		String project_image_name = sqlsession.selectOne("dasom.getBackgroundIMG", project_idx);
+		return project_image_name;
+	} // end of getBackgroundIMG(String project_idx)
+
+
+	//프로젝트의 리스트 목록을 가져오는 메소드
+	@Override
+	public List<ListVO> getListInfo(String project_idx) {
+		List<ListVO> listvo = sqlsession.selectList("dasom.getListInfo", project_idx);
+		return listvo;
+	}
+
+	//비밀번호찾기에서 이메일과 id로 일치하는 회원이 있는지 확인하는 메소드
+	@Override
+	public int emailCheck(HashMap<String, String> map) {
+		int n = sqlsession.selectOne("dasom.emailCheck", map);
+		return n;
+	}
+
+
 	
 }
