@@ -45,7 +45,7 @@ public class JihyeDAO implements InterJihyeDAO{
 	}
 
 	// 내가 속한 팀목록 불러오기
-/*	@Override
+	@Override
 	public List<TeamVO> getTeamList(String userid) {
 		
 		List<TeamVO> teamList = sqlsession.selectList("jihye.getTeamList", userid);
@@ -55,34 +55,41 @@ public class JihyeDAO implements InterJihyeDAO{
 		
 		}
 		return teamList;
-	}*/
+	}
 
-	/*@Override
-	public int insertProfileImg(HashMap<String,String> map) {
+	@Override
+	public int updateProfileImg(HashMap<String,String> map) {
 		
-		
-
-		
-           int n = sqlsession.insert("jihye.insertProfileImg",map);
-		
-		
+        int n = sqlsession.insert("jihye.updateProfileImg",map);
+				
 		if(n==1) {
 			System.out.println("프로필 사진 입력에 성공하셨습니다.");
 		}
 		return n;
-	}*/
-
+	}
 	
-	// 프로필 이미지 변경하기
-	/*@Override
-	public int insertProfileImg(HashMap<String, String> map) {
-		int n = sqlsession.update("jihye.insertProfileImg",map);
-		
-		if(n==1) {
-			System.out.println("프로필 사진 입력에 성공하셨습니다.");
-		}
-		return n;
-	}*/
+
+
+///////////////////////////////////////////////////////////////////	
+	@Override
+	public List<HashMap<String, String>> getChartJSON_job() {
+		List<HashMap<String, String>> jobList = sqlsession.selectList("jihye.getChartJSON_job");
+		return jobList;
+	}
+
+	@Override
+	public List<HashMap<String, String>> adminChartJSON_ageline() {
+		List<HashMap<String, String>> agelineList = sqlsession.selectList("jihye.adminChartJSON_ageline");
+		return agelineList;
+	}
+/////////////////////////////////////////////////////////////////
+
+	// 내가 활동한 기록 불러오기
+	@Override
+	public List<HashMap<String, String>> getMyRecordList(String userid) {
+		List<HashMap<String, String>> myRecordList = sqlsession.selectList("jihye.getMyRecordList", userid);
+		return myRecordList;
+	}
 
 	
 }

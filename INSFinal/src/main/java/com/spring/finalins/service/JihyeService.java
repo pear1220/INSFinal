@@ -5,6 +5,9 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.spring.finalins.model.InterJihyeDAO;
 import com.spring.finalins.model.JihyeDAO;
@@ -41,43 +44,43 @@ public class JihyeService implements InterJihyeService{
 	}
 
 	// 내가 속한 팀목록 불러오기
-/*	@Override
+	@Override
 	public List<TeamVO> getTeamList(String userid) {
 		 List<TeamVO> teamList = dao.getTeamList(userid);
 		return teamList;
-	}*/
-
-	//@Override
-	/*public int insertProfileImg(HashMap<String,String> map) {
-		
-		System.out.println("확인용");
-	
-		
-		InterJihyeDAO dao2 = new JihyeDAO();
-		
-		int n = dao2.insertProfileImg(map);
-		
-		
-		return n;
-	}*/
-
-	// 프로필 사진 변경하기
-	/*@Override
-	public int insertProfileImg(HashMap<String, String> map) {
-		System.out.println("불러오냐?"
-				+ ""
-				+ ""
-				+ "");
-		int n = dao.insertProfileImg(map);
-		return n;
 	}
 
 	@Override
-	public int test() {
-		int n = 1;
-		System.out.println("test호출");
+	public int updateProfileImg(HashMap<String,String> map) {
+		int n = dao.updateProfileImg(map);
 		return n;
-	}*/
+	}
+	
+
+	
+	////////////////////////////////////////////////////////////
+	// 직업별 인원수(통계)
+	@Override
+	public List<HashMap<String, String>> getChartJSON_job() {
+		List<HashMap<String, String>> jobList = dao.getChartJSON_job();
+		return jobList;
+	}
+
+	// 연령별 인원수(통계)
+	@Override
+	public List<HashMap<String, String>> adminChartJSON_ageline() {
+		List<HashMap<String, String>> agelineList = dao.adminChartJSON_ageline();
+		return agelineList;
+	}
+   ///////////////////////////////////////////////////////////
+
+	// 내가 활동한 기록 불러오기
+	@Override
+	public List<HashMap<String, String>> getMyRecordList(String userid) {
+		List<HashMap<String, String>> myRecordList = dao.getMyRecordList(userid);
+		return myRecordList;
+	}
+
 
 
 

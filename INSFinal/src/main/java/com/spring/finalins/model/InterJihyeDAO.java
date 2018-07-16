@@ -14,11 +14,18 @@ public interface InterJihyeDAO {
 
 	int deleteMyAccount(String userid); // 회원탈퇴(leave_status 업데이트 하기)
 
-//	List<TeamVO> getTeamList(String userid); // 내가 속한 팀목록 불러오기
+	List<TeamVO> getTeamList(String userid); // 내가 속한 팀목록 불러오기
 
-//	int insertProfileImg(HashMap<String, String> map); // 프로필 이미지 변경하기
+	int updateProfileImg(HashMap<String, String> map); // 프로필 이미지 변경하기
+	
 
-//	int insertProfileImg(HashMap<String,String> map);
+	// 차트 그리기
+	List<HashMap<String, String>> getChartJSON_job(); // 직업별 인원수(통계)
+	List<HashMap<String, String>> adminChartJSON_ageline(); // 연령별 인원수(통계)
+
+	List<HashMap<String, String>> getMyRecordList(String userid); // 내가 한 
+
+
 
 
  

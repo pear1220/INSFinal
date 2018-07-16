@@ -961,8 +961,8 @@
 
    
    <br/>
-   <button type="button" id="btnUpdate">완료</button>
-   <button type="button" onClick="javascript:history.back();" >취소</button>  
+   <button type="button" class="btn btn-primary btn-sm" id="btnUpdate">완료</button>
+   <button type="button" class="btn btn-warning btn-sm" onClick="javascript:history.back();" >취소</button>  
   
 <form name="editFrm">
       <input type="hidden" name="qna_idx" value="${qnavo.qna_idx}" />

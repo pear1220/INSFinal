@@ -122,16 +122,16 @@
 				        <%--  <button type="button" class="btn btn-primary btn-sm" onClick="javascript:location.href='<%= request.getContextPath() %>/qna.action'">목록보기</button> --%>
 					        <button type="button" class="btn btn-primary btn-sm" onClick="javascript:history.back();">목록보기</button>
 					   <c:if test="${!sessionScope.loginuser.userid.equals('admin') && qnavo.qna_depthno == 0}">
-						   <button type="button" class="btn btn-primary btn-sm" onClick="javascript:location.href='<%= request.getContextPath() %>/editQna.action?qna_idx=${qnavo.qna_idx}'">수정</button>   
-						   <button type="button" class="btn btn-primary btn-sm" onClick="deleteQna('${qnavo.qna_idx}')">삭제</button>
+						   <button type="button" class="btn btn-info btn-sm" onClick="javascript:location.href='<%= request.getContextPath() %>/editQna.action?qna_idx=${qnavo.qna_idx}'">수정</button>   
+						   <button type="button" class="btn btn-danger btn-sm" onClick="deleteQna('${qnavo.qna_idx}')">삭제</button>
 					   </c:if>
 	   
 				
 					   <c:if test="${sessionScope.loginuser.userid.equals('admin')&& !qnavo.qna_fk_idx.equals('0')}"> <!--  qna_fk_idx가 0이면 원글이다. -->
-						   <button type="button" class="btn btn-primary btn-sm" onClick="javascript:location.href='<%= request.getContextPath() %>/editQna.action?qna_idx=${qnavo.qna_idx}'">수정</button>  		    				    	      
+						   <button type="button" class="btn btn-info btn-sm" onClick="javascript:location.href='<%= request.getContextPath() %>/editQna.action?qna_idx=${qnavo.qna_idx}'">수정</button>  		    				    	      
 					   </c:if>
 					    <c:if test="${sessionScope.loginuser.userid.equals('admin')&& !qnavo.qna_fk_idx.equals('0') && qnavo.qna_depthno == 0}"> 
-					   <button type="button" class="btn btn-primary btn-sm" onClick="deleteQna('${qnavo.qna_idx}')">삭제</button>	
+					   <button type="button" class="btn btn-danger btn-sm" onClick="deleteQna('${qnavo.qna_idx}')">삭제</button>	
 					   </c:if>
 					   
 					   <c:if test="${sessionScope.loginuser.userid.equals('admin') && qnavo.qna_depthno == 0}">

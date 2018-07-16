@@ -671,6 +671,31 @@ from ins_team A join ins_team_member B
 on A.team_idx = B.fk_team_idx
 where team_userid = 'jihye'
 
+private String org_filename; // 원본 사진명
+	private String server_filename; // 서버 사진명
+	private String file_size;
+
+-- 프로필 이미지 업데이트하기
+update ins_member set org_filename = ,server_filename = ,file_size =
+where userid = 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 -- 차트 불러오기(선생님 것)
 
@@ -718,5 +743,7 @@ group by D.jepumname, C.typename
 where V.jepumname = '감자깡';
 
 
-
-
+--
+select *
+from ins_project_record
+where record_userid ='jihye';

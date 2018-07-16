@@ -56,18 +56,35 @@
 							              <th>Activity</th>
 							            </tr>
 							          </thead>
-							          <tbody class="table table-hover">
+							          <thead>
+							              <tr >
+							                 <th style="text-align: center;">프로젝트</th>
+							                 <th style="text-align: center;">리스트</th>
+							                 <th style="text-align: center;">카드</th>
+							                 <th style="text-align: center;">내용</th>
+							                 <th style="text-align: center;" >기록시간</th>
+							              </tr>
+							            </thead>
+							          <c:if test="${myRecordList != null}">
+							          <c:forEach var="map" items="${myRecordList}">
+							            
+							            <tbody>
 							            <tr>
-							              <td><a href="#team1">내용</a></td>      
+							              <td style="text-align: center;"><a href="#team1">${map.PROJECT_NAME}</a></td> 
+							              <td style="text-align: center;"><a href="#team1">${map.LIST_NAME}</a></td>
+							              <td style="text-align: center;"><a href="#team1">${map.CARD_TITLE}</a></td>
+							              <td style="text-align: center;" ><a href="#team1">${map.RECORD_DML_STATUS}</a></td> 
+							              <td style="text-align: center;"><a href="#team2">${map.PROJECT_RECORD_TIME}</a></td>  							           
 							            </tr>
-							            <tr>
-							              <td><a href="#team2">내용</a></td>      
-							            </tr>
-							           <%--  <c:forEach items="">
+							         </tbody>
+							          </c:forEach>
+							          </c:if>
+
+							           <%--  
 							            <tr>
 							              <td>John</td>      
 							            </tr>
-							          </c:forEach>    --%> 
+							              --%> 
 							           </tbody>
 							         </table> 
 							       </div>
