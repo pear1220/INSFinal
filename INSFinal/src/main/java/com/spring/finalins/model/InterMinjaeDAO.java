@@ -36,6 +36,8 @@ public interface InterMinjaeDAO {
 	int deleteProjectMember(String fk_project_idx); // ins_project_member 테이블에서의 project_member_status = 1 project_favorite_status = 0
 
 	List<HashMap<String, String>> projectRecordView(HashMap<String, String> map);
+
+	List<HashMap<String, String>> getSearchlistINproject(HashMap<String, String> map); 
 	
 
 	

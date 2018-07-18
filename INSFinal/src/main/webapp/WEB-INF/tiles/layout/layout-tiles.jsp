@@ -43,6 +43,15 @@
   <link href="<%=request.getContextPath() %>/resources/css/style-responsive.css" rel="stylesheet" />
   <link href="<%=request.getContextPath() %>/resources/css/xcharts.min.css" rel=" stylesheet">
   <link href="<%=request.getContextPath() %>/resources/css/jquery-ui-1.10.4.min.css" rel="stylesheet">
+  
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="build.css">
+
+  <!-- <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css" media="screen" title="no title" /> -->
+  
+
+  <script src="bootstrap-checkbox.min.js" defer></script>
   <!-- =======================================================
     Theme Name: NiceAdmin
     Theme URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
@@ -62,8 +71,12 @@
 	    border-radius: 50%;
 	}
 	
+	@import url('https://fonts.googleapis.com/css?family=Do+Hyeon');
 
-	</style>
+	
+
+</style>
+
 </head>
 
 <body>

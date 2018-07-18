@@ -7,20 +7,26 @@ public class TeamVO {
 	private String team_name;
 	private String team_delete_status;
 	private String team_visibility_status;
-	private String team_image;
+	private String server_filename;
+	private String file_size;
+	private String org_filename;
 	
 	public TeamVO() {}
 	
 	public TeamVO(String team_idx, String admin_userid, String team_name, String team_delete_status,
-			String team_visibility_status, String team_image) {
+			String team_visibility_status, String server_filename, String file_size, String org_filename) {
 		
 		this.team_idx = team_idx;
 		this.admin_userid = admin_userid;
 		this.team_name = team_name;
 		this.team_delete_status = team_delete_status;
 		this.team_visibility_status = team_visibility_status;
-		this.team_image = team_image;
+		this.server_filename = server_filename;
+		this.file_size = file_size;
+		this.org_filename = org_filename;
 	}
+
+
 
 	public String getTeam_idx() {
 		return team_idx;
@@ -62,12 +68,28 @@ public class TeamVO {
 		this.team_visibility_status = team_visibility_status;
 	}
 
-	public String getTeam_image() {
-		return team_image;
+	public String getServer_filename() {
+		return server_filename;
 	}
 
-	public void setTeam_image(String team_image) {
-		this.team_image = team_image;
+	public void setServer_filename(String server_filename) {
+		this.server_filename = server_filename;
 	}
-	
+
+	public String getFile_size() {
+		return file_size;
+	}
+
+	public void setFile_size(String file_size) {
+		this.file_size = file_size;
+	}
+
+	public String getOrg_filename() {
+		return org_filename;
+	}
+
+	public void setOrg_filename(String org_filename) {
+		this.org_filename = org_filename;
+	}
+
 }

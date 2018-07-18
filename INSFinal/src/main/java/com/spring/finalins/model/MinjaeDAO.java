@@ -151,6 +151,14 @@ public class MinjaeDAO implements InterMinjaeDAO {
 		return projectRecordList;
 	}
 
+	@Override
+	public List<HashMap<String, String>> getSearchlistINproject(HashMap<String, String> map) {
+		
+		List<HashMap<String, String>> searchINprojectList = sqlsession.selectList("mj.getSearchlistINproject", map);
+	
+		return searchINprojectList;
+	}
+
 	
 	
 	

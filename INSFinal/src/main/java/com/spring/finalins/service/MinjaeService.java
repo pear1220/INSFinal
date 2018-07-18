@@ -163,6 +163,14 @@ public class MinjaeService implements InterMinjaeServie {
 		return projectRecordList;
 	}
 
+	@Override
+	public List<HashMap<String, String>> getSearchlistINproject(HashMap<String, String> map) {
+		
+		List<HashMap<String, String>> searchINprojectList = dao.getSearchlistINproject(map);
+		
+		return searchINprojectList;
+	}
+
 	
 	
 	

@@ -68,7 +68,9 @@ public class MINJAEController {
 				jsonObj.put("team_name", teamvo.getTeam_name());
 				jsonObj.put("team_delete_status", teamvo.getTeam_delete_status());
 				jsonObj.put("team_visibility_status", teamvo.getTeam_visibility_status());
-				jsonObj.put("team_image", teamvo.getTeam_image());
+				jsonObj.put("server_filename", teamvo.getServer_filename());
+				jsonObj.put("file_size", teamvo.getFile_size());
+				jsonObj.put("org_filename", teamvo.getOrg_filename());
 				
 				jsonArr.put(jsonObj);
 				
@@ -155,7 +157,9 @@ public class MINJAEController {
 					jsonObj.put("team_name", teamvo.getTeam_name());
 					jsonObj.put("team_delete_status", teamvo.getTeam_delete_status());
 					jsonObj.put("team_visibility_status", teamvo.getTeam_visibility_status());
-					jsonObj.put("team_image", teamvo.getTeam_image());
+					jsonObj.put("server_filename", teamvo.getServer_filename());
+					jsonObj.put("file_size", teamvo.getFile_size());
+					jsonObj.put("org_filename", teamvo.getOrg_filename());
 					
 					jsonArr.put(jsonObj);
 					
@@ -480,10 +484,14 @@ public class MINJAEController {
 	@RequestMapping(value="/projectRecordView.action", method=RequestMethod.GET)
 	public String requireLogin_projectRecordView(HttpServletRequest req, HttpServletResponse res) {
 				
-	//	String fk_project_idx = req.getParameter("fk_project_idx");
+		String fk_project_idx = req.getParameter("fk_project_idx");
 		String sel1Val = req.getParameter("sel1Val");
+	
+			
+	//	String fk_project_idx = "3";
 		
-		String fk_project_idx = "3";
+		System.out.println("sel1Val>>>>>>>>>>>" + sel1Val);
+		System.out.println("fk_project_idx>>>>>>>>>>>>>" + fk_project_idx);
 		
 		HttpSession session = req.getSession();
 		MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
@@ -493,6 +501,7 @@ public class MINJAEController {
 		map.put("sel1Val", sel1Val);
 		map.put("userid", loginuser.getUserid());
 		
+		System.out.println("controller sel1Val>>>>>>> " + sel1Val);
 				
 		List<HashMap<String, String>> projectRecordList = service.projectRecordView(map);
 		
@@ -510,7 +519,7 @@ public class MINJAEController {
 				
 				JSONObject jsonObj = new JSONObject();
 				
-				jsonObj.put("org_filename", projectRecordMap.get("org_filename"));
+				jsonObj.put("server_filename", projectRecordMap.get("server_filename"));
 				jsonObj.put("userid", projectRecordMap.get("userid"));
 				jsonObj.put("project_record_idx", projectRecordMap.get("project_record_idx"));
 				jsonObj.put("fk_project_idx", projectRecordMap.get("fk_project_idx"));
@@ -532,25 +541,66 @@ public class MINJAEController {
 		req.setAttribute("str_jsonArr", str_jsonArr);
 		System.out.println("projectRecordList>>>>>>>>" + str_jsonArr);
 		
-		/*req.setAttribute("projectRecordList", projectRecordList);
-		req.setAttribute("sel1Val", sel1Val);*/
+		req.setAttribute("projectRecordList", projectRecordList);
+		/*req.setAttribute("sel1Val", sel1Val);*/
 		
 		return "projectRecordView.notiles";
 		
 	}
-	
-	
-/*	@RequestMapping(value="/sel1.action", method=RequestMethod.GET)
-	public String requireLogin_sel1(HttpServletRequest req, HttpServletResponse res) {
+	@RequestMapping(value="/searchINproject.action", method=RequestMethod.GET)
+	public String requireLogin_searchINproject(HttpServletRequest req, HttpServletResponse res) {
 		
-		String sel1Val = req.getParameter("sel1Val");
+		HttpSession session = req.getSession();
+		MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
+		
+		String fk_project_idx = req.getParameter("fk_project_idx");
+		String sel2Val = req.getParameter("sel2Val");
+		String listsearchINproject = req.getParameter("listsearchINproject");
+		
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("userid", loginuser.getUserid());
+		map.put("fk_project_idx", fk_project_idx);
+		map.put("listsearchINproject", listsearchINproject);
+		
+		JSONArray jsonArr = new JSONArray();
+		
+		List<HashMap<String, String>> searchINprojectList = null;
+		
+		if(("list").equals(sel2Val)) {
+			searchINprojectList = service.getSearchlistINproject(map);
 			
-		req.setAttribute("sel1Val", sel1Val);
+			if(searchINprojectList != null && searchINprojectList.size() > 0) {
+				for(HashMap<String, String> searchINprojectMap :searchINprojectList) {
+					JSONObject jsonObj = new JSONObject();
+					
+					jsonObj.put("list_idx", searchINprojectMap.get("list_idx"));
+					jsonObj.put("list_name", searchINprojectMap.get("list_name"));
+					jsonObj.put("list_userid", searchINprojectMap.get("list_userid"));
+					
+					jsonArr.put(jsonObj);
+				}
+			}
+			
+		}
+		else if(("card").equals(sel2Val)) {
 		
-		return "minjae/mj_project.tiles";
+			/*List<HashMap<String, String>> searchINprojectList = service.getSearchcardINproject(map);*/
+		}
+		
+		
+		String str_jsonArr = jsonArr.toString();
+		req.setAttribute("str_jsonArr", str_jsonArr);
+		
+		
+		
+		return "searchINproject.notiles";
+				
 		
 	}
-	*/
+	
+	
+	
+	
 	
 	
 	

@@ -9,6 +9,11 @@
 
 
 <style type="text/css">
+
+#project_dropdown-default:hover{
+	background-color: #e6f2ff;
+}
+
 .teamname {
 	font-size: 15pt;
 	font-weight: bold;
@@ -42,6 +47,17 @@ input[type=text] {
 input[type=text]:focus {
 	width: 100%;
 }
+
+
+#team_name{
+	font-family: 'Do Hyeon', sans-serif;
+} 
+
+.header {
+	background-color: #f2f2f2;
+}
+
+
 
 </style>
 
@@ -878,7 +894,7 @@ input[type=text]:focus {
 					
 					$.each(json, function(entryIndex, entry){
 												
-						html += "<li><span style='padding-left: 10px; color: yellow;'><a href='#'>"+entry.team_name+"<span style='float: right; padding-right: 10px;'>"+entry.admin_userid+"</span></a></span></li>";
+						html += "<li><span id='team_name' style='padding-left: 10px; color: yellow;'><a href='#'>"+entry.team_name+"<span style='float: right; padding-right: 10px;'>"+entry.admin_userid+"</span></a></span></li>";
 															
 						html += "<li id='teamlist"+entryIndex+"'></li>";
 					
@@ -1005,10 +1021,10 @@ input[type=text]:focus {
 
 						<button class="btn btn-default dropdown-toggle" type="button"
 							id="project_button" data-toggle="dropdown"
-							style="background-color: black; margin-top: 1px; color: black; border-color: black;">
+							style="background-color:  #cce6ff; margin-top: 1px; color: black; border: 2px solid royalblue;">
 							<span class="icon_cloud-upload_alt logo"
-								style="margin-right: 10px; font-size: 20pt; color: #ffc61a;"></span><span
-								style="font-size: 16pt;" class="lite">Project</span>
+								style="margin-right: 10px; font-size: 20pt; color: white;"></span><span
+								style="font-size: 16pt; color: white; font-weight: bold;">Project</span>
 						</button>
 
 						<ul class="dropdown-menu" id="project_dropdown"
@@ -1241,32 +1257,60 @@ input[type=text]:focus {
 			 
 	 		</div>  -->
 
-							<div class="dropdown"
-								style="width: 5%; padding-left: 0.2px; padding-top: 7px; float: left; border: 0px solid yellow;">
+						<!--	
+							<div class="dropdown" style="width: 5%; padding-left: 0.2px; padding-top: 7px; float: left; border: 0px solid yellow;">
+								 
+								<button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown" style=" background-color: black; margin-top:1px; color: black; border-color: black;"> 
+					    			<span class="icon_cloud-upload_alt logo" style="margin-right: 10px; font-size: 20pt; color: #ffc61a;"></span><span style="font-size: 16pt;" class="lite">Project</span>
+					    			<span class="caret"></span>
+					    		</button>  
+					    		
 
-								<!-- <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown" style=" background-color: black; margin-top:1px; color: black; border-color: black;"> 
-					    	<span class="icon_cloud-upload_alt logo" style="margin-right: 10px; font-size: 20pt; color: #ffc61a;"></span><span style="font-size: 16pt;" class="lite">Project</span>
-					    <span class="caret"></span></button> -->
-
-								<a data-toggle="dropdown" class="dropdown-toggle" id="menu1"
-									href="#"> <i class="icon-bell-l"></i> <!-- <span class="badge bg-important" style="margin-left: 30pt;">7</span> -->
-								</a>
-								<div class="dropdown" style="border: 1px solid yellow;">
-									<ul class="dropdown-menu" role="menu" aria-labelledby="menu1" style="width: 500px;">
-										<c:forEach var="team" items="${teamList}">
-											<li role="presentation"><a role="menuitem" tabindex="-1">${team}</a></li>
-											<%-- <c:forEach items="">
-							      			<c:if test="${team != null}">
-							      				&nbsp;<li role="presentation"><a role="menuitem" tabindex="-1" href="#">project name</a></li>
-							      			</c:if test="${team == null}">
-							      			<c:if test="">
-							      				&nbsp;<li role="presentation"><a role="menuitem" tabindex="-1">no project</a></li>
-							      			</c:if>
-							      		</c:forEach> --%>
-										</c:forEach>
-									</ul>
-								</div>
+								<a data-toggle="dropdown" class="dropdown-toggle" id="menu1" href="#"> 
+									<i class="icon-bell-l"></i>
+									<span class="badge bg-important" style="margin-left: 30pt;">7</span>
+								</a> 
+								
+							</div> 
+							
+							-->
+							
+							
+							
+							<!-- <div class="dropdown" style="width: 5%; padding-left: 0.2px; padding-top: 7px; float: left; border: 1px solid yellow;">
+							  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Dropdown Example
+							  <span class="caret"></span></button>
+							  <a data-toggle="dropdown" class="dropdown-toggle" data-toggle="dropdown" id="menu1" href="#"> 
+									<i class="icon-bell-l"></i>
+									<span class="badge bg-important" style="margin-left: 30pt;">7</span>
+							  </a>
+							  
+							  <ul class="dropdown-menu" style="border: 1px solid yellow; width: 400px; margin-left: 200px;">
+							    <li><a href="#">HTML</a></li>
+							    <li><a href="#">CSS</a></li>
+							    <li><a href="#">JavaScript</a></li>
+							  </ul>
+							  
+							  
+							  <div class="dropdown-menu" style="width: 400px; margin-left: 50px;">
+							   	<h2>Basic List Group</h2>
+								  	<ul class="list-group">
+								    	<li class="list-group-item">First item</li>
+								    	<li class="list-group-item">Second item</li>
+								    	<li class="list-group-item">Third item</li>
+								  	</ul>
+							  </div>
+							   
 							</div>
+							 -->
+							<!-- <div class="container">
+								<div class="checkbox checkbox-warning">
+			                        <input id="check2" type="checkbox" class="styled" checked>
+			                        <label for="check2">
+			                            Style 2
+			                        </label>
+			                    </div>
+							</div> -->
 
 						</li>
 						<!-- alert notification end-->

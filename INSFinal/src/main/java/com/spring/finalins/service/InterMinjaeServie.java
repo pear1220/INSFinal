@@ -38,6 +38,8 @@ public interface InterMinjaeServie {
 
 	List<HashMap<String, String>> projectRecordView(HashMap<String, String> map); // project : 프로젝트 기록을 얻어옴
 
+	List<HashMap<String, String>> getSearchlistINproject(HashMap<String, String> map); // project : 프로젝트 내 리스트 검색
+
 	
 
 	 

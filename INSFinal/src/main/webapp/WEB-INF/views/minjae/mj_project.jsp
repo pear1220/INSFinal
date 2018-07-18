@@ -55,6 +55,37 @@
 	}
 	
 
+	table, td {
+		/* border: 1px solid gray; */
+		/* width: 50px; */
+	}
+	
+	/* td {
+		border: 1px solid red; 
+	} */
+	
+	.imgtd {
+		width: 100px;
+		/* border: 1px solid green; */
+		
+	}
+	
+	
+	
+	
+	
+	#sel1 {
+		width: 150px;	}
+	
+	.btnActivity{
+		width:24%;
+		height:30px;
+		background-color: #00a0df; 
+		color: white;
+		font-size: 5pt;
+		margin-bottom: 20px;
+	}
+	
 
 </style>
 
@@ -64,26 +95,50 @@
 
 <script type="text/javascript">
 	
+	$(document).ready(function(){
+		
+		/* Activity(); */
+		
+		
+		
+	});
+		
+	
 	function openNav() {
 	
 	    document.getElementById("mySidenav").style.width = "400px";
 	    
-	<%-- 	var sel1 = $("#sel1").val();
-		
-		var frm = document.project_idxFrm;
-		/* frm.fk_project_idx.value = "3";  */
-		frm.sel1Val.value = sel1;
-		frm.method = "get";
-		frm.action = "<%=request.getContextPath() %>/projectRecordView.action";
-		frm.submit(); --%>
+	   	// Activity();  
+	    selVal(); 
 	   
 	}
 
 	function openNav2() {
 	    document.getElementById("mySidesearch").style.width = "400px";
-	    document.getElementById("mySidenav").style.width = "0";
+	   /*  document.getElementById("mySidenav").style.width = "0"; */
 	}
 	
+	
+	function openNav3(){
+		document.getElementById("mySideactivity").style.width = "400px";
+		
+		sel2Val();
+		/* Activity(); */
+		/* $("#cardEditbtn").click(){
+			Activity();
+		}
+		$("#cardDeletebtn").click(){
+			Activity();
+		}
+		
+		$("#cardAddbtn").click(){
+			Activity();
+		}
+		$("#listCreatebtn").click(){
+			Activity();
+		} */
+		
+	}
 	
 	function closeNav() {
 	    document.getElementById("mySidenav").style.width = "0";
@@ -94,6 +149,12 @@
 	    document.getElementById("mySidesearch").style.width = "0";
 	    document.getElementById("mySidenav").style.width = "400px";
 	}
+	
+	function closeNav3() {
+	    document.getElementById("mySideactivity").style.width = "0";
+	    /* document.getElementById("mySidenav").style.width = "400px"; */
+	}
+	
 
 	
 	function leaveProject(){
@@ -123,55 +184,138 @@
 		
 	}
 	
- 	/* $(document).ready(function(){
+	function Activity(val){
+					
+		// alert("실행 확인용"); 
+		alert("확인용 >>>>> " + val);
 		
-	}); 
-	 */
-	
-		
-		<%-- var sel1 = $("#sel1").val();
-		
-		var frm = document.project_idxFrm;
-		frm.fk_project_idx.value = "3";
-		frm.sel1Val.value = sel1;
-		frm.method = "get";
-		frm.action = "<%=request.getContextPath() %>/projectRecordView.action";
-		// frm.submit(); --%>
+		var form_data1 = {fk_project_idx: "3", /* $("#fk_project_idx").val() */
+				          sel1Val: val}
 		
 		
-		<%-- var frm = document.sel1Frm;
-		
-		frm.action = "<%= request.getContextPath() %>/sel1.action";
-		frm.method = "get"; --%>
-	
-	function Activity(){
-	
-		var form_data = {fk_project_idx: "3",/* $("#fk_project_idx").val() */
-				         sel1Val: $("#sel1").val()}
 		
 		$.ajax({
 			
-			url: "projectRecordView.action",
+			url: "<%= request.getContextPath()%>/projectRecordView.action",
 			type: "get",
-			data: form_data,
+			data: form_data1,
 			dataType: "json",
 			success: function(json){
 				
+				$("#activitylist").empty();
+				/* $("#projectRecordListTB").empty(); */
+				$("#projectRecordListMoreTB").empty();
+				
+				/* alert("성공"); */
+				
+				/* var html3 = "";
+	
+				if(json.length = 0){
+					
+					html3 = "<tr><td colspan='3'><span>프로젝트 내 활동이 없습니다.</span></td></tr>";
+					
+					$("#projectRecordListTB").html(html3);
+					
+				}
+				 */
+				
+				
+				
+				
 				var html = "";
 				
-				$.each(json, function(entryIndex, entry){
+				if(json.length > 0){
 					
-					html += "<tr>";
-    				html += "<td colspan='3'><img src='<%=request.getContextPath()%>/resources/img/avatar1.jpg'
-						  alt="Avatar" class="avatar" /><%-- ${map.org_filename} --%></td>
-</tr>
-<tr>
-	<td>${map.userid}&nbsp;&nbsp;${map.project_record_time} </td>
-	<td>${map.record_dml_status}</td>
-	<td>${map.card_title} in ${map.list_name}</td>
-</tr>
+					$.each(json, function(entryIndex, entry){
+						
+						 if(entryIndex < 10){
+							 
+							html += "<tr>";
+							html += "<td rowspan='3' class='imgtd' style='size: 10px;'><img src='<%=request.getContextPath()%>/resources/img/avatar1.jpg'";
+							html += " alt='Avatar' class='avatar' /></td>";
+							html += "<td style='font-weight: bold;'>"+entry.userid+"&nbsp;&nbsp;"+entry.record_dml_status+"</td>";
+							html += "</tr>";
+							html += "<tr>";
+							html += "<td  style='font-size: 8pt;'>&nbsp;"+entry.project_record_time+"</td>";
+							html += "</tr>";
+							html += "<tr>";
+							html += "<td style='font-size: 8pt; color: #b3b3b3;'>"+entry.card_title+" in "+entry.list_name+"</td>"; 
+							html += "</tr>";
+							html += "<tr>";
+							html += "<td colspan='2' style='border: 1px solid #fed189;'></td>";
+							html += "</tr>";
+							
+						}
+						
+						
+					});
 					
-				});
+					$("#projectRecordListTB").html(html);
+					
+					 if(json.length > 10 ){  
+						
+						html += "<tr style='height: 50px; text-align:center; border: 1px solid red;' >";
+						html += "<td colspan='2' style='padding-top: 15px;'><a style='cursor: pointer; color: #00a0df;' id='viewallactivity1'>view all activity</a></td>";
+						html += "</tr>";
+						
+				 	 } 
+					
+					$("#projectRecordListTB").html(html);
+					
+					$("#activitylist").html(html);
+					
+					$("#viewallactivity1").click(function(){
+						
+						var html2 ="";
+						
+						alert("성공");
+						
+						openNav3();
+						
+						/* html2 += "<h2>"+val+"</h2>"
+						
+						$("#activitylistMore").html(html2);
+						 */
+						$.each(json, function(entryIndex, entry){
+							
+							
+							html2 += "<tr>";
+							html2 += "<td rowspan='3' class='imgtd' style='size: 10px;'><img src='<%=request.getContextPath()%>/resources/img/avatar1.jpg'";
+							html2 += " alt='Avatar' class='avatar' /></td>";
+							html2 += "<td style='font-weight: bold;'>"+entry.userid+"&nbsp;&nbsp;"+entry.record_dml_status+"</td>";
+							html2 += "</tr>";
+							html2 += "<tr>";
+							html2 += "<td  style='font-size: 8pt;'>&nbsp;"+entry.project_record_time+"</td>";
+							html2 += "</tr>";
+							html2 += "<tr>";
+							html2 += "<td style='font-size: 8pt; color: #b3b3b3;'>"+entry.card_title+" in "+entry.list_name+"</td>"; 
+							html2 += "</tr>";
+							html2 += "<tr>";
+							html2 += "<td colspan='2' style='border: 1px solid #fed189;'></td>";
+							html2 += "</tr>";
+						
+							
+							$("#projectRecordListMoreTB").html(html2);
+						
+						}); // end of $.each(json)------------------------------------------------------------
+					 
+							
+							$("#activitylistMore").html(html2);
+						
+						
+					});// end of $("#viewallactivity1").click()------------------------------------------------
+					
+					
+					
+				}
+				else{
+										
+					html = "<h2>프로젝트 내 활동이 없습니다.</h2>";
+					
+				}
+				
+					
+				$("#activitylist").html(html);
 				
 			},
 			error: function(request, status, error){
@@ -181,6 +325,118 @@
 		});
 		
 	}
+	
+	
+	function searchINproject(){
+		
+		var form_data2 = {fk_project_idx: "3",
+				          sel2Val : $("#sel3").val(),
+				          listsearchINproject: $("#listsearchINproject").val()}
+		
+		$.ajax({
+			
+			url: "<%= request.getContextPath() %>/searchINproject.action",
+			type: "get",
+			data: form_data2,
+			dataType: "json",
+			success: function(json){
+				
+				// 우선은 리스트나 카드의 정보를 json 으로 받아서 css 처리를 한다. 
+				
+				var html = "";
+				
+				if($("#sel3").val() == 'list'){
+					
+					
+					
+				}
+				else if($("#sel3").val() == 'card'){
+					
+					
+				}
+				
+				
+			},
+			error: function(request, status, error){
+				alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
+		    }
+			
+		});
+		
+		
+	}
+	
+
+	var se1Val = "";
+	
+	function selVal(){
+		
+		// alert("selValChange>>>실행확인"); 
+		
+		
+		
+		if($("#sel1").val() == null){
+			
+			sel1Val = $("#sel1").val("수정");
+			
+		} 
+		
+		/* else if($("#sel").val() != ""){ */
+			
+			/* alert("실행확인????");	 */
+			sel1Val = $("#sel1").val($("#sel").val());	
+		/* } */
+		/* else if($(".btnActivity").val() != ""){
+			
+			alert("실행확인!!!!..............");	
+		
+			sel1Val = $("#sel1").val($("#cardEditbtn").val());	
+		}
+		else if($("#cardDeletebtn").val() != ""){
+			
+			console.log("cardDeletebtn value 값 확인"+$("#cardDeletebtn").val())	
+		
+			sel1Val = $("#sel1").val($("#cardDeletebtn").val());	
+		}
+		else if($("#cardAddbtn").val() != ""){
+			sel1Val = $("#sel1").val($("#cardAddbtn").val());	
+		}
+		else if($("#listCreatebtn").val() != ""){
+			sel1Val = $("#sel1").val($("#listCreatebtn").val());	
+		} */
+		
+		
+		sel1Val = $("#sel1").val();
+		
+		console.log("버튼확인::::::"+se1Val);
+		
+		Activity(sel1Val); 
+		
+		
+	}
+	
+	function sel2Val(){
+		
+		if($("#sel1").val() == null){
+			
+			sel1Val = $("#sel1").val("수정");
+			
+		} 
+		
+		sel1Val = $("#sel1").val($("#sel2").val());	
+		
+		
+		sel1Val = $("#sel1").val();
+		
+		console.log("버튼확인::::::"+se1Val);
+		
+		Activity(sel1Val);
+		
+	}
+	
+	
+	/* */
+	
 	
 </script>
 
@@ -200,8 +456,9 @@
 		 
 		  <hr style="border: solid 1px gray; background-color: gray;"> 
 		  <!-- <span>Activity</span> -->
-		    <div class="form-group" style="padding-left:18pt; padding-top: 10pt; width: 120px; border: 0px solid yellow;">
-		      <select class="form-control" id="sel1" name="sel1" onclick="sel1();">    
+		    <div class="form-group" style="padding-left:18pt; padding-top: 10pt; width: 150px; border: 0px solid yellow;">
+		      <span style="padding-left: 10px;">Activity</span>
+		      <select class="form-control" id="sel" name="sel" onchange="selVal();">     <!-- onclick="Activity();" -->
 		        <option selected value="수정">CARD EDIT</option>
 		        <option value="삭제">CARD DELETE</option>
 		        <option value="추가">CARD ADD</option>
@@ -209,61 +466,62 @@
 		      </select>
 		    </div>           
 		  
-		  <div class="container" style="background-color: white;">
-			  <h2>Activity</h2>           
-			  <table class="table">
-			    
-			    	<c:if test="${projectRecordList != null  || projectRecordList.size() > 0 }"></c:if>
-				    	<c:forEach var="map" items="${projectRecordList}">
-					    	<c:if test="${sel1Val == '수정'}">
-					    		
-					    			<tr>
-					    				<td colspan="3"><img src="<%=request.getContextPath()%>/resources/img/avatar1.jpg"
-															  alt="Avatar" class="avatar" /><%-- ${map.org_filename} --%></td>
-					    			</tr>
-					    			<tr>
-					    				<td>${map.userid}&nbsp;&nbsp;${map.project_record_time} </td>
-					    				<td>${map.record_dml_status}</td>
-					    				<td>${map.card_title} in ${map.list_name}</td>
-					    			</tr>
-				    			
-				    		</c:if>
-			    		</c:forEach>
-				    		<%-- <c:if test="${sel1Val == '수정'}">
-					    		<td>${map.org_filename}</td>
-					    		<td>${map.userid}</td>
-					    		<td>${map.project_record_idx}</td>
-					    		<td>${map.fk_project_idx}</td>
-					    		<td>${map.project_record_time}</td>
-					    		<td>${map.fk_list_idx}</td>
-					    		<td>${map.list_name}</td>
-					    		<td>${map.fk_card_idx}</td>
-					    		<td>${map.card_title}</td>
-					    		<td>${map.record_dml_status}</td>
-				    		</c:if>
-				    		<c:if test="${sel1Val == '수정'}">
-					    		<td>${map.org_filename}</td>
-					    		<td>${map.userid}</td>
-					    		<td>${map.project_record_idx}</td>
-					    		<td>${map.fk_project_idx}</td>
-					    		<td>${map.project_record_time}</td>
-					    		<td>${map.fk_list_idx}</td>
-					    		<td>${map.list_name}</td>
-					    		<td>${map.fk_card_idx}</td>
-					    		<td>${map.card_title}</td>
-					    		<td>${map.record_dml_status}</td>
-				    		</c:if> --%>
-				    		
-				    	
-				    	
-				    	
-			    	
-			    	<c:if test="${projectRecordList == null }">
-			    		<td>프로젝트에서 활동한 기록이 없습니다.</td>
-			    	</c:if>
+		  	<div class="container" style="background-color: #f2f2f2; border: 0px solid red; width:400px;" id="activitylist">
+			  <!-- <h2>Activity</h2>  -->          
+			  <table class="table" id="projectRecordListTB"> 			    	
+			  </table>
+		  	</div>
+		  
+		  
+		 
+		    
+	  </div>
+	  
+	   <div id="mySideactivity" class="sidenav" style="border: 0px solid yellow;">
+   		       
+	  	  <span style="font-size: 40pt; font-weight: bold; cursor: pointer; float: left;" onclick="closeNav2();">Activity</span>
+	  	  <ul class="w3-ul">
+		    <span style="font-size: 30pt; margin-top: 20px; float: left;"><i class="fa fa-arrow-left" onclick="closeNav3();"></i></span>
+	  	  </ul>
+	  	  
+	  	    
+	  	  <div style="border: 0px solid yellow; margin-top: 100px;">
+		  	  <!-- <button type="button" class="btn btnActivity" id="cardEditbtn" value="수정" onclick="selVal();">CARD<br/>EDIT</button>
+		  	  <button type="button" class="btn btnActivity" id="cardDeletebtn" value="삭제" onclick="selVal();">CARD<br/>DELETE</button>
+		  	  <button type="button" class="btn btnActivity" id="cardAddbtn" value="추가" onclick="selVal();">CARD<br/>ADD</button>
+		  	  <button type="button" class="btn btnActivity" id="listCreatebtn" value="생성" onclick="selVal();">LIST<br/>CREATE</button> -->
+		  	  <!-- <input type="button" class="btn btnActivity" id="cardEditbtn" onclick="btnVal();" value="수정" />
+		  	  <input type="button" class="btn btnActivity" id="cardDeletebtn" onclick="btnVal();" value="삭제" />
+		  	  <input type="button" class="btn btnActivity" id="cardAddbtn" onclick="btnVal();" value="추가" />
+		  	  <input type="button" class="btn btnActivity" id="listCreatebtn" onclick="btnVal();" value="생성" /> -->
+		  	  <!-- <select class="form-control" class="sel" id="sel2" name="sel2" onchange="selVal();">     onclick="Activity();"
+		        <option selected value="수정">CARD EDIT</option>
+		        <option value="삭제">CARD DELETE</option>
+		        <option value="추가">CARD ADD</option>
+		        <option value="생성">LIST CREATE</option>
+		      </select> -->
+	  	  </div>
+		  <!-- <a href="javascript:void(0)" onclick="closeNav();"><span style="padding-left: 80%; font-size: 20pt;">&times;</span></a>
+		  <span>&nbsp;&nbsp;&nbsp;Search in PROJECT</span> -->             
+		   <!-- <div class="form-group" style="padding-left:18pt; padding-top: 10pt; width: 120px; border: 0px solid yellow;">
+		      <h2><span>Activity</span></h2>
+		      <select class="form-control" id="sel2" name="sel2" onclick="Activity();">     onclick="Activity();"
+		        <option selected value="수정">CARD EDIT</option>
+		        <option value="삭제">CARD DELETE</option>
+		        <option value="추가">CARD ADD</option>
+		        <option value="생성">LIST CREATE</option>
+		      </select>
+		    </div> -->
+		    
+		    
+		  
+		  
+		  <div class="container" style="background-color: #f2f2f2; border: 0px solid red; width:400px;" id="activitylistMore">
+			  <!-- <h2>Activity</h2>  -->          
+			  <table class="table" id="projectRecordListMoreTB">
+			    			    	
 			  </table>
 		  </div>
-		    
 	  </div>
 	  
 	  
@@ -274,7 +532,7 @@
 		  <div class="container" style="border: 0px solid yellow;" >
 			  <form>
 			    <div class="form-group" style="padding-left:18pt; padding-top: 10pt; width: 120px; border: 0px solid yellow;">
-			      <select class="form-control" id="sel2">    
+			      <select class="form-control" id="sel3" onclick="searchINproject();">    
 			        <option selected value="list">LIST</option>
 			        <option value="card">CARD</option>
 			      </select>
@@ -284,7 +542,7 @@
 			  <!--  search form start -->
 		      <div class="nav search-row" id="top_menu" style="float: left; width: 300px; border: 0px solid orange;">
 		      <form class="navbar-form" style="border: 0px solid yellow;">
-		         <input class="form-control" placeholder="Search" type="text" style="float:left; hight: 500px; width: 300px; border: 0px solid yellow;"> 
+		         <input class="form-control" placeholder="Search" type="text" id="listsearchINproject" style="float:left; hight: 500px; width: 300px; border: 0px solid yellow;"> 
 		      </form>                        
 		        <!--  search form start -->
 		        <!-- <ul class="nav top-menu"> 
@@ -296,6 +554,9 @@
 		      </div>
 		  </div>
 	  </div>
+	  
+	 
+	  
                            
 	  <div style="float: left;">                     
 		<br/>
@@ -315,9 +576,9 @@
 		  		<input type="text" value="집에가고 싶다"/>
 		  	</c:if>
 		</c:forEach> --%>
-	  <form name="sel1Frm">
-	  	
-	  </form>
-	  <input type="text" value="집에가고 싶다22222222"/>
+	  <div style="float: right;">
+	  		<input type="text" id="sel1" name="sel1" value=""/>	
+	  </div>
+	  
 </body>
 </html>
