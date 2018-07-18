@@ -9,7 +9,7 @@
 	else if(${result ==2}){
 		alert("프로젝트가 생성되었습니다.");
 		<%-- location.href = "<%=request.getContextPath()%>/project/project.action?project_name=${project_info.project_name}&projectIDX=${project_info.projectIDX}"; --%>
-		location.href = "<%=request.getContextPath()%>/project.action?project_name=${project_info.project_name}&projectIDX=${project_info.projectIDX}";
+		location.href = "<%=request.getContextPath()%>/project.action?project_name=${project_info.project_name}&projectIDX=${project_info.projectIDX}&team_IDX=${project_info.team_idx}";
 	}
 	
 </script>

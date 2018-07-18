@@ -80,6 +80,7 @@ public class ProjectService implements InterProjectService{
 			System.out.println("team_idx값 확인용: " + project_info.get("team_idx"));
 			*/
 			m = dao.insertProjectMember(project_info);
+		//	System.out.println("================== m값 확인용:" + m);
 		}
 		result = n + m;
 		return result;
@@ -133,6 +134,30 @@ public class ProjectService implements InterProjectService{
 		int n = dao.emailCheck(map);
 		return n;
 	} // end of emailCheck(HashMap<String, String> map)
+
+
+	//회원가입 폼에서 이메일 중복체크하는 메소드
+	@Override
+	public int signupEmailcheck(String emailCheck) {
+		int n = dao.signupEmailcheck(emailCheck);
+		return n;
+	} // end of signupEmailcheck(String emailCheck)
+
+
+	//email로 가입된 유저의 아이디를 가져오는 메소드
+	@Override
+	public String getuserID(String emailCheck) {
+		String resultid = dao.getuserID(emailCheck);
+		return resultid;
+	} // end of getuserID(String emailCheck)
+
+
+	//배경이미지테이블의 데이터를 가져오는 메소드
+	@Override
+	public List<HashMap<String, String>> getProjectImg() {
+		List<HashMap<String, String>> imageList = dao.getProjectImg();
+		return imageList;
+	} // end of getProjectImg()
 
 
 	

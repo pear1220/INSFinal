@@ -123,5 +123,29 @@ public class ProjectDAO implements InterProjectDAO{
 	}
 
 
+	//회원가입 폼에서 이메일 중복체크하는 메소드
+	@Override
+	public int signupEmailcheck(String emailCheck) {
+		int n = sqlsession.selectOne("dasom.signupEmailcheck", emailCheck);
+		return n;
+	} // end of signupEmailcheck(String emailCheck)
+
+
+	//email로 가입된 유저의 아이디를 가져오는 메소드
+	@Override
+	public String getuserID(String emailCheck) {
+		String resultid = sqlsession.selectOne("dasom.getuserID", emailCheck);
+		return resultid;
+	} // end of getuserID(String emailCheck)
+
+
+	//배경이미지테이블의 데이터를 가져오는 메소드
+	@Override
+	public List<HashMap<String, String>> getProjectImg() {
+		List<HashMap<String, String>> imageList = sqlsession.selectList("dasom.getProjectImg");
+		return imageList;
+	} // end of getProjectImg()
+
+
 	
 }

@@ -1,13 +1,10 @@
 package com.spring.finalins;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
@@ -17,7 +14,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.google.gson.JsonObject;
 import com.spring.finalins.model.ListVO;
 import com.spring.finalins.model.MemberVO;
 import com.spring.finalins.service.InterProjectService;
@@ -33,6 +29,7 @@ public class ProjectController {
 	@Autowired
 	private InterProjectService service;
 
+	
 
 	//로그인 처리를 하는 메소드
 	@RequestMapping(value="loginEnd.action", method= {RequestMethod.POST})
@@ -52,9 +49,14 @@ public class ProjectController {
 			
 			//로그인 가능한 유저인 경우 유저의 팀리스트를 select해서 세션에 담아 보내준다.
 			List<HashMap<String, String>> teamList = service.getTeamList(userid);
-			List<HashMap<String, String>> projectList = service.getProjectList(userid);
-	//		System.out.println("팀리스트 확인용: " + teamList.size() );
 			
+			//로그인한 유저의 프로젝트리스트를 select해서 세션으로 보내준다.
+			List<HashMap<String, String>> projectList = service.getProjectList(userid);
+
+			//프로젝트 생성을 위해 배경이미지 테이블의 데이터를 받아와 세션으로 보내준다.
+			List<HashMap<String, String>> imageList = service.getProjectImg();
+			
+			session.setAttribute("imageList", imageList);
 			session.setAttribute("projectList", projectList);
 			session.setAttribute("teamList", teamList);
 		}
@@ -91,7 +93,7 @@ public class ProjectController {
 	} // end of signupEnd(HttpServletRequest request)
 	
 	
-	//아이디 중복체크하는 함수 
+	//회원가입시 아이디 중복체크하는 함수 
 	@RequestMapping(value="idcheck.action", method= {RequestMethod.GET})
 	public String idcheck(HttpServletRequest request) {
 		String useridCheck = request.getParameter("useridCheck");
@@ -114,9 +116,38 @@ public class ProjectController {
 		request.setAttribute("str_jsonObj", str_jsonObj);
 		request.setAttribute("n", n);
 		request.setAttribute("useridCheck", useridCheck);
-		System.out.println("확인용: " + str_jsonObj);
+	//	System.out.println("확인용: " + str_jsonObj);
 		return "login/idcheckJSON";
 	} // end of idcheck(HttpServletRequest request)
+	
+	
+	//회원가입시 이메일 중복체크하는 메소드 emailcheck.action
+	@RequestMapping(value="emailcheck.action", method= {RequestMethod.GET})
+	public String emailcheck(HttpServletRequest request) {
+		String emailCheck = request.getParameter("emailCheck");
+		String Classification = request.getParameter("Classification");
+		
+		
+		JSONObject jsonObj = new JSONObject();
+		
+		int n = service.signupEmailcheck(emailCheck);
+		jsonObj.put("n", n);
+		jsonObj.put("emailCheck", emailCheck);
+		
+		if(Classification.equals("Signup")) { //회원가입페이지에서 email체크하는 경우
+			String str_jsonObj = jsonObj.toString();
+			request.setAttribute("str_jsonObj", str_jsonObj);
+			return "login/emailcheckJSON";
+		}
+		else{ //ID찾기에서 email체크하는 경우
+			String resultid = service.getuserID(emailCheck);
+			
+			jsonObj.put("resultid", resultid);
+			String str_jsonObj = jsonObj.toString();
+			request.setAttribute("str_jsonObj", str_jsonObj);
+			return "login/emailcheckJSON";
+		}
+	} // end of emailcheck(HttpServletRequest request)
 	
 	
 	//팀idx의 가져와서 프로젝트 노출도 리스트를 보여주는 메소드
@@ -152,12 +183,16 @@ public class ProjectController {
 		String project_name = request.getParameter("project_name");
 		String pjst = request.getParameter("pjst");
 		String team_idx = request.getParameter("team");
+		String image_idx = request.getParameter("image_idx");
 		
+	//	System.out.println("image_idx확인용: " + image_idx);
+
 		HashMap<String, String> project_info = new HashMap<String, String>();
 		project_info.put("userid", userid);
 		project_info.put("project_name", project_name);
 		project_info.put("pjst", pjst);
 		project_info.put("team_idx", team_idx);
+		project_info.put("image_idx", image_idx);
 		
 		int result = service.insertProject(project_info);
 		
@@ -171,10 +206,12 @@ public class ProjectController {
 	@RequestMapping(value="project.action", method= {RequestMethod.GET})
 	public String showProjectPage(HttpServletRequest request) {
 		String project_name = request.getParameter("project_name");
-		String project_idx= request.getParameter("project_idx");
-		
+		String project_idx= request.getParameter("projectIDX");
+
 		HttpSession session = request.getSession();
 		session.removeAttribute("projectInfo");
+//		List<HashMap<String, String>> teamList = (List<HashMap<String, String>>)session.getAttribute("teamList");
+		
 		MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
 		
 		if(loginuser != null) {
@@ -329,5 +366,11 @@ public class ProjectController {
 		request.setAttribute("str_jsonObj", str_jsonObj);
 		
 		return "project/findPasswordJSON";
+	} // end of findPassword(HttpServletRequest request)
+	
+	
+	@RequestMapping(value="changePwd.action", method= {RequestMethod.GET})
+	public String changePwd() {
+		return "login/changePwd";
 	}
 }

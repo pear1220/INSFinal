@@ -45,5 +45,14 @@ public interface InterProjectService {
 	//비밀번호찾기에서 이메일과 id로 일치하는 회원이 있는지 확인하는 메소드
 	int emailCheck(HashMap<String, String> map);
 
+	//회원가입 폼에서 이메일 중복체크하는 메소드
+	int signupEmailcheck(String emailCheck);
+
+	//email로 가입된 유저의 아이디를 가져오는 메소드
+	String getuserID(String emailCheck);
+
+	//배경이미지테이블의 데이터를 가져오는 메소드
+	List<HashMap<String, String>> getProjectImg();
+
 
 }
