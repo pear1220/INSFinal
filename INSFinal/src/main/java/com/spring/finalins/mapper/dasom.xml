@@ -105,13 +105,25 @@
 		<result property="project_member_idx" column="project_member_idx" javaType="String" />
 		<result property="member_id"   		  column="member_id"  		  javaType="String" />
 		<result property="project_admin"   	  column="project_admin"  	  javaType="String" />
+		<result property="project_image_name" column="project_image_name" javaType="String" />
 	</resultMap>
 	<select id="getProjectInfo" parameterType="HashMap" resultMap="projectInfo">
-		select project_idx, project_name, project_visibility_st as project_visibility, project_favorite_status as project_favorite, project_member_idx, 
-       		   project_member_userid as member_id, project_member_admin_status as project_admin
-		  from ins_project A left join ins_project_member B
-			on A.project_idx = B.fk_project_idx
-		 where project_idx = #{project_idx} and project_member_status = 0 and project_member_userid = #{userid}
+		select project_idx, 
+			   project_name, 
+			   project_visibility_st as project_visibility, 
+			   project_favorite_status as project_favorite, 
+			   project_member_idx, 
+       		   project_member_userid as member_id, 
+       		   project_member_admin_status as project_admin,
+       		   project_image_name
+		  from ins_project A,
+		  	   ins_project_member B,
+		  	   ins_project_image C
+		 where project_idx = #{project_idx} 
+		   and project_member_status = 0 
+		   and project_member_userid = #{userid}
+		   and A.project_idx = B.fk_project_idx
+		   and A.fk_project_image_idx = C.project_image_idx
 	</select>
 	
 	

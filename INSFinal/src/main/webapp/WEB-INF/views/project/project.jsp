@@ -83,17 +83,31 @@
   display: flex;
   flex-direction: column;
  } */
+ #mycontainer	{height:inherit;}
  .example1{ 
   background-image: url("./resources/images/${project_image_name}"); 
   background-color: white;
   background-size: cover;
-  width: 100%;
-  height: 100%; 
-  overflow-x: visible;
-  overflow-y: hidden;
+  background-attachment: fixed;
+  background-repeat: repeat-x;
+  height: inherit; 
  }
  
  .colStyle{cursor: pointer;}
+ 
+ .list-wrapper{
+ 	white-space:nowrap;
+ 	overflow-x: auto;
+ 	overflow-y: hidden;
+ 	height:inherit;
+ 	padding-top: 40px;
+ 	padding-left: 20px;
+ 	padding-right: 10px;
+ }
+ 
+ .list-wrapper .well {
+ 	margin-right:10px;
+ }
  
  .list-wrap{
  width: 272px;
@@ -119,7 +133,7 @@
 
 </style>
 
-	  <nav class="navbar navbar-inverse" style="width: 100%; margin-top: 30px; height: 50px;">
+	  <%-- <nav class="navbar navbar-inverse" style="width: 100%; margin-top: 30px; height: 50px;">
 		  <div class="container-fluid">
 		    <div class="navbar-header" >
 		      <a class="navbar-brand" href="#" ><span style="color: yellow;">${projectInfo.project_name}</span></a>
@@ -143,33 +157,58 @@
 	    		<span style="font-size: 13pt; color: yellow;">...Show Menu</span>
 	   		</button></p>
 		  </div>
-	</nav>
+	</nav> --%>
 
-	
+	<div class="list-wrapper">
 	<c:if test="${listvo == null || listvo.size() == 0}">
-		<div class="row" style="margin-left: 1%;" id="list1">
-		    <div class="col-sm-2"  style="cursor: pointer;">
-		      <h3>add List...</h3>
-		      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
-		      <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris...</p>
-		    </div>
+		<div id="list1" class="panel panel-default" style="width:300px;display:inline-block;">
+			<div class="panel-heading">
+				<h3 class="panel-title">add List...</h3>
+			</div>
+			<div class="panel-body">
+				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
+		      	<p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris...</p>
+			</div>
 		</div>
 	</c:if>
 	
 	<c:if test="${listvo != null || listvo.size() != 0}">
 		<c:forEach items="${listvo}" var="vo" varStatus="status">
-			<div class="col-sm-2 list-wrap" id="list${status.count}" >
-		      <h4>${vo.list_name}</h4> 
-		      <h4>리스트사이즈: ${status.count}</h4>       
-	    	</div>
-	    	<c:if test="${status.count == listvo.size()}">
-	    		<div class="col-sm-2 assign-to-team-create-content" id="list${status.count}">
-		        	<h4>add another list...</h4>   
-		        	<h4>리스트사이즈${listvo.size()+1}</h4>        
-	    		</div>
-	    	</c:if>
+		<div id="list${status.count}" class="well" style="width:300px;display:inline-block;">
+			<h3>${vo.list_name}</h3>
+			<div class="card-wrapper" style="max-height:500px;overflow-y:auto;">
+				<div class="panel panel-default">
+					<div class="panel-body">카드 내용</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-body">카드 내용</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-body">카드 내용</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-body">카드 내용</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-body">카드 내용</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-body">카드 내용</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-body">카드 내용</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-body">카드 내용</div>
+				</div>
+			</div>
+	    </div>
 		</c:forEach>
+		<div id="addList" class="well" style="width:300px;display:inline-block;vertical-align:top;">
+			<h3><span class="glyphicon glyphicon-plus"></span> add another list...</h3>
+		</div>
 	</c:if>
+	</div>
 	
 <form name="updateFavorite">
 	<input type="hidden" name="userid" value="${projectInfo.member_id}">

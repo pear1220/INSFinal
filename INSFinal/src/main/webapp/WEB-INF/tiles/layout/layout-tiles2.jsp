@@ -45,7 +45,7 @@
   <%-- 스마트 에디터 구현 끝(iframe 사용시) --%>  
   
   <style type="text/css">
-  	#mycontainer	{ width:90%; margin:0 auto; padding:20px; }
+  	#mycontainer	{ width:90%; height:inherit; margin:0 auto; padding:20px; }
 	#myheader		{ background-color:#EBEBE0; height:56px; padding: 10px; }
 	#mycontent		{ background-color:#F5F5F5; min-height:800px; padding-top: 40px;}
 

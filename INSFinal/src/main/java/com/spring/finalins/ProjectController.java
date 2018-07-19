@@ -232,6 +232,7 @@ public class ProjectController {
 			List<ListVO> listvo = null;
 			listvo = service.getListInfo(project_idx);
 			for(int i=0; i<listvo.size(); i++) {
+				// listvo for문 돌면서 cardVo 담기 
 				System.out.println("확인용 " + i + "번째 리스트 제목: " + listvo.get(i).getList_name());
 			}
 			

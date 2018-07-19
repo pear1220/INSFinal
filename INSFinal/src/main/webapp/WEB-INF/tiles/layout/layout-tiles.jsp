@@ -50,19 +50,15 @@
     Author URL: https://bootstrapmade.com
   ======================================================= -->
   <style type="text/css">
- 
 	/* #mycontent		{min-height:800px; padding-top: 40px; border: 0px red solid;} */
-	#mycontent		{min-height:950px; padding-top: 40px; border: 0px red solid;}
-
-
+	/* #mycontent		{min-height:950px; padding-top: 40px; border: 0px red solid;} */
+	#mycontent		{padding-top: 40px; height:inherit;}
 	.avatar {
 	    vertical-align: middle;
 	    width: 50px;
 	    height: 50px;
 	    border-radius: 50%;
 	}
-	
-
 	</style>
 </head>
 

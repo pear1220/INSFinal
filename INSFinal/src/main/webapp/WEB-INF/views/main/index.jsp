@@ -529,7 +529,7 @@ body{overflow: hidden;}
 <!-- 프로젝트 생성 Modal -->
   <div class="modal fade" id="myModal" role="dialog" style="padding-right: 50%; border: 0px solid yellow; margin-right: 50%;" >
     <div class="modal-dialog modal-lg" >
-      <div class="modal-content" style="padding-right: 50%; border: 0px solid yellow;">
+      <div class="modal-content" style="border: 0px solid yellow;">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
           <h4 class="modal-title">Create New Project!!</h4>
@@ -608,9 +608,9 @@ body{overflow: hidden;}
   
   
   <!-- 아이디찾기 modal -->
-  <div class="modal fade" id="findID-modal" role="dialog" style="margin-right: 30%;" >
-    <div class="modal-dialog modal-lg" >
-      <div class="modal-content" style="padding-right: 50%; border: 0px solid yellow;">
+  <div class="modal fade" id="findID-modal" role="dialog" >
+    <div class="modal-dialog" style="width:400px;">
+      <div class="modal-content">
         
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -639,9 +639,9 @@ body{overflow: hidden;}
   
   
   <!-- 비밀번호찾기 modal --><!-- style="padding-right: 50%; border: 0px solid yellow; margin-right: 50%;"  -->
-  <div class="modal fade" id="findPwd-modal" role="dialog" style="margin-right: 30%;">
+  <div class="modal fade" id="findPwd-modal" role="dialog">
     <div class="modal-dialog modal-lg" >
-      <div class="modal-content" style="padding-right: 50%; border: 0px solid yellow;">
+      <div class="modal-content" style="border: 0px solid yellow;">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
           <h4 class="modal-title"><span style="font-size: 13pt; font-weight: bold;">Change your password!!</span></h4>
