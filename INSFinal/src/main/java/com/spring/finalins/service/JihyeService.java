@@ -3,6 +3,8 @@ package com.spring.finalins.service;
 import java.util.HashMap;
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -73,13 +75,107 @@ public class JihyeService implements InterJihyeService{
 		return agelineList;
 	}
    ///////////////////////////////////////////////////////////
+	// 내가 활동한 전체 기록수
+	@Override
+	public int getRecordTotalCount(HashMap<String, String> map) {
+		int n = dao.getRecordTotalCount(map);
+		return n;
+	}
 
 	// 내가 활동한 기록 불러오기
 	@Override
+	public List<HashMap<String, String>> getMyRecordList(HashMap<String,String> btnmoreMap) {
+		List<HashMap<String, String>> myRecordList = dao.getMyRecordList(btnmoreMap);
+		return myRecordList;
+	}
+	
+/*	@Override
 	public List<HashMap<String, String>> getMyRecordList(String userid) {
 		List<HashMap<String, String>> myRecordList = dao.getMyRecordList(userid);
 		return myRecordList;
+	}*/
+	
+	
+	//////////////////////////////////////////////////////////////////////////////////////
+	// 초대한 팀명 알아오기
+	@Override
+	public List<HashMap<String, String>> getInviteTeamName(String userid) {
+		// 초대한 팀명 알아오기
+		List<HashMap<String, String>> teamName = dao.getInviteTeamName(userid);
+	
+		return teamName;
 	}
+
+	// 팀초대 승인할 경우
+	@Override
+	public int approveTeam(String userid) {
+		int n = dao.approveTeam(userid);
+		return n;
+	}
+
+	// 팀 초대 거절할 경우.
+	@Override
+	public int denyTeam(String userid) {
+		int n = dao.denyTeam(userid);
+		return n;
+	}
+   /////////////////////////////////////////////////////////////////////////////////////////
+
+	 // 이중차트
+	@Override
+	public String rankShowJSON() {
+		
+		List<HashMap<String,String>> list = dao.rankShowJSON();
+		
+		JSONArray jsonarray = new JSONArray();
+		
+		String str_jsonarray = "";
+	
+		
+		if(list != null && list.size() > 0) {
+			for(HashMap<String,String> map : list) {
+				
+				JSONObject jsonObj = new JSONObject();
+				jsonObj.put("RANK",map.get("RANK")); 
+				jsonObj.put("JOB",map.get("JOB"));
+				jsonObj.put("CNT",map.get("CNT")); 
+				jsonObj.put("PERCENT",map.get("PERCENT"));
+				
+				jsonarray.put(jsonObj);
+			}// end of for ---------------------------------------------
+		}
+		
+		str_jsonarray = jsonarray.toString();
+		
+		return str_jsonarray;
+	}
+	
+	@Override
+	public String jobAgelineRankShowJSON(String job) {
+		
+		List<HashMap<String,String>> list = dao.jobAgelineRankShowJSON(job);
+		
+        JSONArray jsonarray = new JSONArray();
+		
+		String str_jsonarray = "";
+		
+		if(list != null && list.size() > 0) {
+			for(HashMap<String,String> map : list) {
+				
+				JSONObject jsonObj = new JSONObject();
+				jsonObj.put("AGELINE",map.get("AGELINE")); 
+				jsonObj.put("PERCENT",map.get("PERCENT"));
+			//	jsonObj.put("CNT",map.get("CNT"));
+		
+				jsonarray.put(jsonObj);
+			}// end of for ---------------------------------------------
+		}
+		
+		str_jsonarray = jsonarray.toString();
+		
+		return str_jsonarray;
+	}
+
 
 
 

@@ -26,6 +26,7 @@ public interface InterQnaService {
 	int del(String qna_idx); // 글 1개 삭제하기
 
 	int getTotalCount(HashMap<String,String> map); // 검색어가 없는 총 게시물 수
+//	int getTotalCount2(HashMap<String, String> map);  // 검색어가 없는 총 게시물 수 & 기술문의 or 기타 선택옵션
 
 //	int getTotalCount2(HashMap<String, String> map); // 검색어가 있는 총 게시물 수
 
@@ -35,6 +36,7 @@ public interface InterQnaService {
 	
 	// ******
 	int updateQnaDepthno(QnaVO qnavo) throws Throwable;
+	
 	
 
 

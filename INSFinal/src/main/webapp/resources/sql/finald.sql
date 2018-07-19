@@ -605,8 +605,45 @@ commit;
     where T.RNO >= 1 and T.RNO <= 20
     order by rno desc
     
-   
-         
+-- 검색어가 없는 qna리스트 + 대기중을 맨 위로 보내기
+select  rno, qna_idx, fk_userid, qna_title, qna_date
+              , qna_groupno, qna_fk_idx, qna_depthno
+              , qna_fileName, qna_orgFilename, qna_byte
+              , fk_qna_category_idx
+		from 
+		(
+		select rownum as RNO
+		     , V.qna_idx, V.fk_userid, V.qna_title, V.qna_content,  V.qna_date
+             , V.qna_groupno, V.qna_fk_idx, V.qna_depthno
+             , V.qna_fileName, V.qna_orgFilename, V.qna_byte
+             , V.fk_qna_category_idx
+		from 
+		(
+		select qna_idx, fk_userid 
+		     , case when length(qna_title) > 20 then substr(qna_title, 1, 18)||'..'
+		       else qna_title end as qna_title
+		     , qna_content 
+		     , to_char(qna_date, 'yyyy-mm-dd hh24:mi:ss') as qna_date
+             , qna_groupno, qna_fk_idx, qna_depthno
+             , qna_fileName, qna_orgFilename, qna_byte
+             , fk_qna_category_idx
+		from ins_QnA 
+	
+	        where fk_userid ='jihye' or fk_userid = 'admin'
+	    
+	     start with qna_fk_idx = 0
+         connect by prior qna_idx = qna_fk_idx
+		order siblings by qna_groupno desc, qna_idx asc 
+	    ) V
+	     start with qna_fk_idx = 0
+         connect by prior qna_idx = qna_fk_idx
+		order siblings by qna_depthno,qna_groupno desc, qna_idx asc   
+	  ) T  
+       where T.RNO <![CDATA[>=]]> #{startRno} and T.RNO <![CDATA[<=]]> #{endRno} 
+     
+--
+select *
+from ins_QnA
           
 -- 답글이 달렸을 경우 삭제하지 않기          
 select *
@@ -697,53 +734,123 @@ where userid =
 
 
 
--- 차트 불러오기(선생님 것)
 
 
-
-select rank() over(order by sum(A.oqty) desc) as RANKING
-     , C.jepumname 
-     , sum(A.oqty) as TOTALQTY
-     , trunc( sum(A.oqty)/(select sum(oqty) from chart_orderDetail) * 100, 1) as PERCENTAGE
-from chart_orderDetail A left join chart_jepumDetail B
-on A.fk_jepumDetailno = B.jepumDetailno
-left join chart_jepum C
-on B.fk_jepumno = C.jepumno
-group by C.jepumname;
+-- 내가 활동한 기록 불러오기
+select record_userid, project_record_time, record_dml_status
+from ins_project_record
+where record_userid ='ddcat'
+order by project_record_time desc;
 
 
-select D.jepumname 
-     , sum(B.oqty) as TOTALQTY
-     , trunc( sum(B.oqty)/(select sum(oqty) from chart_orderDetail) * 100, 1) as PERCENTAGE
-from chart_order A join chart_orderDetail B 
-on A.orderno = B.fk_orderno
-join chart_jepumDetail C
-on B.fk_jepumDetailno = C.jepumDetailno
-left join chart_jepum D
-on C.fk_jepumno = D.jepumno
-where A.userid = 'hansk'
-group by D.jepumname
-order by TOTALQTY desc;
-
-
-select ranking, jepumname, typename, totalqty, percentage
-from
-(
-select rank() over(order by sum(A.oqty) desc) as RANKING
-     , D.jepumname, C.typename, sum(A.oqty) as TOTALQTY
-     , trunc( sum(A.oqty)/(select sum(oqty) from chart_orderDetail) * 100, 1) as PERCENTAGE
-from chart_orderDetail A left join chart_jepumDetail B
-on A.fk_jepumDetailno = B.jepumDetailno
-left join chart_jepumType C
-on B.fk_typecode = C.typecode
-left join chart_jepum D
-on B.fk_jepumno = D.jepumno
-group by D.jepumname, C.typename
-) V
-where V.jepumname = '감자깡';
-
-
---
 select *
 from ins_project_record
-where record_userid ='jihye';
+
+-- 개인활동 기록 불러오기(프로젝트명, 리스트명, 카드명, 기록내용, 활동시간)
+select project_Name, list_name, card_title, record_userid, project_record_time, record_dml_status
+from ins_project_record A join ins_project B
+on A.fk_project_idx = B.project_idx
+join ins_list C
+on A.fk_list_idx = C.list_idx
+join ins_card D
+on A.fk_card_idx = D.card_idx
+where record_userid ='ddcat'
+
+-- 나를 초대한 팀목록 불러오기
+select team_name, team_userid, team_member_admin_status
+from ins_team_member A join ins_team B
+on A.fk_team_idx = B.team_idx
+where team_userid = 'jihye';
+
+-- 팀초대 승인하기 
+update ins_team_member set team_member_admin_status = 2
+where team_userid = 'ddcat'
+
+-- 팀초대 거절하기
+delete from ins_team_member
+where team_userid = 'jihye' and team_member_admin_status = 3
+
+rollback;
+
+select *
+from ins_team_member
+
+commit;
+
+select * from ins_member;
+
+-- 내가 활동한 기록 더보기 버튼 활용하기
+select project_Name, list_name, card_title, record_userid, project_record_time, record_dml_status
+from
+(
+select rownum as RNO
+      ,project_Name, list_name, card_title, record_userid, project_record_time, record_dml_status
+from
+(
+    select project_Name, list_name, card_title, record_userid, project_record_time, record_dml_status
+		from ins_project_record A join ins_project B
+		on A.fk_project_idx = B.project_idx
+		left join ins_list C
+		on A.fk_list_idx = C.list_idx
+		left join ins_card D
+		on A.fk_card_idx = D.card_idx
+		where record_userid = 'ddcat'
+		order by project_record_time desc
+ ) V
+)T
+where T.rno between 11 and 20;
+
+
+        
+        
+-- 이중차트 만들기
+  -- job별 rank
+   select rank() over(order by cnt desc) as rank, job, cnt, percent
+   from
+   (
+   select  job, count(*) AS cnt, round( count(*)/(select count(*) from ins_member)*100, 1) as percent  
+   from ins_member 
+   group by job
+   order by job desc
+   )
+   
+   -- 
+
+-- 각 직업별 연령대 인원수
+select AGELINE, round( cnt/(select count(*) from ins_member where job='IT')*100, 1) as percent  
+from 
+(
+select AGELINE, count(*) as cnt
+from
+(
+select decode(trunc(EXTRACT(YEAR FROM SYSDATE) - extract(year from birthday), -1), 0 , '10대미만',to_char(trunc(EXTRACT(YEAR FROM SYSDATE) - extract(year from birthday),-1)|| '대' )) as ageline     
+from ins_member
+where job='IT'
+)
+group by ageline 
+)
+group by ageline ,cnt
+order by ageline
+
+-- 전체 연령별 인원수
+ select ageline, count(*) as cnt           
+ from
+ (
+ select decode(trunc(EXTRACT(YEAR FROM SYSDATE) - extract(year from birthday), -1), 0 , '10대미만',to_char(trunc(EXTRACT(YEAR FROM SYSDATE) - extract(year from birthday),-1)|| '대' )) as ageline 
+ from ins_member
+ )
+ group by ageline
+ order by ageline   
+ 
+ 
+-- 회원 탈퇴 연습용 쿼리문 
+ select *
+ from ins_member
+ where userid = 'jihye';
+
+update ins_member set leave_status = 0
+where userid = 'jihye'
+
+commit;
+
+

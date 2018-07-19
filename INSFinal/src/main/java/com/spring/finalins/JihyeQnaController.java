@@ -57,7 +57,19 @@ public class JihyeQnaController {
 		List<HashMap<String,String>> qnaList = null;
 		
 		
+		// ==== #106. 검색어가 포함되었으므로
+		// 먼저 위의 boardList = service.boardList(); 부분을
+		// 주석처리하고서 아래의 작업을 한다. ====
+/*		String colname = req.getParameter("colname"); 
+													
+
 		HashMap<String, String> map = new HashMap<String, String>();
+
+		map.put("colname", colname);*/
+	//	map.put("search", search);
+
+		HashMap<String, String> map = new HashMap<String, String>();
+
 
 				// ===== #110. 페이징 처리 하기 =====
 				String str_currentShowPageNo = req.getParameter("currentShowPageNo");
@@ -70,14 +82,25 @@ public class JihyeQnaController {
 				int startRno = 0;// 시작행 번호
 				int endRno = 0;// 끝행 번호
 
-				int blockSize = 3;// "페이지바" 에 보여줄 페이지의 갯수
+				int blockSize = 5;// "페이지바" 에 보여줄 페이지의 갯수
 
 				/*
 				 * ==== 총 페이지 수 구하기 ==== 검색 조건이 없을 때의 총 페이지 수와 검색 조건이 있을 때의 총 페이지 수를 구해야 한다.
 				 * 
 				 * 검색 조건이 없을 때의 총 페이지 수 ==> colname과 search가 null 인 것이고, 검색 조건이 있을 때의 총 페이지 수
-				 * ==> colname과 search가 null 이 아닌 것이다.
+				 *                         ==> colname과 search가 null 이 아닌 것이다.
 				 */
+				// 먼저 총 게시물 건수를 구한다.
+				// 먼저 총 게시물 건수를 구한다.
+		/*		if ((colname != null ) && (!colname.equals("null"))
+						&& (!colname.trim().isEmpty() )) // colname을 선택했고 검색어를 입력했을 경우
+				{
+					totalCount = service.getTotalCount2(map); // 검색어가 있는 총 게시물 건수 // map에 colname과 search과 포함되어 있다.
+
+				} else {
+					totalCount = service.getTotalCount(map); // 검색어가 없는 총 게시물 건수
+				}
+	*/
 				map.put("userid", userid);
 				
 				totalCount = service.getTotalCount(map); // 검색어가 없는 총 게시물 건수

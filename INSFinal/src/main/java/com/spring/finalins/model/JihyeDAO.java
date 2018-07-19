@@ -83,13 +83,65 @@ public class JihyeDAO implements InterJihyeDAO{
 		return agelineList;
 	}
 /////////////////////////////////////////////////////////////////
+	// 내가 활동한 전체 기록수
+	@Override
+	public int getRecordTotalCount(HashMap<String, String> map) {
+		int n =  sqlsession.selectOne("jihye.getRecordTotalCount",map);
+		return n;
+	}
 
 	// 내가 활동한 기록 불러오기
 	@Override
-	public List<HashMap<String, String>> getMyRecordList(String userid) {
-		List<HashMap<String, String>> myRecordList = sqlsession.selectList("jihye.getMyRecordList", userid);
+	public List<HashMap<String, String>> getMyRecordList(HashMap<String,String> btnmoreMap) {
+		List<HashMap<String, String>> myRecordList = sqlsession.selectList("jihye.getMyRecordList", btnmoreMap);
 		return myRecordList;
 	}
+
+	/*@Override
+	public List<HashMap<String, String>> getMyRecordList(String userid) {
+		List<HashMap<String, String>> myRecordList = sqlsession.selectList("jihye.getMyRecordList",userid);
+		return myRecordList;
+	}*/
+	
+	
+	
+/////////////////////////////////////////////////////////////////////////////////////////////
+	// 초대한 팀명 알아오기
+	@Override
+	public List<HashMap<String, String>> getInviteTeamName(String userid) {
+		List<HashMap<String, String>> teamName = sqlsession.selectList("jihye.getInviteTeamName", userid);		
+		return teamName;
+	}
+
+	// 팀초대 승인하기
+	@Override
+	public int approveTeam(String userid) {
+		int n = sqlsession.update("jihye.approveTeam", userid);
+		return n;
+	}
+
+	// 팀초대 거절하기
+	@Override
+	public int denyTeam(String userid) {
+		int n = sqlsession.delete("jihye.denyTeam", userid);
+		return n;
+	}
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+	// 이중차트
+	@Override
+	public List<HashMap<String, String>> rankShowJSON() {
+		List<HashMap<String, String>> list = sqlsession.selectList("jihye.rankShowJSON");
+		return list;
+	}
+
+
+	@Override
+	public List<HashMap<String, String>> jobAgelineRankShowJSON(String job) {
+		List<HashMap<String, String>> list = sqlsession.selectList("jihye.jobAgelineRankShowJSON",job);
+		return list;
+	}
+
 
 	
 }

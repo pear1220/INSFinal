@@ -17,13 +17,25 @@ public interface InterJihyeService {
 
 	List<TeamVO> getTeamList(String userid); // 내가 속한 팀목록 불러오기
 	
-	List<HashMap<String, String>> getMyRecordList(String userid); // 내가 활동한 기록 불러오기
+	int getRecordTotalCount(HashMap<String, String> map); // 내가 활동한 전체 기록수
+	List<HashMap<String, String>> getMyRecordList(HashMap<String,String> btnmoreMap); // 내가 활동한 기록 불러오기
+//	List<HashMap<String, String>> getMyRecordList(String userid);
 
 	int updateProfileImg(HashMap<String, String> map); // 프로필 이미지 변경하기
 
 	// ==== 차트 그리기 ====
 	List<HashMap<String, String>> getChartJSON_job(); // 직업별 인원수
 	List<HashMap<String, String>> adminChartJSON_ageline(); // 연령별 인원수
+
+	List<HashMap<String, String>> getInviteTeamName(String userid);  // 나를 초대한 팀 목록 불러오기
+	int approveTeam(String userid); //  팀초대 승인할 경우 
+	int denyTeam(String userid); /// 팀 초대 거절할 경우.
+
+	// 이중차트
+	String rankShowJSON(); 
+	String jobAgelineRankShowJSON(String job); //
+
+	
 
 	
 	

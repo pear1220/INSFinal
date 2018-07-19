@@ -365,8 +365,8 @@
         <!--  search form end -->
       </div>
       
-      
 	  <button onclick="location.href='<%= request.getContextPath() %>/mypage.action'">지혜</button>
+	  
 	  
 	  
 	  

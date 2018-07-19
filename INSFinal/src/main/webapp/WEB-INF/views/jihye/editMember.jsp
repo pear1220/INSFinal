@@ -39,12 +39,16 @@ $(document).ready(function(){
 		// 패스워드를 검사해주는 정규표현식 객체 생성
 		var bool = regexp_passwd.test(passwd); 
 		
-		
-		if($(this).val()==''){
-    		$(this).css("border-color", "#FF0000");
-    			$('#submit').attr('disabled',true);
-    			 $("#error_pwd").text("* 비밀번호를 입력하세요.");
-    	}
+		 
+		if($("#pwd").val()==''){
+	          $("#pwd").css("border-color", "#ccc");
+	          $("#error_pwd").text("* 비밀번호를 입력하세요.");
+	       }
+		/* if($(this).val()==''){
+			$(this).css("border-color", "#FF0000");
+    		$('#submit').attr('disabled',true); 			
+    	    $("#error_pwd").text("* 비밀번호를 입력하세요.");
+    	} */
 		else if(!bool)
 			{
 			$(this).css("border-color", "#FF0000");
@@ -61,6 +65,8 @@ $(document).ready(function(){
    });
 	
 	$("#pwdchk").keyup(function(){
+		
+		$pwd =$("#pwd").val();
 		if($(this).val()==''){
     		$(this).css("border-color", "#FF0000");
     			$('#submit').attr('disabled',true);
@@ -84,7 +90,7 @@ $(document).ready(function(){
     $("#nickname").keyup(function(){
     	
     	var nickname = $("#nickname").val().trim();
-    	var regexp_nickname = new RegExp(/^[가-힣]{2,10}|[a-zA-Z]{2,10}$/);
+    	var regexp_nickname = new RegExp(/^[가-힣]{2,10}|[a-zA-Z]{2,10}$/);                              //new RegExp(/^[가-힣]{2,10}|[a-zA-Z]{2,10}$/);
     	var bool = regexp_nickname.test(nickname);
     	
 		if($(this).val()==''){
@@ -93,7 +99,7 @@ $(document).ready(function(){
 			$("#error_nickname").text("* 닉네임을 입력하세요.");
     		
     	}
-    	else if(!bool){
+    	else  if(!bool){
 			$(this).css("border-color", "#FF0000");
 			$('#submit').attr('disabled',true);
 			$("#error_nickname").text("* 한글은 2~10글자, 영문은 2~10글자로 입력해 주세요.");
@@ -109,11 +115,12 @@ $(document).ready(function(){
     
     $("#tel2").keyup(function(){
     	var tel2 = $(this).val().trim();
-    	var regexp_tel2 = /\d{3,4}/g; 
+    //	var regexp_tel2 = /^\d{3,4}$/;                            //  /\d{3,4}/g; 
+       var regexp_tel2 = new RegExp(/^\d{3,4}$/); 
 		// 3~4자리 숫자 입력 정규표현식
 		var bool = regexp_tel2.test(tel2);
 		
-        $pho =$("#tel").val();
+   //     $pho =$("#tel").val();
 		if($(this).val()==''){
     		$(this).css("border-color", "#FF0000");
     			$('#submit').attr('disabled',true);
@@ -133,13 +140,15 @@ $(document).ready(function(){
     	}
 
 	});
+    
     $("#tel3").keyup(function(){
     	var tel3 = $(this).val().trim();
-    	var regexp_tel3 = /\d{3,4}/g; 
-		// 3~4자리 숫자 입력 정규표현식
+    //	var regexp_tel3 = /^\d{4}$/;                                            // /\d{3,4}/g; 
+		var regexp_tel3 = new RegExp(/^\d{4}$/);
+        // 3~4자리 숫자 입력 정규표현식
 		var bool = regexp_tel3.test(tel3);
 		
-        $pho =$("#tel").val();
+  //      $pho =$("#tel").val();
 		if($(this).val()==''){
     		$(this).css("border-color", "#FF0000");
     			$('#submit').attr('disabled',true);
@@ -249,26 +258,22 @@ $(document).ready(function(){
 // 탈퇴
 function goDel()
 {	
-	 var frm =document.useridFrm;
-	  frm.method="post";
-	  frm.action= "memberDeleteAccount.action";
-	  frm.submit();
+	if(confirm("정말 탈퇴하시겠습니까?") == true){
+		 var frm =document.useridFrm;
+		  frm.method="post";
+		  frm.action= "memberDeleteAccount.action";
+		  frm.submit();	
+	} else {
+		return;
+	}	
 	
 } 
 
 </script>
    
-<%-- 상단에 탭메뉴이다. 탭을 클릭하면 링크타고 페이지 이동한다. --%> 
-<%-- <div class="navtab" align="center">        
-	 <ul class="nav nav-tabs abc">
-		 <li><a data-toggle="tab1" href="<%= request.getContextPath() %>/mypage.action">Profile</a></li>
-		 <li><a data-toggle="tab1" href="<%= request.getContextPath() %>/qna.action">Q&A</a></li>
-		 <li ><a data-toggle="tab1" href="<%= request.getContextPath() %>/setting.action">Setting</a></li>
-		 <li class="active"><a data-toggle="tab1" href="<%= request.getContextPath() %>/edit.action">Edit</a></li> 
-	</ul>   
-</div>  --%>    
 
-<%-- edit 페이지에 있는 회원정보 수정 form --%> 
+
+<%--  회원정보 수정 form --%> 
 <div align="center" style="border: 0px solid gold; width: 30%; margin-left: 35%;">
 
      <%-- 탈퇴관련 form --%>

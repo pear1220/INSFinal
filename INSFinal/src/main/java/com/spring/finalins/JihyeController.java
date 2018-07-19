@@ -61,21 +61,194 @@ public class JihyeController {
 			userid = loginuser.getUserid();
 		}
 		
+		if(!userid.equalsIgnoreCase("admin")) {
+		
 	// ============ 내가 속한 팀목록 보여주기  ///////////////////////////////////////////////////////////////////////////////////////// 
 	    List<TeamVO> teamList = service.getTeamList(userid);
 	    
-	    // 내가 활동한 기록 불러오기
-	    List<HashMap<String,String>> myRecordList = service.getMyRecordList(userid);
+	///////////////////////////////////////////////////////////////////////////////////////////////////   
+           List<HashMap<String,String>> myRecordList = null;
+		
+		
+		HashMap<String, String> map = new HashMap<String, String>();
+	    
+	 // ===== #110. 페이징 처리 하기 =====
+		String str_currentShowPageNo = req.getParameter("currentShowPageNo");
 
-		req.setAttribute("teamList", teamList);
+		int totalCount = 0; // 총 게시물 건 수 알기
+		int sizePerPage = 5; // 한 페이지당 보여줄 게시물 건수
+		int currentShowPageNo = 0; // 현재 보여주는 페이지 번호로서, 초기값은 1페이지로 설정함.
+		int totalPage = 0; // 총페이지수(웹브라우저상에 보여줄 총 페이지 갯수)
+
+		int startRno = 0;// 시작행 번호
+		int endRno = 0;// 끝행 번호
+
+		int blockSize = 3;// "페이지바" 에 보여줄 페이지의 갯수
+
+		/*
+		 * ==== 총 페이지 수 구하기 ==== 검색 조건이 없을 때의 총 페이지 수와 검색 조건이 있을 때의 총 페이지 수를 구해야 한다.
+		 * 
+		 * 검색 조건이 없을 때의 총 페이지 수 ==> colname과 search가 null 인 것이고, 검색 조건이 있을 때의 총 페이지 수
+		 * ==> colname과 search가 null 이 아닌 것이다.
+		 */
+		map.put("userid", userid);
+		
+		totalCount = service.getRecordTotalCount(map); // 검색어가 없는 총 게시물 건수
+		
+		System.out.println("총 게시물 수"+totalCount);
+
+		// 구해온 totalCount로 totalPage를 만든다.
+		// 정수 / 정수 (정수 나누기 정수는 실수) ==> 형번환 해준다.
+		totalPage = (int)Math.ceil((double)totalCount / sizePerPage);
+		
+		System.out.println("총 페이지 수"+totalPage);
+
+
+		// 맨 처음에 목록보기를 눌렀을 때
+		// 뷰단에서 자바로 넘어올 때 get방식이라서 장난치는 것을 다 막아줘야 한다. get방식의 주소창은 다 드러나기 때문에 유효성 검사
+		if (str_currentShowPageNo == null) {
+			// 게시판 초기 화면에 보여지는 것은
+			// req.getParameter("currentShowPageNo"); 값이 없으므로
+			// str_currentShowPageNo 은 null 이 된다.
+
+			currentShowPageNo = 1;
+		} else { // null이 아니라면 int로 바꿔주는데 존재하지 않는 음수 페이지거나 토탈페이지보다 더 많으면 currentShowPageNo = 1; 로
+					// 설정하겠다.
+			try { // 숫자만 Integer로 바꿀 수 있고 똘똘이와 같은 건 안되기 때문에 numberformat exception이 발생
+				currentShowPageNo = Integer.parseInt(str_currentShowPageNo);
+
+				if (currentShowPageNo < 1 || currentShowPageNo > totalPage) { // ==> 존재하지 않는 페이지가 있다면
+					currentShowPageNo = 1;
+				}
+
+			} catch (NumberFormatException e) {
+				currentShowPageNo = 1;
+			}
+		}
+
+		// **** 가져올 게시글의 범위를 구한다.(공식임!!) ****
+		/*
+		 * // 1페이지당 5개씩 보여준다고 가정한다면 currentShowPageNo startRno endRno
+		 * ------------------------------------------------ 1 page ==> 1 5 2 page ==> 6
+		 * 10 3 page ==> 11 15 4 page ==> 16 20 5 page ==> 21 25 6 page ==> 26 30 7 page
+		 * ==> 31 35
+		 */
+
+		// ****** 공식!공식!공식! *******
+		startRno = (currentShowPageNo - 1) * sizePerPage + 1;
+		endRno = startRno + sizePerPage - 1;
+
+		// totalCount 는 검색어의 유무에 따라 게시물의 총 갯수가 달라진다
+		// ===== #111. 페이징 처리를 위한 startRno, endRno 를 map에 추가하여
+		// 파라미터로 넘겨서 select 되도록 한다.
+		// --> totalCount 구하기(DB에서 데이터 갯수 알아오기)
+
+		// 처음에 검색도 안했을때 현재 페이지는 1이고 페이지에서 시작값은 1이고 마지막 값은 5이다. 그것을 map에 넣어준다.
+
+		map.put("startRno", String.valueOf(startRno));
+		map.put("endRno", String.valueOf(endRno));
+		
+		map.put("userid", userid);
+		
+		myRecordList = service.getMyRecordList(map);
+
+		// =====  페이지바 만들기(먼저, 페이지바에 나타낼 총 페이지 갯수(totalPage) 구해야 한다.) =====
+		String pagebar = "<ul>";
+		pagebar += MyUtil.getSearchPageBar("mypage.action", currentShowPageNo, sizePerPage, totalPage, blockSize,
+				map.get("colname"), map.get("search"), null); // period는 없으니까 null 을 넣어준다.
+		pagebar += "</ul>";
+
+		req.setAttribute("pagebar", pagebar);
 		req.setAttribute("myRecordList", myRecordList);
+///////////////////////////////////////////////////////////////////////
+		req.setAttribute("teamList", teamList);
+	
+		}
+		else if(userid.equalsIgnoreCase("admin")){
+			/*String msg ="접근이 불가합니다.";
+			String loc ="index.action";
+			
+			req.setAttribute("msg", msg);
+			req.setAttribute("loc", loc);*/
+			
+			return "jihye/adminChart.tiles";
+		}
 		
 		return "jihye/mypage.tiles";
 	}
 	
 	
+	// 내가 활동한 기록 더보기 버튼 만들기
+/*	@RequestMapping(value="myRecordListJSON.action", method = {RequestMethod.POST})
+	public String requireLogin_myRecordListJSON(HttpServletRequest req, HttpServletResponse res) {
+		
+		String start = req.getParameter("start");
+		String length = req.getParameter("length");
+		
+		if(start == null || start.trim().isEmpty()) {
+			start = "1";
+		}
+		if(length == null || length.trim().isEmpty()) {
+			length = "2";
+		}
+		
+					
+		
+     	int startRno = Integer.parseInt(start);
+		int endRno = Integer.parseInt(start) + Integer.parseInt(length) - 1;
+		
+		HttpSession session = req.getSession();
+		MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
+		
+		String userid = null;
+
+		if (loginuser != null) {
+			userid = loginuser.getUserid();
+		}
+		
+		
+		
+		HashMap<String,String> btnmoreMap = new HashMap<String,String>();
+		btnmoreMap.put("userid", userid);
+		btnmoreMap.put("startRno",  String.valueOf(startRno));
+		btnmoreMap.put("endRno", String.valueOf(endRno));
+		
+		List<HashMap<String,String>> myRecordList = service.getMyRecordList(btnmoreMap);
+		
+		 JSONArray jsonArr = new JSONArray();  //아무것도 안 넣으면 []
+         
+         for(HashMap<String, String> map : myRecordList) {
+            JSONObject jsonObj = new JSONObject();
+
+            //밑에 것은 json에 대한 키값이다.
+            jsonObj.put("project_Name", map.get("PROJECT_NAME"));  // map.get("키값")은 xml에 있는 키값이다!!! 차트용
+            jsonObj.put("list_name", map.get("LIST_NAME"));  // 남/녀의 실제 인원수도 구할 것이다. 나중에 테이블 하나 만들려고 한 것이다.
+            jsonObj.put("card_title", map.get("CARD_TITLE")); // 남/녀의 비율 
+            jsonObj.put("record_userid", map.get("RECORD_USERID")); 
+            jsonObj.put("project_record_time", map.get("PROJECT_RECORD_TIME")); 
+            jsonObj.put("record_dml_status", map.get("RECORD_DML_STATUS")); 
+      
+            jsonArr.put(jsonObj);
+         }
+
+         String str_jsonArr = jsonArr.toString();
+         
+         System.out.println("str_jsonArr"+ str_jsonArr);
+         
+         req.setAttribute("str_jsonArr", str_jsonArr);
+       //  req.setAttribute("myRecordList",myRecordList);
+		
+		
+		return "jihye/myRecordListJSON";
+	}*/
+	
+	
+	
+	
+	
+	
 	// my-2. 개인정보 수정을 위한 (로그인한) 유저의 정보를 불러오기
-	@RequestMapping(value="/edit.action", method= {RequestMethod.GET})
+	@RequestMapping(value="/editMember.action", method= {RequestMethod.GET})
 	public String requireLogin_edit(HttpServletRequest req, HttpServletResponse res) {
 
 		// 1. 기본정보를 불러 온다. 패스워드 빼고는 전부 기본정보가 입력이 되어야 한다. 
@@ -102,7 +275,7 @@ public class JihyeController {
 		req.setAttribute("membervo", membervo);
 		req.setAttribute("goBackURL", goBackURL);
 		
-		return "jihye/edit.tiles";
+		return "jihye/editMember.tiles";
 	}
 	
 	
@@ -188,7 +361,11 @@ public class JihyeController {
     	HttpSession session = req.getSession();
 		MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");	
 	
-		String userid = loginuser.getUserid();
+		String userid = null;
+
+		if (loginuser != null) {
+			userid = loginuser.getUserid();
+		}
 		
 		int n = service.deleteMyAccount(userid);
 		
@@ -314,8 +491,12 @@ public class JihyeController {
 	          
 	      } else {   
 	    	  
+	    	 String gobackURL = (String) session.getAttribute("gobackURL"); 
 	    	 String msg = "첨부된 파일이 없습니다.";
-	    	 String loc = "jihye/mypage.action";
+	    	 String loc = gobackURL;
+	    	 
+	    	 req.setAttribute("msg", msg);
+	    	 req.setAttribute("loc", loc);
 	         return "msg.notiles";
 	      }
 	      
@@ -341,10 +522,104 @@ public class JihyeController {
 
 	   }
 	   
+	   
+	   // setting page 
+	   @RequestMapping(value="/mySetting.action", method= {RequestMethod.GET})
+	   public String requireLogin_setting(HttpServletRequest req, HttpServletResponse res) {  
+		   
+		   
+		   HttpSession session = req.getSession();
+	       MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
+	       
+	       String userid = null;
+
+			if (loginuser != null) {
+				userid = loginuser.getUserid();
+			}
+	
+		   // ==== 팀에서 초대할 경우 초대 수락/거절 버튼 만들기
+		   // 1) 우선 나를 초대한 팀명 불러오기
+			List<HashMap<String, String>> teamName = service.getInviteTeamName(userid);
+		 
+		   
+		   // 2) 팀초대 승인할 경우 / 팀 초대 거절할 경우.
+		   
+		   
+		   req.setAttribute("teamName", teamName);
+		   
+	      return "jihye/mySetting.tiles";
+	   }
+	   
+	   
+	   // 2) 팀초대 승인할 경우 / 팀 초대 거절할 경우.
+	   @RequestMapping(value="/approveTeam.action", method= {RequestMethod.GET})
+	   public String requireLogin_approveTeam(HttpServletRequest req, HttpServletResponse res) {  
+		   
+		   String approveDeny =req.getParameter("approveDeny");
+		   
+		   System.out.println(">>>"+approveDeny);
+		   
+		   HttpSession session = req.getSession();
+	       MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
+	       
+	       String userid = null;
+
+			if (loginuser != null) {
+				userid = loginuser.getUserid();
+			}
+			
+          if(!userid.equalsIgnoreCase("admin")) {
+					
+			if(approveDeny.equalsIgnoreCase("승인")) {
+			int n = service.approveTeam(userid);
+			}
+			if(approveDeny.equalsIgnoreCase("거절")){
+			int del = service.denyTeam(userid);
+			}
+          } else if(userid.equalsIgnoreCase("admin"))
+          {	String msg ="접근이 불가합니다.";
+			String loc ="index.action";
+			
+			req.setAttribute("msg", msg);
+			req.setAttribute("loc", loc);
+			
+			return "msg.notiles";
+			
+		}		
+			
+			return "jihye/mySetting.tiles";
+	   }
+	   
+	   
+	   
+	   
+	   
+	   
+	   
 	     // admin 차트 그리기
 	   // ========> 차트그리기 <=============
-	   	@RequestMapping(value="/setting.action", method= {RequestMethod.GET})
-	   public String requireLogin_setting(HttpServletRequest req, HttpServletResponse res) {  
+	   	@RequestMapping(value="/adminChart.action", method= {RequestMethod.GET})
+	   public String requireLogin_adminChart(HttpServletRequest req, HttpServletResponse res) {  
+	   		HttpSession session = req.getSession();
+			MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
+			
+			String userid = null;
+
+			if (loginuser != null) {
+				userid = loginuser.getUserid();
+			}
+			
+			if(!userid.equalsIgnoreCase("admin")) {
+				
+				String msg ="접근이 불가합니다.";
+				String loc ="index.action";
+				
+				req.setAttribute("msg", msg);
+				req.setAttribute("loc", loc);
+				
+				return "msg.notiles";
+				
+			}
 		   
 	      return "jihye/adminChart.tiles";
 	   }
@@ -400,6 +675,7 @@ public class JihyeController {
                //밑에 것은 json에 대한 키값이다.
                jsonObj.put("ageline", map.get("AGELINE"));  // map.get("키값")은 xml에 있는 키값이다!!! 차트용
                jsonObj.put("cnt", map.get("CNT"));  // 남/녀의 실제 인원수도 구할 것이다. 나중에 테이블 하나 만들려고 한 것이다.
+ 
                
                jsonArr.put(jsonObj);
             }
@@ -414,7 +690,37 @@ public class JihyeController {
          }// end of mybatisTest16JSON_gender()
          
      
-	
+	/////////////////////////////////////////////////////////////////////////////////////
+    // 이중 차트
+        @RequestMapping(value="/rankShowJSON.action", method={RequestMethod.GET})
+     	public String rankShowJSON(HttpServletRequest req) {
+     		
+     		String str_jsonarray = service.rankShowJSON();
+     		
+     		req.setAttribute("str_jsonArr", str_jsonarray);
+     		
+     		return "jihye/rankShowJSON";
+     	}
+     	
+     	
+     	@RequestMapping(value="/jobAgelineRankShowJSON.action", method={RequestMethod.GET})
+     	public String jepumdetailnameRankShowJSON(HttpServletRequest req) {
+     		
+     		String job = req.getParameter("job");
+     		
+     		System.out.println("성공성공");
+     		
+     		String str_jsonarray = service.jobAgelineRankShowJSON(job);
+     		
+     		req.setAttribute("str_jsonArr", str_jsonarray);
+     		
+     		return "jihye/jobAgelineRankShowJSON"; 
+     	}
+         
+         
+         
+         
+         
 	
 	
 	

@@ -37,7 +37,9 @@
       frm.submit();
    }   
 
-    function deleteQna(qna_idx){
+  function deleteQna(qna_idx){
+    	
+    if(confirm("정말 삭제하시겠습니까?") == true){
 
     	// 팝업창을 띄운 뒤 한 번 더 묻고 예/아니오 예라고 선택했을 때 del
     	var qna_idx = ${qnavo.qna_idx};
@@ -46,7 +48,12 @@
     	frm.action = "del.action";
     	frm.method = "post";
     	frm.submit();    	
-    }
+   		 
+   	} else {
+   		return;
+   	}	
+
+  }
     
 </script>  
  
@@ -99,6 +106,7 @@
 					            <td><span style="color: maroon;  width: 100px;">${qnavo.qna_date}</span></td>
 					        </tr>
 					        <%-- ==== #147.첨부파일 이름 및 파일크기를 보여주고 첨부파일 다운받게 만들기 --%>
+					        <c:if test="${not empty qnavo.qna_orgfilename}">
 					        <tr>
 					            <th  style="font-weight: bold; white-space: pre; ">첨부파일</th>
 					            <td>
@@ -116,6 +124,8 @@
 					               ${qnavo.qna_byte}
 					            </td>
 					        </tr>
+					        </c:if>
+					        
 					   </table>
 	                    <br/>
 					   	<%-- admin인 경우 답글에 대해서만 수정/삭제 보여주기   <!-- 이미 답글을 등록했기 때문에 삭제가 불가하다. -->--%>

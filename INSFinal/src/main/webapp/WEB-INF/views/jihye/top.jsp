@@ -39,7 +39,7 @@
 
 
 
-<style>
+<style >
 
  ul {
   list-style: none;
@@ -62,11 +62,6 @@
   color: yellow;
   background-color: #000;
  }
-
-
-
-
-
 
 
 .grid-container {
@@ -99,8 +94,6 @@
   text-align: left;
 }
 
-
-
 .avatar2 {
     vertical-align: middle;
     width: 200px;
@@ -109,7 +102,7 @@
     border: 0px solid gold;
 }
 
- .abc {
+.abc {
       /*  border: 3px solid gold;  */
       padding-left:45%;
      padding-right:35%;   
@@ -138,8 +131,7 @@
 
     display: block;
     }
-    
-    
+        
 .modal-dialog{
   display: inline-block;
   text-align: left;
@@ -149,9 +141,10 @@
 .topBack {
    background-image: url('<%= request.getContextPath() %>/resources/jihye/www.jpg');
 }
+
 </style>
 
-<script>
+<script type="text/javascript">
 
 $(document).ready(function(){
 	
@@ -183,13 +176,19 @@ function test(){
 
 				<div class="grid-container" style="border: 0px solid black; margin_bottom: 100px;">
 				       <div class="grid-item item1"> <!--grid-item  -->
-				       <%--  
-				        <c:if test="${sessionScope.loginuser.server_filename != null}"> --%>
+				     
+				       <c:if test="${sessionScope.loginuser.server_filename == null}"> 
+				        
+				           <div id="profileImg2" class="avatar2" style="border: 0px solid black;"  data-toggle="modal" data-target="#myModal"> 
+				               <img alt="Avatar2" class="avatar2" src="<%= request.getContextPath() %>/resources/files/20180716092958347996517292548.jpg">               
+				            </div> 
+				      </c:if>
+				        <c:if test="${sessionScope.loginuser.server_filename != null}"> 
 				        
 				           <div id="profileImg2" class="avatar2" style="border: 0px solid black;"  data-toggle="modal" data-target="#myModal"> 
 				               <img alt="Avatar2" class="avatar2" src="<%= request.getContextPath() %>/resources/files/${sessionScope.loginuser.server_filename}">               
 				            </div> 
-				    <%--      </c:if>  --%>
+				      </c:if>  
 				        </div>
 				 
 					  <div class="grid-item item2" >
@@ -226,7 +225,7 @@ function test(){
                 <form name="profileImgFrm" id="profileImg" enctype="multipart/form-data">
                    <input type="file" id="attach" name="attach">
                     <button type="button" class="btn btn-primary" onclick="test();">Save changes</button> 
-                <    <input type="hidden" id="url" name="url" > 
+                    <input type="hidden" id="url" name="url" > 
                  </form>   
                  <!--  <button type="button" id="changeProfileImgJSON"class="btn btn-primary">Save changes</button>  -->
            </div>
@@ -250,13 +249,16 @@ function test(){
        </c:if>
        <c:if test="${!sessionScope.loginuser.userid.equals('admin') }">  
 	       <li><a id="ccc" data-toggle="tab1" href="<%= request.getContextPath() %>/mypage.action">Profile</a></li>
-	       <li><a id="ccc"data-toggle="tab4" href="<%= request.getContextPath() %>/edit.action">Edit</a></li> 
+	       <li><a id="ccc"data-toggle="tab4" href="<%= request.getContextPath() %>/editMember.action">Edit</a></li> 
        </c:if> 
        
 	       <li><a id="ccc"  data-toggle="tab2" href="<%= request.getContextPath() %>/qna.action">Q&A</a></li>
 	     <c:if test="${sessionScope.loginuser.userid.equals('admin') }">     
-	       <li><a id="ccc" data-toggle="tab3" href="<%= request.getContextPath() %>/setting.action">Setting</a></li> 
-	     </c:if>     
+	       <li><a id="ccc" data-toggle="tab3" href="<%= request.getContextPath() %>/adminChart.action">Chart</a></li> 
+	     </c:if> 
+	      <c:if test="${!sessionScope.loginuser.userid.equals('admin') }">     
+	     <li><a id="ccc" data-toggle="tab3" href="<%= request.getContextPath() %>/mySetting.action">Setting</a></li> 
+	     </c:if> 
    </ul>   
 </div>  
  

@@ -96,6 +96,18 @@ function goWrite(){
     frm.submit();
 }
 
+/* function chooseCategory(){// 에이작스?
+	
+	if($(".btnCategory").equals.("wait")){
+		
+		
+	}else if($(".btnCategory").equals.("finish")){
+		
+	}
+	
+	
+}  */
+
 
 </script>  
 
@@ -119,7 +131,10 @@ function goWrite(){
                      <br/>
                   </div>
                </div>      
-               
+                <div class="categorybtn">
+                <button class="btn colname" style=" background-color: orange; color: white;" value="technique" onclick="chooseCategory();">기술문의</button>
+                <button class="btn colname" style=" background-color: pink; color: white;" value="theOthers" onclick="chooseCategory();">기타</button>
+                </div> 
                 <div align="right" style="margin-bottom:15px;">
 	                   <div>
 		                    <c:if test="${(sessionScope.loginuser).userid != 'admin' }">
@@ -151,7 +166,7 @@ function goWrite(){
                           <th style="text-align: center; white-space: pre;" >작성자</th>
                          <!--  <th style="text-align: center; white-space: pre;" >답변상태</th> -->
                           <!-- ==== #144. 파일여부를 보여주도록 수정 ==== -->
-				          <th style="text-align: center; white-space: pre;">첨부파일</th>
+				        <!--   <th style="text-align: center; white-space: pre;">첨부파일</th> -->
 <!-- 				          <th  style="width: 100px; text-align: center;">크기(bytes)</th> -->
 				        
                         </tr>
@@ -181,6 +196,9 @@ function goWrite(){
                                     <c:if test="${map.qna_depthno == 1}">
                                     <span style="color: red; font-size: 5px; font-style: italic; font-size: smaller; vertical-align: sub;">[답변완료]</span>
                                     </c:if>
+                                     <c:if test="${not empty map.qna_filename}">
+				                        <img src="<%= request.getContextPath() %>/resources/jihye/disk.gif">
+				                     </c:if>   
                                     </span></td> 
                                    </c:if>
                                    <!-- 답변글인 경우  -->
@@ -200,11 +218,9 @@ function goWrite(){
 	                              </c:if> --%>
 	                              
 	                             <%-- ==== #145. 첨부파일 여부 표시하기 ==== --%>
-				                 <td align="center" >
-				                     <c:if test="${not empty map.qna_filename}">
-				                        <img src="<%= request.getContextPath() %>/resources/jihye/disk.gif">
-				                     </c:if>   
-				                 </td> 
+				              <%--    <td align="center" >
+				                    
+				                 </td>  --%>
 				              <%--    <td align="center" >
 				                      <c:if test="${not empty map.qna_byte}">
 				                        ${map.qna_byte}

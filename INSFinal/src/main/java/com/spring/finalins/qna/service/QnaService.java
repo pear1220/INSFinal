@@ -99,18 +99,27 @@ public class QnaService implements InterQnaService {
 		// ===== #114.   검색어가 없는 총 게시물 건수   =====
 		@Override
 		public int getTotalCount(HashMap<String,String> map) {
-		int totalCount = dao.getTotalCount(map);
-		return totalCount;
+			int totalCount = dao.getTotalCount(map);
+			return totalCount;
 		}
+		
+		// 검색어가 없는 총 게시물 수 & 기술문의 or 기타 선택옵션
+	/*	@Override
+		public int getTotalCount2(HashMap<String, String> map) {
+			int totalCount = dao.getTotalCount2(map);
+			return totalCount;
+		}*/
 
 
 		// ===== #107. 글목록 보여주기(검색어가 없는 것) =====
 		@Override
-		public List<HashMap<String,String>> qnaList(HashMap<String, String> map) {
-	
+		public List<HashMap<String,String>> qnaList(HashMap<String, String> map) {	
 			List<HashMap<String,String>> qnaList =  dao.qnaList(map);
-		return qnaList;
+		    return qnaList;
 		}
+		
+		
+				
 		
 		
 		
@@ -136,6 +145,9 @@ public class QnaService implements InterQnaService {
 
 			return m;
 		}
+
+
+
 		
 	
 	

@@ -23,7 +23,21 @@ public interface InterJihyeDAO {
 	List<HashMap<String, String>> getChartJSON_job(); // 직업별 인원수(통계)
 	List<HashMap<String, String>> adminChartJSON_ageline(); // 연령별 인원수(통계)
 
-	List<HashMap<String, String>> getMyRecordList(String userid); // 내가 한 
+	int getRecordTotalCount(HashMap<String, String> map); // 내가 활동한 전체 기록수
+	List<HashMap<String, String>> getMyRecordList(HashMap<String,String> btnmoreMap); // 내가 활동한 기록 불러오기
+//	List<HashMap<String, String>> getMyRecordList(String userid);
+
+	List<HashMap<String, String>> getInviteTeamName(String userid);// 나를 초대한 팀목록 불러오기
+	int approveTeam(String userid); //팀초대 승인하기
+	int denyTeam(String userid); //팀초대 거절하기
+
+	// 이중차트
+	List<HashMap<String,String>> rankShowJSON(); 
+	List<HashMap<String, String>> jobAgelineRankShowJSON(String job);
+
+	
+
+
 
 
 

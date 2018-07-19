@@ -1,23 +1,37 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    
+   
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>     
     
 <jsp:include page="top.jsp" /> 
-   
-<%--     
-   <div class="navtab" align="center">    
-	    <ul class="nav nav-tabs abc">
-	    <!-- 부트스트랩 3.3.7버전에서 data-toggle에 tab이라 적으면 안된다 그래서 tab1이라 바꿨다. -->
-	    <li class="active"><a data-toggle="tab1" href="<%= request.getContextPath() %>/mypage.action"><span style="color: black;">Profile</span></a></li>
-	    <li><a data-toggle="tab1" href="<%= request.getContextPath() %>/qna.action">Q&A</a></li>
-	    <li ><a data-toggle="tab1" href="<%= request.getContextPath() %>/setting.action">Setting</a></li>
-	    <li ><a data-toggle="tab1" href="<%= request.getContextPath() %>/edit.action">Edit</a></li> 
-	   </ul>   
-   </div>     
 
- --%>
- 
+<style>
+a {
+    text-decoration: none;
+    display: inline-block;
+    padding: 8px 16px;
+}
+
+a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+.previous {
+    background-color: #f1f1f1;
+    color: black;
+}
+
+.next {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.round {
+    border-radius: 50%;
+}
+</style>
+
  
 <div class="super_container"> 
    <div class="cart_container" style="padding-top: 20px;">
@@ -47,15 +61,20 @@
 							           </tbody>
 							         </table> 
 							       </div>
-						              
-						          <!-- activity 기록 목록 -->
-							       <div>
+						               
+						          <!-- activity 기록 목록 -->						        					          
+							      <div>
 							        <table class="table table-hover">
 							          <thead>
 							            <tr>
 							              <th>Activity</th>
 							            </tr>
 							          </thead>
+							          <c:if test="${myRecordList.size() <1 }">						         					        
+							              <td style="text-align: center;">${sessionScope.loginuser.name}님의 개인 활동 기록이 없습니다.</td>
+							            </c:if>  
+							        <c:if test="${myRecordList.size() > 0}"> 
+							           
 							          <thead>
 							              <tr >
 							                 <th style="text-align: center;">프로젝트</th>
@@ -64,33 +83,33 @@
 							                 <th style="text-align: center;">내용</th>
 							                 <th style="text-align: center;" >기록시간</th>
 							              </tr>
-							            </thead>
-							          <c:if test="${myRecordList != null}">
-							          <c:forEach var="map" items="${myRecordList}">
-							            
-							            <tbody>
+							            </thead>         
+							            <tbody id="recordList">
+							              <c:forEach var="map" items="${myRecordList}">
 							            <tr>
-							              <td style="text-align: center;"><a href="#team1">${map.PROJECT_NAME}</a></td> 
-							              <td style="text-align: center;"><a href="#team1">${map.LIST_NAME}</a></td>
-							              <td style="text-align: center;"><a href="#team1">${map.CARD_TITLE}</a></td>
-							              <td style="text-align: center;" ><a href="#team1">${map.RECORD_DML_STATUS}</a></td> 
-							              <td style="text-align: center;"><a href="#team2">${map.PROJECT_RECORD_TIME}</a></td>  							           
+							            	   <td style="text-align: center;"><a href="#team1">${map.PROJECT_NAME}</a></td> 
+								              <td style="text-align: center;"><a href="#team1">${map.LIST_NAME}</a></td>
+								              <td style="text-align: center;"><a href="#team1">${map.CARD_TITLE}</a></td>
+								              <td style="text-align: center;" ><a href="#team1">${map.RECORD_DML_STATUS}</a></td> 
+								              <td style="text-align: center;"><a href="#team2">${map.PROJECT_RECORD_TIME}</a></td>						              					           								             						           
 							            </tr>
-							         </tbody>
-							          </c:forEach>
-							          </c:if>
-
-							           <%--  
-							            <tr>
-							              <td>John</td>      
-							            </tr>
-							              --%> 
-							           </tbody>
+							             </c:forEach> 
+							                </c:if>  
+							         </tbody>					
 							         </table> 
-							       </div>
+							         
+							           <%-- #117. 페이지바 보여주기 --%>
+				   <div align="center" style="width: 70%; margin-top: 20px;  margin-left: 100px;  margin-right: auto;">
+				       ${pagebar}
+				   </div>
+							         
+							       <!--  <div class="btnclass" style="margin-top: 20px; margin-bottom: 20px; text-align:center;">				       
+						           <button type="button"  class="btn btn-primary btn-sm" id="btnMore" value="" >더보기....</button>
+							       </div> --> 
+							               
 					        </div>
 					  </div>
-
+                </div>
             </div>
          </div>
       </div>

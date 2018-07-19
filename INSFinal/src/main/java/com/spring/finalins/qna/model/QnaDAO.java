@@ -68,10 +68,16 @@ public class QnaDAO implements InterQnaDAO {
 		// ===== #115. 검색어가 없는 총 게시물 건수 =====
 		@Override
 		public int getTotalCount(HashMap<String,String> map) {
-		int totalCount = sqlsession.selectOne("qna.getTotalCount", map);
-		return totalCount;
+			int totalCount = sqlsession.selectOne("qna.getTotalCount", map);
+			return totalCount;
 		}
-		
+		// 검색어가 없는 총 게시물 수 & 기술문의 or 기타 선택옵션
+/*		@Override
+		public int getTotalCount2(HashMap<String, String> map) {
+			int totalCount = sqlsession.selectOne("qna.getTotalCount2", map);
+			return totalCount;
+		}
+		*/
 		
 		// ===== #108. 글목록 보여주기(검색어가 있는 것) =====
 	/*	@Override
@@ -109,6 +115,8 @@ public class QnaDAO implements InterQnaDAO {
 			int m = sqlsession.update("qna.depthnoUpdate", qna_idx);
 			return m;
 		}
+
+	
 		
 		
 }

@@ -53,7 +53,7 @@ public class MyUtil {
 		
 		// 1페이지부터 totalPage까지 페이지넘버를 표현하기 위해 while문 사용
 		// 페이지마다 링크를 걸어준다
-		while(loop <= blocksize && pageNo <= totalPage) { 
+	   while(loop <= blocksize && pageNo <= totalPage) { 
 			if(pageNo == currentPage) { //페이지 번호가 현재페이지라면 링크를 걸지 않는다
 				pageBar += "&nbsp;<span style='color:red; font-weight:bold; text-decoration:underline;'>" + pageNo + "</span>";
 			}
@@ -113,7 +113,7 @@ public class MyUtil {
 		pageBar += "";
 		}
 		else {
-		pageBar += "&nbsp;<a href=\""+url+"?currentShowPageNo="+(pageNo-1)+"&sizePerPage="+sizePerPage+"&colname="+searchtype+"&search="+searchword+"&period="+period+"\">[이전]</a>";
+		pageBar += "&nbsp;<a class='previous' href=\""+url+"?currentShowPageNo="+(pageNo-1)+"&sizePerPage="+sizePerPage+"&colname="+searchtype+"&search="+searchword+"&period="+period+"\" >previous</a>";
 		}
 		
 		while( !(loop > blockSize || pageNo > totalPage) ) {
@@ -133,7 +133,7 @@ public class MyUtil {
 		pageBar += "";
 		}
 		else {
-		pageBar += "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&colname="+searchtype+"&search="+searchword+"&period="+period+"\">[다음]</a>";
+		pageBar += "&nbsp;<a class='next' href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&colname="+searchtype+"&search="+searchword+"&period="+period+"\">next</a>";
 		}
 		
 		return pageBar;

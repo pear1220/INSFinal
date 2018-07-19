@@ -10,9 +10,12 @@
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 <script src="https://code.highcharts.com/modules/export-data.js"></script>
 
+<script src="https://code.highcharts.com/modules/data.js"></script>
+<script src="https://code.highcharts.com/modules/drilldown.js"></script>
+
 <script type="text/javascript" src="<%= request.getContextPath() %>/resources/js/jquery-3.3.1.min.js"></script>
 
-
+ 
 
 <style type="text/css">
    table#tblGender {width: 100%;
@@ -32,33 +35,238 @@
 <script type="text/javascript">
 
   $(document).ready(function(){
-     
-     callAjax();
-     callAjax2();
-     
-    /*  $("#btnOK").click(function(){
-       
-        var chartType = $("#chartType").val();
-        
-        callAjax(chartType);
-        
-     });// end of $("#btnOK").click
-     
-     $("#btnClear").click(function(){
-          
-       $("#chart").empty();
-       $("#tbl").empty();
-        
-     });// end of $("#btnClear ").click
-      */
-     
+	  
+	 loopshowNowTime();
+	 showRank();
+		
   });
-  
- /*  
-  function callAjax(chartType){
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////
+	function showNowTime() {
+		
+		var now = new Date();
+	
+		var strNow = now.getFullYear() + "-" + (now.getMonth() + 1) + "-" + now.getDate();
+		
+		var hour = "";
+		if(now.getHours() > 12) {
+			hour = " 오후 " + (now.getHours() - 12);
+		} else if(now.getHours() < 12) {
+			hour = " 오전 " + now.getHours();
+		} else {
+			hour = " 정오 " + now.getHours();
+		}
+		
+		var minute = "";
+		if(now.getMinutes() < 10) {
+			minute = "0"+now.getMinutes();
+		} else {
+			minute = ""+now.getMinutes();
+		}
+		
+		var second = "";
+		if(now.getSeconds() < 10) {
+			second = "0"+now.getSeconds();
+		} else {
+			second = ""+now.getSeconds();
+		}
+		
+		strNow += hour + ":" + minute + ":" + second;
+		
+		$("#clock").html("<span style='color:green; font-weight:bold;'>"+strNow+"</span>");
      
-     switch(chartType){
-          case "job" : */
+	}
+	
+	function loopshowNowTime() {
+		
+		showNowTime();
+		
+		var timejugi = 1000;   // 시간을 1초 마다 자동 갱신하려고.
+		
+		setTimeout(function() {
+						loopshowNowTime();	
+					}, timejugi);
+		
+	}// end of loopshowNowTime() --------------------------
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+	
+	// 직업별 인원수 rank
+	function getTableRank(){
+		
+		$.ajax({
+			url: "rankShowJSON.action",
+		    type: "GET",
+		    dataType: "JSON",
+		    success: function(json){
+		    	
+		    	$("#displayTable").empty();
+		    	
+		    	var html  = "<table class=table table-hover' align='center' width='250px' height='180px' >";  //table 태그에서 class에 적은 것은 부트스트랩을 참조한 것이다.
+		    	    html += "<tr>";
+		    	    html += "<th class='myaligncenter'>등수</th>";
+		    	    html += "<th class='myaligncenter'>직업명</th>";
+		    	    html += "<th class='myaligncenter'>인원수</th>";   // layout-tiles.jsp에 보면 css에 .myaligncenter 를 align='center'로 설정해둠.
+		    	    html += "<th class='myaligncenter'>비율</th>";
+		    	    html += "</tr>";
+		    	    
+		    	$.each(json, function(entryIndex, entry){
+		    		html += "<tr>";
+		    	    html += "<td class='myaligncenter myrank'>"+entry.RANK+"</td>";
+		    	    html += "<td class='myaligncenter'>"+entry.JOB+"</td>";
+		    	    html += "<td class='myaligncenter'>"+entry.CNT+"</td>";
+		    	    html += "<td class='myaligncenter'>"+entry.PERCENT+"</td>";
+		    	    html += "</tr>";
+		    	});   
+		    	
+		    	html += "</table>";
+	    	    
+
+		    	$("#displayTable").append(html);
+		    },
+			error: function(request, status, error){ //ajax 요청에 의해 실행했으나 데이터를 받아오는데 실패한 경우, 디버깅을 위해 error를 실행한다.
+	             alert(" code: " + request.status + "\n"+"message: " + request.responseText + "\n"+"error: " + error);
+	        }
+		});
+		
+		
+	}// end of getTableRank()
+	
+	
+	function getChartRank(){
+		
+		$.ajax({
+			url: "rankShowJSON.action",
+		    type: "GET",
+		    dataType: "JSON",
+		    success: function(json){
+		    	
+		    	var jobObjArr = [];
+		    	
+		    	// 배열 속에 값넣기
+		    	$.each(json,function(entryIndex, entry){
+		    		
+		    		// 실제 데이터 값 jobObjArr에 넣기
+		    		jobObjArr.push({
+		  		           "name": entry.JOB,
+		  		           "y": parseFloat(entry.PERCENT),
+		  		           "drilldown": entry.JOB
+					});
+
+		    	});// end of $.each(json,function(entryIndex, entry)
+		    				
+		    			
+		    	// *** 객체 속의 배열
+		    	var agelineObjArr = [];	
+		    	
+		    	// 배열 속의 객체 속의 배열에 값넣기
+		    	$.each(json,function(entryIndex, entry){
+		    		
+		    		var form_data = {job : entry.JOB}; // form_data로 값을 보낸다.
+		    		
+		    		// 새로운 쿼리문으로 값을 구해야 하기 때문에 ajax를 또 한다. 
+		    		$.ajax({
+		    		    url: "jobAgelineRankShowJSON.action",
+		    		    data: form_data,
+		    		    type: "get",
+		    		    dataType: "JSON",
+		    		    success: function(json2){
+		                     
+		    		    	var subArr = [];
+		    		    	
+		    		    	$.each(json2,function(entryIndex2, entry2){
+		    		    		subArr.push([
+		    		    		   	          entry2.AGELINE,
+		    		    		   	          parseFloat(entry2.PERCENT)
+		    		    		             ]);
+		    		    	});// end of $.each(json2,function()
+		    		    	
+		    		    			
+		    		    	agelineObjArr.push({
+		    		    		"name": entry.JOB,
+				  		        "id": entry.JOB,
+				  		        "data": subArr          
+		    		    	});  //{}는 객체		
+		    		    			
+		    		    },
+		    			error: function(request, status, error){ //ajax 요청에 의해 실행했으나 데이터를 받아오는데 실패한 경우, 디버깅을 위해 error를 실행한다.
+		   	             alert(" code: " + request.status + "\n"+"message: " + request.responseText + "\n"+"error: " + error);
+		   	           }
+		    		    
+		    		
+		    		});
+		    	});	
+		    			
+
+		    			
+		    			
+                ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				// Create the chart
+		    	Highcharts.chart('chart-container', {
+		  		  chart: {
+		  		    type: 'column'
+		  		  },
+		  		  title: {
+		  		    text: '직업별/연령별 인원수 통계'
+		  		  },
+		  		  subtitle: {
+		  		    text: 'Click the columns to view versions. Source: <a href="http://statcounter.com" target="_blank">statcounter.com</a>'
+		  		  },
+		  		  xAxis: {
+		  		    type: 'category'
+		  		  },
+		  		  yAxis: {
+		  		    title: {
+		  		      text: '인원수(명)'
+		  		    }
+
+		  		  },
+		  		  legend: {
+		  		    enabled: false
+		  		  },
+		  		  plotOptions: {
+		  		    series: {
+		  		      borderWidth: 0,
+		  		      dataLabels: {
+		  		        enabled: true,
+		  		        format: '{point.y:.1f}%'
+		  		      }
+		  		    }
+		  		  },
+
+		  		  tooltip: {
+		  		    headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+		  		    pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
+		  		  },
+
+		  		  "series": [ //배열
+		  		    {
+		  		      "name": "직업",
+		  		      "colorByPoint": true,
+		  		      "data": jobObjArr // *** 위에서 구한 값을 대입시킴 ***//
+		  		    }
+		  		  ] ,
+		  		  "drilldown": {
+		  			"series": agelineObjArr   // *** 위에서 구한 값을 대입시킴 ***//
+		  		  }
+		  		});
+                
+               //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+		    },
+			error: function(request, status, error){ //ajax 요청에 의해 실행했으나 데이터를 받아오는데 실패한 경우, 디버깅을 위해 error를 실행한다.
+	             alert(" code: " + request.status + "\n"+"message: " + request.responseText + "\n"+"error: " + error);
+	        }    
+		});
+
+		
+		
+		
+		
+	} // end of getCharRank()
+	
+
+	
+
           function callAjax(){        
             $.ajax({
              
@@ -117,7 +325,7 @@
                     });
                   
                   
-                  var html = "<table id='tblGender'>"
+                /*   var html = "<table id='tblGender'>"
                            + "<thead>"
                            + "<tr>"
                            + "<th>직업</th>"
@@ -139,7 +347,7 @@
                     html += "</tbody>";
                     html += "</table>";
                     
-                    $("#tbl").html(html);
+                    $("#tbl").html(html); */
                   
                },
                error: function(request, status, error){ //ajax 요청에 의해 실행했으나 데이터를 받아오는데 실패한 경우, 디버깅을 위해 error를 실행한다.
@@ -150,10 +358,7 @@
             });
           }   
 
-      /*   break;
-              
-         case "ageline" :
-             */
+
       function callAjax2(){             
             $.ajax({
                 
@@ -205,7 +410,7 @@
                           enabled: false
                       },
                       tooltip: {
-                          pointFormat: '연령대별 인원수 : <b>{point.y:.1f} millions</b>'
+                          pointFormat: '연령대별 인원수 : <b>{point.y:.1f} 명</b>'
                       },
                       series: [{
                           name: 'Population',
@@ -233,169 +438,24 @@
               
             });
          }
-      //  break;
-              
-        /*  case "deptno" :  // 부서별 평균연봉을 구하고 테이블에는 평균 인원수까지 구하기!!
-            $.ajax({
-                
-               url: "mybatisTest16JSON_deptname.action",
-               type: "GET",
-               dataType: "JSON",
-               success: function(json){
-                  
-                  $("#chart").empty();
-                  $("#tbl").empty();
-                  
-                      var resultArr = [];
-                  
-                  for(var i=0; i<json.length; i++){
-                     var subArr = [ json[i].deptname, Number(json[i].avgsalary)];
-                     resultArr.push(subArr);
-                  } 
-         
-              /////////////////////////////////////////////
-                    
-                  Highcharts.chart('chart', {
-                      chart: {
-                          type: 'column'
-                      },
-                      title: {
-                          text: '부서번호별 평균연봉'
-                      },
-                      subtitle: {
-                          text: 'Source: <a href="http://www.google.com">Google</a>'
-                      },
-                      xAxis: {
-                          type: 'category',
-                          labels: {
-                              rotation: -45,
-                              style: {
-                                  fontSize: '13px',
-                                  fontFamily: 'Verdana, sans-serif'
-                              }
-                          }
-                      },
-                      yAxis: {
-                          min: 0,
-                          title: {
-                              text: '평균연봉 ($)'
-                          }
-                      },
-                      legend: {
-                          enabled: false
-                      },
-                      tooltip: {
-                          pointFormat: 'Average Salary in Department: <b>{point.y:.0f} $</b>'
-                      },
-                      series: [{
-                          name: 'Avg Salary',
-                          data: resultArr,
-                          dataLabels: {
-                              enabled: true,
-                              rotation: -90,
-                              color: '#FFFFFF',
-                              align: 'right',
-                              format: '{point.y:.0f}', // one decimal  // 1을 0으로 바꿔 소수부를 없앴따.
-                              y: 10, // 10 pixels down from the top
-                              style: {
-                                  fontSize: '13px',
-                                  fontFamily: 'Verdana, sans-serif'
-                              }
-                          }
-                      }]
-                  });
-                  
-                 
-                   var html = "<table id='tblGender'>"
-                           + "<thead>"
-                           + "<tr>"
-                           + "<th>부서번호</th>"
-                           + "<th>부서명</th>"
-                           + "<th>평균연봉($)</th>"
-                           + "<th>인원수(명)</th>"
-                           + "</tr>"
-                           + "</thead>"
-                          + "<tbody>";
-                          
-                          
-                  $.each(json, function(entryIndex, entry){
-                     html += "<tr>";
-                     html += "<td>"+entry.deptno+"</td>";
-                     html += "<td>"+entry.deptname+"</td>";
-                     html += "<td>"+entry.avgsalary+"</td>";
-                     html += "<td>"+entry.cnt+"</td>";
-                     html += "</tr>";
-                  });
-                  
-                    html += "</tbody>";
-                    html += "</table>";
-                    
-                    $("#tbl").html(html); 
+      
+      
+  	function showRank(){
 
-               },
-               error: function(request, status, error){ //ajax 요청에 의해 실행했으나 데이터를 받아오는데 실패한 경우, 디버깅을 위해 error를 실행한다.
-                      alert(" code: " + request.status + "\n message: " + request.responseText + "\n error: " + error);
-                 }
-            
-            });
-            
-            //////////////////////////////////////////////
-        break; */
-   //  }// end of switch(chartType)
-     
-//  }// end of function callAjax(chartType)
-
+		getTableRank();
+		getChartRank();
+		callAjax();
+	    callAjax2();
+     /*    var timejugi = 10000;   // 시간을 1초 마다 자동 갱신하려고.
+		
+		setTimeout(function() {
+			           showRank();	
+					}, timejugi); */
+	} // end of showRank()
+   
 </script>
 
 
-
-
-   <!-- Home -->
-
-   <!-- <div class="home">
-      <div class="home_background parallax-window" data-parallax="scroll" data-image-src="images/chart.jpg" data-speed="0.8"></div>
-      <div class="container">
-         <div class="row">
-            <div class="col">
-               <div class="home_container">
-                  <div class="home_content">
-                     <div class="home_title">Chart List</div>
-                     <div class="breadcrumbs">
-                        <ul>
-                           <li><a href="index.do">Home</a></li>
-                           <li><a href="gochart.do">Chart List</a></li>
-                           <li>Chart List</li>
-                        </ul>
-                     </div>
-                  </div>
-                  
-               </div>
-            </div>
-         </div>
-      </div>
-   </div> -->
-   <!-- Member List -->
-      
-      <div class="cart_container">
-      <div class="container">
-         
-         <%-- <div class="row" style="margin-bottom: 20px;">
-               <div class="col">            
-                  <div class="cart_title">회원 전체 보기 <c:if test="(${empty memberList})"></c:if></div>
-               </div>
-         </div> --%>
-      <!--    <div id="mychart" style="min-width: 300px; height: 200px; margin: 0 auto"></div>
-         <div class="row">
-           <div class="col-6">
-                 <div class="mychart" id="chart3" style="margin-bottom: 20px; margin-top: 20px;"></div>
-           </div>
-           
-           <div class="col-6">
-                 <div class="mychart" id="chart4" style="margin-bottom: 20px; margin-top: 20px;"></div>
-           </div>
-           
-         </div> -->
-   <!--       <div align="center" style="margin-bottom: 100px;"> -->
 <div class="super_container"> 
    <div class="cart_container" style="padding-top: 20px;">
       <div class="container" >
@@ -407,6 +467,19 @@
 					<div style="padding-left: 30px;">   
 						<h2>회원 통계 자료</h2>
 						    <br/><br/>
+						         
+						         <br/>
+						         <br/>
+						         <!-- 이중차트 Rank -->
+						         <div class="row">
+							          <div class="col">
+						 		         <div id="displayTable" style="min-width: 90%; margin-top: 50px; margin-bottom: 50px; padding-left: 20px; padding-right: 20px;"></div> 		
+		                                 <div id="chart-container" style="min-width: 90%; height: 400px; margin: 0 auto"></div>	
+						                </div>
+						         </div>   
+						         <br/>
+						         <br/>
+						         <!-- 직업별 인원수 -->
 						         <div class="row">
 						            <div class="col">
 						               <div class="mychart" id="chart1" style="margin-bottom: 20px;"></div>
@@ -415,12 +488,13 @@
 						         </div>
 						         <br/>
 						         <br/>
-						         <div class="row">
+						         <!-- 연령별 인원수 -->
+						          <div class="row">
 							          <div class="col">
 							            <div class="mychart" id="chart2" style="margin-bottom: 20px;"></div>
 							          </div>
-						         </div>        
-                     </div>
+						         </div>          
+                      </div>
                  </div>
             </div>
             
@@ -428,7 +502,15 @@
       </div>
     </div>
   </div>
-</div>
+</div> 
    
 
+
+<div style="margin: 0 auto;" align="center">
+	현재시각 :&nbsp; 
+	<div id="clock" style="display:inline;"></div>
+</div>
+	
+
+	
 

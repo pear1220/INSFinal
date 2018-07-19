@@ -172,7 +172,7 @@
 	    ) V
 	     start with qna_fk_idx = 0
          connect by prior qna_idx = qna_fk_idx
-		order siblings by qna_groupno desc, qna_idx asc
+		order siblings by qna_depthno,qna_groupno desc, qna_idx asc
 	  ) T  
        where T.RNO <![CDATA[>=]]> #{startRno} and T.RNO <![CDATA[<=]]> #{endRno} 
      
