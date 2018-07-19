@@ -40,6 +40,12 @@ public interface InterMinjaeServie {
 
 	List<HashMap<String, String>> getSearchlistINproject(HashMap<String, String> map); // project : 프로젝트 내 리스트 검색
 
+	int getNewMessageCount(String userid); // user가 읽지 않은 메시지의 갯수를 얻어옴
+
+	List<HashMap<String, String>> getNewMessageList(String userid); // user가 읽지 않은 메세지의 리스트를 얻어옴
+
+	
+
 	
 
 	 

@@ -159,6 +159,24 @@ public class MinjaeDAO implements InterMinjaeDAO {
 		return searchINprojectList;
 	}
 
+	// user가 읽지 않은 메시지의 갯수를 얻어옴
+	@Override
+	public int getNewMessageCount(String userid) {
+		
+		int newmsg = sqlsession.selectOne("mj.getNewMessageCount", userid);
+		
+		return newmsg;
+	}
+
+	@Override
+	public List<HashMap<String, String>> getNewMessageList(String userid) {
+		
+		List<HashMap<String, String>> newMsgList = sqlsession.selectList("mj.getNewMessageList", userid);
+		
+		return newMsgList;
+	}
+
+
 	
 	
 	

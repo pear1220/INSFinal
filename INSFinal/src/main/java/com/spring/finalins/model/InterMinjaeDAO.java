@@ -37,7 +37,14 @@ public interface InterMinjaeDAO {
 
 	List<HashMap<String, String>> projectRecordView(HashMap<String, String> map);
 
-	List<HashMap<String, String>> getSearchlistINproject(HashMap<String, String> map); 
+	List<HashMap<String, String>> getSearchlistINproject(HashMap<String, String> map);
+
+	int getNewMessageCount(String userid);  // user가 읽지 않은 메시지의 갯수를 얻어옴
+
+	List<HashMap<String, String>> getNewMessageList(String userid); // user가 읽지 않은 메세지의 리스트를 얻어옴
+
+	
+
 	
 
 	

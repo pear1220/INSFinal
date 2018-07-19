@@ -171,6 +171,25 @@ public class MinjaeService implements InterMinjaeServie {
 		return searchINprojectList;
 	}
 
+    // user가 읽지 않은 메시지의 갯수를 얻어옴
+	@Override
+	public int getNewMessageCount(String userid) {
+		
+		int newmsg = dao.getNewMessageCount(userid);
+		
+		return newmsg;
+	}
+
+	// user가 읽지 않은 메세지의 리스트를 얻어옴
+	@Override
+	public List<HashMap<String, String>> getNewMessageList(String userid) {
+		
+		List<HashMap<String, String>> nesMsgList = dao.getNewMessageList(userid);
+		
+		return nesMsgList;
+	}
+
+	
 	
 	
 	

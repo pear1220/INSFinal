@@ -53,11 +53,20 @@ input[type=text]:focus {
 	font-family: 'Do Hyeon', sans-serif;
 } 
 
-.header {
-	background-color: #f2f2f2;
+/* #newMsgList{
+	width: 300px;
+} */
+
+#newMsgList{
+   width: 300px;
+   overflow-x: hidden;
+   overflow-y: auto;
+   height: 400px;
 }
-
-
+/* 
+.wrap{
+	
+} */
 
 </style>
 
@@ -984,6 +993,62 @@ input[type=text]:focus {
 		  
 	  });  */
 	
+	function personalAlarm(){
+		  
+		$.ajax({
+			
+			url: "<%= request.getContextPath() %>/personalAlarm.action",
+			type: "get",
+			dataType: "JSON",
+			success: function(json){
+				
+				var html = "";
+				
+				html += "<div class='notify-arrow notify-arrow-blue'></div>"; 
+				html += "<li>";
+				html += "<p class='blue'>You have "+${sessionScope.newmsg}+" new messages</p>";
+				html += "</li>"; 
+				/* html += "<li style='width: 300px;'>";
+				html += "<p class='blue'>You have new messages</p>";
+				html += "</li>"; */
+				
+				html += "<div class='wrap' style='border: 0px solid yellow; width: 300px;'>";
+				
+				if(json.length > 0){
+					
+					$.each(json, function(entryIndex, entry){
+						
+						html += "<input type='checkbox' id='select'"+entryIndex+ "class='checkbox'>";
+						html += "<label for='select'"+entryIndex+ "class='input-label checkbox'>";
+						html += "<span style='color: black;'>" + entry.record_dml_status + "</span><br/>";
+						html += "<span style='color: black;'>프로젝트 "+entry.project_name+"&nbsp;&nbsp;";
+						html += "리스트"+entry.list_name+"카드"+entry.card_title+"등록일자"+entry.project_record_time;
+						html += "</label><br/>";
+						html += "<li class='divider'></li>";
+						
+					});
+					
+					html += "</div>";
+					
+					
+					$("#newMsgList").html(html);
+					
+				}
+			
+			
+				
+				
+			},
+			error: function(request, status, error){
+				alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
+			}
+			
+		});
+		  
+		  
+	}
+	  
+	  
 	
 
 		
@@ -999,11 +1064,9 @@ input[type=text]:focus {
 			<header class="header dark-bg">
 
 
-				<div style="padding-left: 50%; border: 0px solid red;">
+				<div style="padding-left: 47%; border: 0px solid red;">
 					<!-- logo start -->
-					<a href="index.action" class="logo" style="font-size: 20pt;">
-						FINAL <span class="lite">INS</span>
-					</a>
+					  <a href="index.action" class="logo"> FINAL <span class="lite">INS</span></a>
 					<!-- logo end -->
 				</div>
 
@@ -1019,14 +1082,20 @@ input[type=text]:focus {
 					style="border: 0px solid yellow; width: 150px; float: left; padding-top: 2px;">
 					<div class="dropdown" style="border: 0px solid yellow;">
 
-						<button class="btn btn-default dropdown-toggle" type="button"
+						<!-- <button class="btn btn-default dropdown-toggle" type="button"
 							id="project_button" data-toggle="dropdown"
-							style="background-color:  #cce6ff; margin-top: 1px; color: black; border: 2px solid royalblue;">
+							style="background-color: #B5D3DB; margin-top: 1px; color: black; border: 2px solid royalblue;">
 							<span class="icon_cloud-upload_alt logo"
-								style="margin-right: 10px; font-size: 20pt; color: white;"></span><span
+								style="margin-right: 10px; font-size: 20pt; color: #FF9C34;"></span><span
 								style="font-size: 16pt; color: white; font-weight: bold;">Project</span>
-						</button>
-
+						</button> -->
+						
+						 <button class="btn btn-default dropdown-toggle" type="button" id="project_button"
+						  data-toggle="dropdown" style=" background-color:  #1a2732; margin-top:1px; color: black; border-color: black;"> 
+         				 <span class="icon_cloud-upload_alt logo" style="margin-right: 10px; font-size: 20pt; color: #ffc61a;"></span>
+         				 <span style="font-size: 16pt;" class="lite">Project</span>
+       					<!-- <span class="caret"></span> --></button>
+							
 						<ul class="dropdown-menu" id="project_dropdown"
 							style="width: 300px;">
 						</ul>
@@ -1063,7 +1132,7 @@ input[type=text]:focus {
 
 				<!--  search form start -->
 				<div class="nav search-row" id="top_menu"
-					style="float: left; padding-top: 1px; padding-left: 1px; padding-bottom: 2px; width: 500px; border: 0px solid yellow;">
+					style="float: left; padding-left: 1px; padding-bottom: 2px; width: 500px; border: 0px solid yellow;">
 					<!--  search form start -->
 					<ul class="nav top-menu">
 						<li>
@@ -1179,28 +1248,31 @@ input[type=text]:focus {
 					<!--  search form end -->
 				</div>
 
-				<div style="padding-left: 50%;">
-					<!--logo start-->
-					<a href="index.action" class="logo"> FINAL <span class="lite">INS</span></a>
-					<!--logo end-->
-					<a href="mj_project.action" class="logo">mj_project</a>
+				<div style="padding-left: 47%; border: 0px solid red;">
+					<!-- logo start -->
+					  <a href="index.action" class="logo"> FINAL <span class="lite">INS</span></a>
+					<!-- logo end -->
 				</div>
 
-				<div class="top-nav notification-row">
+				<div class="top-nav notification-row" >
 
 					<!-- notificatoin dropdown start-->
 					<ul class="nav pull-right top-menu">
 
 						<!-- inbox notificatoin start-->
 						<li id="mail_notificatoin_bar" class="dropdown"><a
-							data-toggle="dropdown" class="dropdown-toggle" href="#"> <i
+							data-toggle="dropdown" class="dropdown-toggle" onclick="personalAlarm();"> <i
 								class="icon-envelope-l"></i> <!-- <span class="badge bg-important">5</span> -->
 						</a>
-							<ul class="dropdown-menu extended inbox">
-								<div class="notify-arrow notify-arrow-blue"></div>
-								<li>
+							<ul class="dropdown-menu extended inbox" id="newMsgList">
+								<!-- <div class="notify-arrow notify-arrow-blue"></div> -->
+								<!-- <li>
 									<p class="blue">You have 5 new messages</p>
-								</li>
+								</li> -->
+							
+								
+								
+								<!-- 
 								<li><a href="#"> <span class="photo"><img
 											alt="avatar" src="./img/avatar-mini.jpg"></span> <span
 										class="subject"> <span class="from">Greg Martin</span>
@@ -1227,8 +1299,8 @@ input[type=text]:focus {
 											class="time">1 day</span>
 									</span> <span class="message"> Icon fonts are great. </span>
 								</a></li>
-								<li><a href="#">See all messages</a></li>
-							</ul></li>
+								<li><a href="#">See all messages</a></li>-->
+							</ul></li> 
 						<!-- inbox notificatoin end -->
 
 

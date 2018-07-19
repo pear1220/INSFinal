@@ -598,7 +598,76 @@ public class MINJAEController {
 		
 	}
 	
+	@RequestMapping(value="/personalAlarm.action", method=RequestMethod.GET)
+	public String personalAlarmProjectList(HttpServletRequest req, HttpServletResponse res) {
 	
+		HttpSession session = req.getSession();
+		MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
+		
+		String userid = loginuser.getUserid();
+				
+		int newmsg = service.getNewMessageCount(userid); // user가 읽지 않은 메시지의 갯수를 얻어옴
+		
+		System.out.println("controller msg >>>>>" + newmsg);
+		
+		session.setAttribute("newmsg", newmsg);
+		
+		///////////////////////////////////////////////////////////////////////////////////////////////
+								
+		List<HashMap<String, String>> newMsgList = service.getNewMessageList(userid); // user가 읽지 않은 메세지의 리스트를 얻어옴
+		
+		JSONArray jsonArr = new JSONArray();
+		
+		if(newMsgList.size() > 0) {
+			
+			for(HashMap<String, String> newMsgMap :newMsgList) {
+				
+				JSONObject jsonObj = new JSONObject();
+				
+				jsonObj.put("project_record_idx", newMsgMap.get("project_record_idx"));
+				jsonObj.put("record_userid", newMsgMap.get("record_userid"));
+				jsonObj.put("project_record_time", newMsgMap.get("project_record_time"));
+				jsonObj.put("record_dml_status", newMsgMap.get("record_dml_status"));
+				jsonObj.put("project_name", newMsgMap.get("project_name"));
+				jsonObj.put("list_name", newMsgMap.get("list_name"));
+				jsonObj.put("card_title", newMsgMap.get("card_title"));
+				
+				jsonArr.put(jsonObj);
+				
+			}
+			
+		}
+		
+		String str_jsonArr = jsonArr.toString();
+		req.setAttribute("str_jsonArr", str_jsonArr);
+		
+		return "personalAlarm.notiles";
+				
+	}	
+	
+	
+/*	@RequestMapping(value="/personalAlarmProjectrecordList.action", method=RequestMethod.GET)
+	public String personalAlarmProjectrecordList(HttpServletRequest req, HttpServletResponse res) {
+	
+		HttpSession session = req.getSession();
+		MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
+					
+		// String fk_project_idx = req.getParameter("fk_project_idx");
+		String fk_project_idx = "3";
+				
+		
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("userid", loginuser.getUserid());
+		map.put("fk_project_idx", fk_project_idx);
+				
+		List<HashMap<String, String>> newMsgList = service.getNewMessageList(map); // user가 읽지 않은 메세지의 리스트를 얻어옴
+		
+		
+		
+		
+		return "";
+				
+	}	*/
 	
 	
 	
