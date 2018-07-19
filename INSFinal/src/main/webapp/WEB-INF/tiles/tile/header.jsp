@@ -1006,8 +1006,8 @@ input[type=text]:focus {
 				
 				html += "<div class='notify-arrow notify-arrow-blue'></div>"; 
 				html += "<li>";
-				html += "<p class='blue'>You have "+${sessionScope.newmsg}+" new messages</p>";
-				html += "</li>"; 
+				html += "<p class='blue'>You have "+${sessionScope.newmsg}+" new messages</p>";/* 처음 작동시 안 됨 */
+				html += "</li>";
 				/* html += "<li style='width: 300px;'>";
 				html += "<p class='blue'>You have new messages</p>";
 				html += "</li>"; */
@@ -1253,9 +1253,11 @@ input[type=text]:focus {
 					  <a href="index.action" class="logo"> FINAL <span class="lite">INS</span></a>
 					<!-- logo end -->
 				</div>
-
+				
 				<div class="top-nav notification-row" >
-
+					    <div class="scrollbar" id="style-2">
+					      <div class="force-overflow"></div>
+					    </div>
 					<!-- notificatoin dropdown start-->
 					<ul class="nav pull-right top-menu">
 
