@@ -1005,12 +1005,12 @@ input[type=text]:focus {
 				var html = "";
 				
 				html += "<div class='notify-arrow notify-arrow-blue'></div>"; 
-				html += "<li>";
+				/* html += "<li>";
 				html += "<p class='blue'>You have "+${sessionScope.newmsg}+" new messages</p>";
-				html += "</li>"; 
-				/* html += "<li style='width: 300px;'>";
+				html += "</li>"; */ 
+				html += "<li style='width: 300px;'>";
 				html += "<p class='blue'>You have new messages</p>";
-				html += "</li>"; */
+				html += "</li>";
 				
 				html += "<div class='wrap' style='border: 0px solid yellow; width: 300px;'>";
 				
