@@ -44,6 +44,8 @@ public interface InterMinjaeServie {
 
 	List<HashMap<String, String>> getNewMessageList(String userid); // user가 읽지 않은 메세지의 리스트를 얻어옴
 
+	int setPersonal_alarm_read_status(String checkboxVal); // personl_alarm 테이블의 personal_alarm_read_status 변경
+
 	
 
 	

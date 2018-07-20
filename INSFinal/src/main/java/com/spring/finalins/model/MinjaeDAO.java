@@ -165,6 +165,8 @@ public class MinjaeDAO implements InterMinjaeDAO {
 		
 		int newmsg = sqlsession.selectOne("mj.getNewMessageCount", userid);
 		
+		System.out.println("dao 에서 newmsg22222222222222222222222"+newmsg);
+		
 		return newmsg;
 	}
 
@@ -174,6 +176,14 @@ public class MinjaeDAO implements InterMinjaeDAO {
 		List<HashMap<String, String>> newMsgList = sqlsession.selectList("mj.getNewMessageList", userid);
 		
 		return newMsgList;
+	}
+
+	@Override
+	public int setPersonal_alarm_read_status(String checkboxVal) {
+		
+		int n = sqlsession.update("mj.setPersonal_alarm_read_status", checkboxVal);
+		
+		return n;
 	}
 
 

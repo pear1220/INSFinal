@@ -10,63 +10,94 @@
 
 <style type="text/css">
 
-#project_dropdown-default:hover{
-	background-color: #e6f2ff;
-}
-
-.teamname {
-	font-size: 15pt;
-	font-weight: bold;
-}
-
-#drop1 {
-	margin-left: 193px;
-	width: 500px;
-}
-
-#drop2{
-	margin-left: 193px;
-	width: 500px;
-}
-
-input[type=text] {
-	width: 130px;
-	box-sizing: border-box;
-	border: 2px solid #ccc;
-	border-radius: 4px;
-	font-size: 16px;
-	background-color: white;
-	background-image: url('searchicon.png');
-	background-position: 10px 10px;
-	background-repeat: no-repeat;
-	padding: 12px 20px 12px 40px;
-	-webkit-transition: width 0.4s ease-in-out;
-	transition: width 0.4s ease-in-out;
-}
-
-input[type=text]:focus {
-	width: 100%;
-}
-
-
-#team_name{
-	font-family: 'Do Hyeon', sans-serif;
-} 
-
-/* #newMsgList{
-	width: 300px;
-} */
-
-#newMsgList{
-   width: 300px;
-   overflow-x: hidden;
-   overflow-y: auto;
-   height: 400px;
-}
-/* 
-.wrap{
+	#project_dropdown-default:hover{
+		background-color: #e6f2ff;
+	}
 	
-} */
+	.teamname {
+		font-size: 15pt;
+		font-weight: bold;
+	}
+	
+	#drop1 {
+		margin-left: 193px;
+		width: 500px;
+	}
+	
+	#drop2{
+		margin-left: 193px;
+		width: 500px;
+	}
+	
+	input[type=text] {
+		width: 130px;
+		box-sizing: border-box;
+		border: 2px solid #ccc;
+		border-radius: 4px;
+		font-size: 16px;
+		background-color: white;
+		background-image: url('searchicon.png');
+		background-position: 10px 10px;
+		background-repeat: no-repeat;
+		padding: 12px 20px 12px 40px;
+		-webkit-transition: width 0.4s ease-in-out;
+		transition: width 0.4s ease-in-out;
+	}
+	
+	input[type=text]:focus {
+		width: 100%;
+	}
+	
+	
+	#team_name{
+		font-family: 'Do Hyeon', sans-serif;
+	} 
+	
+	/* #newMsgList{
+		width: 300px;
+	} */
+	
+	#newMsgList{
+	   width: 300px;
+	   overflow-x: hidden;
+	   overflow-y: auto;
+	   height: 500px;
+	}
+
+	/* .custom_checkbox input + label {
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        background-color: #bcbcbc;
+        border-radius: 7px;
+        cursor: pointer;
+      }
+      .custom_checkbox input:checked + label {
+        background-color: #00a0df;
+      }
+      .custom_checkbox input {
+        display: none;
+      } */
+
+	input[type=checkbox] + label {
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        background-color: #bcbcbc;
+        border-radius: 7px;
+        cursor: pointer;
+      }
+      input[type=checkbox]:checked + label {
+        background-color: #00a0df;
+        
+        
+        
+      }
+      input[type=checkbox] {
+        display: none;
+      }
+
+
 
 </style>
 
@@ -1005,12 +1036,10 @@ input[type=text]:focus {
 				var html = "";
 				
 				html += "<div class='notify-arrow notify-arrow-blue'></div>"; 
-				html += "<li>";
-				html += "<p class='blue'>You have "+${sessionScope.newmsg}+" new messages</p>";/* 처음 작동시 안 됨 */
-				html += "</li>";
-				/* html += "<li style='width: 300px;'>";
-				html += "<p class='blue'>You have new messages</p>";
-				html += "</li>"; */
+				
+				html += "<li style='width: 300px;'>";
+				html += "<p class='blue'>You have "+json[0].newmsg+" new messages </p>";
+				html += "</li>"; 
 				
 				html += "<div class='wrap' style='border: 0px solid yellow; width: 300px;'>";
 				
@@ -1018,13 +1047,25 @@ input[type=text]:focus {
 					
 					$.each(json, function(entryIndex, entry){
 						
-						html += "<input type='checkbox' id='select'"+entryIndex+ "class='checkbox'>";
-						html += "<label for='select'"+entryIndex+ "class='input-label checkbox'>";
-						html += "<span style='color: black;'>" + entry.record_dml_status + "</span><br/>";
-						html += "<span style='color: black;'>프로젝트 "+entry.project_name+"&nbsp;&nbsp;";
-						html += "리스트"+entry.list_name+"카드"+entry.card_title+"등록일자"+entry.project_record_time;
-						html += "</label><br/>";
+						
+						/* html += "<span style='color: gray; font-weight: bold; font-size: 15pt;'><p>"*/
+						   <%-- html +=  "<img src='<%= request.getContextPath() %>/img/"+entry.server_filename+"'>" --%> 
+						/* html += entry.record_userid + "</p></span>" ; */ 
+						html += "<li id='checkbox"+entry.project_record_idx+"' >"
+						html += "<input type='checkbox' id='select"+entryIndex+ "' name='current_proudct' class='custom_checkbox' value='"+entry.project_record_idx+"' onclick='goHide();'/>";
+	  					html += "<label for='select'"+entryIndex+">";
+	  					html += "</label><br/>";
+						
+						/* html += "<input type='checkbox' id='select'"+entryIndex+ "class='custom_checkbox'>";
+						html += "<label for='select'"+entryIndex+">"; */
+						html += "<span style='color: gray; font-weight: bold; font-size: 15pt;'>"+ entry.record_userid + "</span><br/>" ;
+						html += "<span style='color: gray; font-weight: lighter;'>" + entry.record_dml_status + "</span><br/>";
+						html += "<span style='color: gray; font-weight: lighter; font-size: 7pt;'>프로젝트 "+entry.project_name+"&nbsp;&nbsp;";
+						html += "리스트"+entry.list_name+"카드"+entry.card_title;
+						html += "<br/>등록일자"+entry.project_record_time;
+						
 						html += "<li class='divider'></li>";
+						html += "</li>";
 						
 					});
 					
@@ -1047,6 +1088,50 @@ input[type=text]:focus {
 		  
 		  
 	}
+	  
+	  function goHide(){
+		  
+		  var test = "";
+		  
+		  
+		  $("input[name=current_proudct]:checked").each(function() {
+			 
+			  test = $(this).val();
+			  // alert("test : " + test); 1078 	  		
+		      var form_data = {checkboxVal: test}
+		  		   			  
+			  $.ajax({
+				  url: "<%= request.getContextPath() %>/personalAlarmCheckbox.action",
+				  type: "post",
+				  data: form_data,
+				  dataType: "JSON",
+				  success: function(json){
+					
+					var n = json[0].n;
+					 
+					if(n == 1){
+						
+				//	 console.log("read_status 변경 성공!!!"+${n});
+					 alert("체크박스 value 값>>>" + test);
+					 
+					  $("#checkbox"+test).hide();
+					 
+					  personalAlarm();
+					}
+					
+					 					  
+				  },
+				  error: function(request, status, error){
+						alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
+				  }
+					
+				  
+			  });
+		  
+		  
+		  });
+		  
+	  }
 	  
 	  
 	
@@ -1492,7 +1577,7 @@ input[type=text]:focus {
             </ul>
           </li> -->
 						<!-- task notificatoin end -->
-
+<!-- <span style="font-weight: "></span> -->
 					</ul>
 					<!-- notificatoin dropdown end-->
 				</div>

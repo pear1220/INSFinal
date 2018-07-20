@@ -87,6 +87,8 @@
 		margin-bottom: 20px;
 	}
 	
+	
+
 
 </style>
 
@@ -564,12 +566,15 @@
 		<span style="font-size:30px; cursor:pointer;" onclick="openNav();">&#9776; menu</span>
 	  </div>
 	
-		
+			
 	
 	  <form name="project_idxFrm">
 	  	<input type="text" name="fk_project_idx" value="31" /><%-- value="${project_membervo.fk_project_idx}" --%>
 	  	<input type="text" name="sel1Val" />
 	  </form>
+	  
+	  <input type="checkbox" id="mj_checkbox" class="" />
+	  <label for="mj_checkbox">체크박스</label>
 	  
 	  <%-- <c:forEach items="${adminList}" var="map">
 		  	<c:if test="project_member_userid.equals('${sessionScope.loginuser.userid}')">

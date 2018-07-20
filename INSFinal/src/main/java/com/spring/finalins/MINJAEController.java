@@ -609,8 +609,7 @@ public class MINJAEController {
 		int newmsg = service.getNewMessageCount(userid); // user가 읽지 않은 메시지의 갯수를 얻어옴
 		
 		System.out.println("controller msg >>>>>" + newmsg);
-		
-		session.setAttribute("newmsg", newmsg);
+		// session.setAttribute("newmsg", newmsg);
 		
 		///////////////////////////////////////////////////////////////////////////////////////////////
 								
@@ -631,7 +630,8 @@ public class MINJAEController {
 				jsonObj.put("project_name", newMsgMap.get("project_name"));
 				jsonObj.put("list_name", newMsgMap.get("list_name"));
 				jsonObj.put("card_title", newMsgMap.get("card_title"));
-				
+				jsonObj.put("server_filename", newMsgMap.get("server_filename"));
+				jsonObj.put("newmsg", newmsg);
 				jsonArr.put(jsonObj);
 				
 			}
@@ -643,33 +643,30 @@ public class MINJAEController {
 		
 		return "personalAlarm.notiles";
 				
-	}	
+	}
 	
 	
-/*	@RequestMapping(value="/personalAlarmProjectrecordList.action", method=RequestMethod.GET)
-	public String personalAlarmProjectrecordList(HttpServletRequest req, HttpServletResponse res) {
-	
-		HttpSession session = req.getSession();
-		MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
-					
-		// String fk_project_idx = req.getParameter("fk_project_idx");
-		String fk_project_idx = "3";
-				
+	@RequestMapping(value="/personalAlarmCheckbox.action", method=RequestMethod.POST)
+	public String personalAlarmCheckbox(HttpServletRequest req, HttpServletResponse res) {
 		
-		HashMap<String, String> map = new HashMap<String, String>();
-		map.put("userid", loginuser.getUserid());
-		map.put("fk_project_idx", fk_project_idx);
-				
-		List<HashMap<String, String>> newMsgList = service.getNewMessageList(map); // user가 읽지 않은 메세지의 리스트를 얻어옴
+		String checkboxVal = req.getParameter("checkboxVal");
+		
+		System.out.println("checkboxVal >>>>>>>>>>>>>>>" + checkboxVal);
+		
+		int n = service.setPersonal_alarm_read_status(checkboxVal);// personal_alarm_read_status 변경
+		
+		JSONArray jsonArr = new JSONArray();
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("n", n);
+		jsonArr.put(jsonObj);
+		String str_jsonArr = jsonArr.toString();
+		req.setAttribute("str_jsonArr", str_jsonArr);
+		
+		System.out.println("성공했다.>>>>>>>>>>>>>>>>>" + n);
 		
 		
-		
-		
-		return "";
-				
-	}	*/
-	
-	
+	   return "personalAlarmCheckbox.notiles";
+	}
 	
 	
 	

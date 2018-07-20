@@ -177,6 +177,8 @@ public class MinjaeService implements InterMinjaeServie {
 		
 		int newmsg = dao.getNewMessageCount(userid);
 		
+		System.out.println("service 에서 newmsg1111111111111111111111"+newmsg);
+		
 		return newmsg;
 	}
 
@@ -187,6 +189,15 @@ public class MinjaeService implements InterMinjaeServie {
 		List<HashMap<String, String>> nesMsgList = dao.getNewMessageList(userid);
 		
 		return nesMsgList;
+	}
+
+	// personl_alarm 테이블의 personal_alarm_read_status 변경
+	@Override
+	public int setPersonal_alarm_read_status(String checkboxVal) {
+		
+		int n = dao.setPersonal_alarm_read_status(checkboxVal);
+		
+		return n;
 	}
 
 	
