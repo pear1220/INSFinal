@@ -374,4 +374,33 @@ public class ProjectController {
 	public String changePwd() {
 		return "login/changePwd";
 	}
+	
+	
+	//리스트를 생성하는 메소드 
+	@RequestMapping(value="addList.action", method= {RequestMethod.POST})
+	public String addList(HttpServletRequest request) {
+		String list_name = request.getParameter("list_name");
+		String project_idx = request.getParameter("project_idx");
+		String userid = request.getParameter("userid");
+		
+		System.out.println("리스트명 확인: " + list_name);
+		System.out.println("idx 확인: " + project_idx);
+		System.out.println("유저 확인: " + userid);
+		//2018.07.20 리스트생성 메소드 작업중
+		
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("list_name", list_name);
+		map.put("project_idx", project_idx);
+		map.put("userid", userid);
+		
+		int result = service.addList(map);
+		
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("result", result);
+		
+		String str_jsonObj = jsonObj.toString();
+		request.setAttribute("str_jsonObj", str_jsonObj);
+		
+		return "project/addListJSON";
+	} // end of addList(HttpServletRequest request) 
 }

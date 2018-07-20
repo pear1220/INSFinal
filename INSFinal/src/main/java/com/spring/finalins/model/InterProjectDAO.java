@@ -56,4 +56,7 @@ public interface InterProjectDAO {
 	//배경이미지테이블의 데이터를 가져오는 메소드
 	List<HashMap<String, String>> getProjectImg();
 
+	//새로운 리스트를 생성하는 메소드
+	int addList(HashMap<String, String> map);
+
 }

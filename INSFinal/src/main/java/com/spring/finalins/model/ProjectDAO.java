@@ -147,5 +147,13 @@ public class ProjectDAO implements InterProjectDAO{
 	} // end of getProjectImg()
 
 
+	//새로운 리스트를 생성하는 메소드
+	@Override
+	public int addList(HashMap<String, String> map) {
+		int result = sqlsession.insert("dasom.addList", map);
+		return result;
+	} // end of addList(HashMap<String, String> map)
+
+
 	
 }

@@ -186,6 +186,13 @@
 		select project_image_idx, project_image_name 
 		  from ins_project_image
 	</select>
+	
+	
+	<!-- 리스트 테이블에 insert -->
+	<insert id="addList">
+		insert into ins_list(list_idx, fk_project_idx, list_name, list_delete_status, list_userid)
+		values(seq_list.nextval, #{project_idx}, #{list_name}, default, #{userid})
+	</insert>
 </mapper>
  
  

@@ -541,7 +541,7 @@ body{overflow: hidden;}
           <form name = PJcreateFrm>
           <div class="form-group">
             <label for="usr">Project title:</label>
-            <input type="text" class="form-control" id="project_name" name="project_name">
+            <input type="text" class="form-control" id="project_name" name="project_name" style="outline: none;">
             <span id="error_project_name" class="text-danger"></span>
           </div>
           <!-- 팀 선택 -->

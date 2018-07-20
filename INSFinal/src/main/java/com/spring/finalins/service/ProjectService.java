@@ -160,6 +160,14 @@ public class ProjectService implements InterProjectService{
 	} // end of getProjectImg()
 
 
+	//새로운 리스트를 생성하는 메소드
+	@Override
+	public int addList(HashMap<String, String> map) {
+		int result = dao.addList(map);
+		return result;
+	} // end of addList(HashMap<String, String> map)
+
+
 	
 
 }
