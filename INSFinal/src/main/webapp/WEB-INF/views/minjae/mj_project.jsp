@@ -71,10 +71,6 @@
 		
 	}
 	
-	
-	
-	
-	
 	#sel1 {
 		width: 150px;	}
 	
@@ -125,8 +121,9 @@
 	function openNav3(){
 		document.getElementById("mySideactivity").style.width = "400px";
 		
-		sel2Val();
-		/* Activity(); */
+		selVal();
+		// sel2Val();
+		// Activity(); 
 		/* $("#cardEditbtn").click(){
 			Activity();
 		}
@@ -206,32 +203,16 @@
 			success: function(json){
 				
 				$("#activitylist").empty();
-				/* $("#projectRecordListTB").empty(); */
+				
 				$("#projectRecordListMoreTB").empty();
-				
-				/* alert("성공"); */
-				
-				/* var html3 = "";
-	
-				if(json.length = 0){
-					
-					html3 = "<tr><td colspan='3'><span>프로젝트 내 활동이 없습니다.</span></td></tr>";
-					
-					$("#projectRecordListTB").html(html3);
-					
-				}
-				 */
-				
-				
-				
-				
+						
 				var html = "";
 				
 				if(json.length > 0){
 					
 					$.each(json, function(entryIndex, entry){
 						
-						 if(entryIndex < 10){
+						if(entryIndex < 10){ 
 							 
 							html += "<tr>";
 							html += "<td rowspan='3' class='imgtd' style='size: 10px;'><img src='<%=request.getContextPath()%>/resources/img/avatar1.jpg'";
@@ -248,7 +229,7 @@
 							html += "<td colspan='2' style='border: 1px solid #fed189;'></td>";
 							html += "</tr>";
 							
-						}
+						 }
 						
 						
 					});
@@ -258,7 +239,9 @@
 					 if(json.length > 10 ){  
 						
 						html += "<tr style='height: 50px; text-align:center; border: 1px solid red;' >";
-						html += "<td colspan='2' style='padding-top: 15px;'><a style='cursor: pointer; color: #00a0df;' id='viewallactivity1'>view all activity</a></td>";
+						html += "<td colspan='2' style='padding-top: 15px;'>";
+						/* html += "<a style='cursor: pointer; color: #00a0df;' href='javascript:void(0);'>view all activity</a></td>"; */
+						html += "<a href='javascript:void(0);' id='clickFUN'>클릭확인</a></td>"
 						html += "</tr>";
 						
 				 	 } 
@@ -267,21 +250,22 @@
 					
 					$("#activitylist").html(html);
 					
-					$("#viewallactivity1").click(function(){
+					
+					$("#clickFUN").click(function(){
 						
-						var html2 ="";
+						alert("클릭확인");
+					});
+					<%-- 
+					$("#viewallactivity").click(function(){
 						
-						alert("성공");
+						var html2 = "";
+						
+						alert("viewallactivity 성공");
 						
 						openNav3();
 						
-						/* html2 += "<h2>"+val+"</h2>"
-						
-						$("#activitylistMore").html(html2);
-						 */
 						$.each(json, function(entryIndex, entry){
-							
-							
+														
 							html2 += "<tr>";
 							html2 += "<td rowspan='3' class='imgtd' style='size: 10px;'><img src='<%=request.getContextPath()%>/resources/img/avatar1.jpg'";
 							html2 += " alt='Avatar' class='avatar' /></td>";
@@ -300,14 +284,12 @@
 							
 							$("#projectRecordListMoreTB").html(html2);
 						
-						}); // end of $.each(json)------------------------------------------------------------
-					 
-							
+						}); // end of $.each(json)------------------------------------------------------------ 
+					 							
 							$("#activitylistMore").html(html2);
-						
-						
+												
 					});// end of $("#viewallactivity1").click()------------------------------------------------
-					
+					 --%>
 					
 					
 				}
@@ -374,51 +356,25 @@
 	
 	function selVal(){
 		
-		// alert("selValChange>>>실행확인"); 
-		
-		
-		
 		if($("#sel1").val() == null){
 			
 			sel1Val = $("#sel1").val("수정");
 			
 		} 
-		
-		/* else if($("#sel").val() != ""){ */
-			
-			/* alert("실행확인????");	 */
-			sel1Val = $("#sel1").val($("#sel").val());	
-		/* } */
-		/* else if($(".btnActivity").val() != ""){
-			
-			alert("실행확인!!!!..............");	
-		
-			sel1Val = $("#sel1").val($("#cardEditbtn").val());	
-		}
-		else if($("#cardDeletebtn").val() != ""){
-			
-			console.log("cardDeletebtn value 값 확인"+$("#cardDeletebtn").val())	
-		
-			sel1Val = $("#sel1").val($("#cardDeletebtn").val());	
-		}
-		else if($("#cardAddbtn").val() != ""){
-			sel1Val = $("#sel1").val($("#cardAddbtn").val());	
-		}
-		else if($("#listCreatebtn").val() != ""){
-			sel1Val = $("#sel1").val($("#listCreatebtn").val());	
-		} */
-		
+				
+		sel1Val = $("#sel1").val($("#sel").val());	
 		
 		sel1Val = $("#sel1").val();
 		
 		console.log("버튼확인::::::"+se1Val);
 		
 		Activity(sel1Val); 
-		
-		
+				
 	}
 	
-	function sel2Val(){
+ /* 	function sel2Val(){
+ 		
+ 		console.log("버튼확인22222::::::"+se1Val);
 		
 		if($("#sel1").val() == null){
 			
@@ -434,8 +390,8 @@
 		console.log("버튼확인::::::"+se1Val);
 		
 		Activity(sel1Val);
-		
-	}
+		 
+	}  */
 	
 	
 	/* */

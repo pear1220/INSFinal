@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
-
+<link href="https://fonts.googleapis.com/css?family=Stylish" rel="stylesheet">
 
 <style type="text/css">
 
@@ -50,7 +50,7 @@
 	
 	
 	#team_name{
-		font-family: 'Do Hyeon', sans-serif;
+		/* font-family: 'Do Hyeon', sans-serif; */
 	} 
 	
 	/* #newMsgList{
@@ -63,21 +63,6 @@
 	   overflow-y: auto;
 	   height: 500px;
 	}
-
-	/* .custom_checkbox input + label {
-        display: inline-block;
-        width: 14px;
-        height: 14px;
-        background-color: #bcbcbc;
-        border-radius: 7px;
-        cursor: pointer;
-      }
-      .custom_checkbox input:checked + label {
-        background-color: #00a0df;
-      }
-      .custom_checkbox input {
-        display: none;
-      } */
 
 	input[type=checkbox] + label {
         display: inline-block;
@@ -97,8 +82,45 @@
         display: none;
       }
 
+	
+	.header {
+		background: #fff;   
+		background-color: rgba(255, 255, 255, 1); 
+		hegith: 64px;        
+		box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.08);
+		font-weight: lighter;
+		margin-bottom: 0%;
+	}             
 
+	#project_button {
+		 background-color:  white;
+		 margin-top:8px; 
+		 color: black;  
+		 border: 2px solid #CACACA;
+		 border-radius: 20px;
+	}
+	
+	.title {
+		font-weight: bold; 
+		color: rgba(0, 0, 0, 0.54);       
+		font-size: 20pt;   
+		font-weight: bold;  
+		/* padding-top: 5px; */                    
+	}  
+	
+	a:hover {
+		text-decoration: none;
+	}
 
+	.menu_header{
+		align: center;
+		border: 1px solid red;   
+		
+	}
+	
+	.dropSearch{
+		width: 80%;
+	}
 </style>
 
 
@@ -172,7 +194,7 @@
 							 
 							 $("#team_drop1").show();  
 									
-							 html += "<span class='lite' style='font-weight: bold; font-size: 15pt;'>Teams</span>";
+							 html += "<span style='color: rgba(0, 0, 0, 0.54); font-weight: bold; font-size: 15pt;'>Teams</span>";
 							 
 							 $.each(json, function(entryIndex, entry){
 								 												
@@ -186,7 +208,7 @@
 															
 								 var str ="";
 								
-									 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: #fed189; font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+len) + "</span>"; 
+									 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: rgb(255, 82, 82); font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+len) + "</span>"; 
 									
 								if(json.length < 2){
 									
@@ -231,13 +253,19 @@
 							 
 					  		/* $("#drop2").empty(); */
 					  		
+					  		$("#project_drop2").empty();
+					  		$("#list_drop2").empty();
+					  		$("#card_drop2").empty();
+					  		$("#member_drop2").empty(); 
+						  		
+					  		
 					  		 dropShow2();
 					  		 
 					  		
 					  		
 							 var html2 = "";
 							 
-							 html2 += "<span class='lite' style='font-weight: bold; font-size: 15pt;'>Teams</span>";
+							 html2 += "<span style='color: rgba(0, 0, 0, 0.54); font-weight: bold; font-size: 15pt;'>Teams</span>";
 							 html2 += "<span id='backicon'><img src='<%=request.getContextPath() %>/resources/img/left-arrow.png' /></span>";
 							 
 							 $.each(json, function(entryIndex, entry){
@@ -252,7 +280,7 @@
 															
 								 var str ="";
 								
-									 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: #fed189; font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+len) + "</span>"; 
+									 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: rgb(255, 82, 82); font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+len) + "</span>"; 
 									
 									 html2 += "<br/><a href='#'><span class='result'>"+str+"</span></a>";
 									 
@@ -299,7 +327,7 @@
 							 
 							 $("#project_drop1").show();  
 									
-							 html += "<span class='lite' style='font-weight: bold; font-size: 15pt;'>Projects</span>";
+							 html += "<span style='color: rgba(0, 0, 0, 0.54);font-weight: bold; font-size: 15pt;'>Projects</span>";
 							 
 							 $.each(json, function(entryIndex, entry){
 								 												
@@ -313,7 +341,7 @@
 															
 								 var str ="";
 								
-									 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: #fed189; font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+len) + "</span>"; 
+									 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: rgb(255, 82, 82); font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+len) + "</span>"; 
 									
 								if(json.length < 2){
 									
@@ -355,15 +383,20 @@
 				  		
 					  	$("#btnMore2").click(function(){
 							 
-					  		/* $("#drop2").empty();
-					  		 */
+					  		/*  $("#drop2").empty(); */
+					  		$("#team_drop2").empty();
+					  		$("#list_drop2").empty();
+					  		$("#card_drop2").empty();
+					  		$("#member_drop2").empty(); 
+						  		
+					  		
 					  		 dropShow2();
 					  		 
 					  		
 					  		
 							 var html3 = "";
 							 
-							 html3 += "<span class='lite' style='font-weight: bold; font-size: 15pt;'>Projects</span>";
+							 html3 += "<span style='color: rgba(0, 0, 0, 0.54); font-weight: bold; font-size: 15pt;'>Projects</span>";
 							 html3 += "<span id='backicon'><img src='<%=request.getContextPath() %>/resources/img/left-arrow.png' /></span>";
 							 
 							 $.each(json, function(entryIndex, entry){
@@ -378,7 +411,7 @@
 															
 								 var str ="";
 								
-									 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: #fed189; font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+len) + "</span>"; 
+									 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: rgb(255, 82, 82); font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+len) + "</span>"; 
 									
 									 html3 += "<br/><a href='#'><span class='result'>"+str+"</span></a>";
 									 
@@ -423,7 +456,7 @@
 						 
 						 $("#list_drop1").show();  
 								
-						 html += "<span class='lite' style='font-weight: bold; font-size: 15pt;'>Lists</span>";
+						 html += "<span style='color: rgba(0, 0, 0, 0.54); font-weight: bold; font-size: 15pt;'>Lists</span>";
 						 
 						 $.each(json, function(entryIndex, entry){
 							 												
@@ -437,7 +470,7 @@
 														
 							 var str ="";
 							
-								 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: #fed189; font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+len) + "</span>"; 
+								 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: rgb(255, 82, 82); font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+len) + "</span>"; 
 								
 							if(json.length < 2){
 								
@@ -479,15 +512,19 @@
 			  		
 				  	$("#btnMore3").click(function(){
 						
-				  	/* 	$("#drop2").empty();
-				  		 */
+				  	 	/* $("#drop2").empty(); */
+				  		$("#team_drop2").empty();
+				  		$("#project_drop2").empty();
+				  		$("#card_drop2").empty();
+				  		$("#member_drop2").empty();
+				  		
 				  		 dropShow2();
 				  		
 				  		
 				  		 
 						 var html4 = "";
 						 
-						 html4 += "<span class='lite' style='font-weight: bold; font-size: 15pt;'>Lists</span>";
+						 html4 += "<span style='color: rgba(0, 0, 0, 0.54); font-weight: bold; font-size: 15pt;'>Lists</span>";
 						 html4 += "<span id='backicon'><img src='<%=request.getContextPath() %>/resources/img/left-arrow.png' /></span>";
 						 
 						 $.each(json, function(entryIndex, entry){
@@ -502,7 +539,7 @@
 														
 							 var str ="";
 							
-								 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: #fed189; font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+len) + "</span>"; 
+								 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: rgb(255, 82, 82); font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+len) + "</span>"; 
 								
 								 html4 += "<br/><a href='#'><span class='result'>"+str+"</span></a>";
 								 
@@ -548,7 +585,7 @@
 						 
 						 $("#card_drop1").show();  
 								
-						 html += "<span class='lite' style='font-weight: bold; font-size: 15pt;'>Cards</span>";
+						 html += "<span style='color: rgba(0, 0, 0, 0.54); font-weight: bold; font-size: 15pt;'>Cards</span>";
 						 
 						 $.each(json, function(entryIndex, entry){
 							 												
@@ -562,7 +599,7 @@
 														
 							 var str ="";
 							
-								 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: #fed189; font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+len) + "</span>"; 
+								 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: rgb(255, 82, 82); font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+len) + "</span>"; 
 								
 							if(json.length < 2){
 								
@@ -604,15 +641,20 @@
 			  		
 				  	$("#btnMore4").click(function(){
 						 
-				  	/* 	$("#drop2").empty(); */
-				  		
+				  	 	/* $("#drop2").empty(); */
+				  		$("#team_drop2").empty();
+				  		$("#project_drop2").empty();
+				  		$("#list_drop2").empty();
+				  		$("#member_drop2").empty();
+				  	 	
+				  	 	
 				  		 dropShow2();
 				  		 
 				  		 
 				  		
 						 var html5 = "";
 						 
-						 html2 += "<span class='lite' style='font-weight: bold; font-size: 15pt;'>Cards</span>";
+						 html2 += "<span style='color: rgba(0, 0, 0, 0.54); font-weight: bold; font-size: 15pt;'>Cards</span>";
 						 html2 += "<span id='backicon'><img src='<%=request.getContextPath() %>/resources/img/left-arrow.png' /></span>";
 						 
 						 $.each(json, function(entryIndex, entry){
@@ -627,7 +669,7 @@
 														
 							 var str ="";
 							
-								 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: #fed189; font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+len) + "</span>"; 
+								 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: rgb(255, 82, 82); font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+len) + "</span>"; 
 								
 								 html5 += "<br/><a href='#'><span class='result'>"+str+"</span></a>";
 								 
@@ -671,7 +713,7 @@
 						 
 						 $("#member_drop1").show();  
 								
-						 html += "<span class='lite' style='font-weight: bold; font-size: 15pt;'>Members</span>";
+						 html += "<span style='color: rgba(0, 0, 0, 0.54); font-weight: bold; font-size: 15pt;'>Members</span>";
 						 
 						 $.each(json, function(entryIndex, entry){
 							 
@@ -699,7 +741,7 @@
 														
 							 var str ="";
 							
-								 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: #fed189; font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+len) + "</span>"; 
+								 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: rgb(255, 82, 82); font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+len) + "</span>"; 
 								
 							if(json.length < 2){
 								
@@ -766,7 +808,12 @@
 			  		
 				  	$("#btnMore5").click(function(){
 						 
-				  		/* $("#drop2").empty(); */
+				  		 /* $("#drop2").empty(); */ 
+				  		
+				  		$("#team_drop2").empty();
+				  		$("#project_drop2").empty();
+				  		$("#list_drop2").empty();
+				  		$("#card_drop2").empty();
 				  		
 				  		 dropShow2();
 				  		
@@ -774,7 +821,7 @@
 				  		 
 						 var html2 = "";
 						 
-						 html2 += "<span class='lite' style='font-weight: bold; font-size: 15pt;'>Members</span>";
+						 html2 += "<span style='color: rgba(0, 0, 0, 0.54); font-weight: bold; font-size: 15pt;'>Members</span>";
 						 html2 += "<span id='backicon'><img src='<%=request.getContextPath() %>/resources/img/left-arrow.png' /></span>";
 						 
 						 $.each(json, function(entryIndex, entry){
@@ -798,7 +845,7 @@
 														
 							 var str ="";
 							
-								 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: #fed189; font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+len) + "</span>"; 
+								 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: rgb(255, 82, 82); font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+len) + "</span>"; 
 								
 								 html += "<br/><img src='<%=request.getContextPath()%>/resources/img/avatar1.jpg' style='float: left;' class='avatar'/>";
 								 
@@ -1150,8 +1197,8 @@
 
 
 				<div style="padding-left: 47%; border: 0px solid red;">
-					<!-- logo start -->
-					  <a href="index.action" class="logo"> FINAL <span class="lite">INS</span></a>
+					<!-- logo start --> 
+					 <a href="index.action" class="title">FINAL <span style="color: rgb(255, 82, 82);">INS</span></span></a>
 					<!-- logo end -->
 				</div>
 
@@ -1162,23 +1209,23 @@
 		<c:if test="${sessionScope.loginuser != null }">
 
 			<header class="header dark-bg">
-
+			
+			<div style="padding-left: 47%; border: 0px solid red;">      
+					<!-- logo start -->
+					   <a href="index.action" class="title">FINAL <span style="color: rgb(255, 82, 82);">INS</span></span></a>
+					<!-- logo end -->
+			</div>  
+			
+			
+			<div class="menu_header">
 				<div class="container"
 					style="border: 0px solid yellow; width: 150px; float: left; padding-top: 2px;">
 					<div class="dropdown" style="border: 0px solid yellow;">
 
-						<!-- <button class="btn btn-default dropdown-toggle" type="button"
-							id="project_button" data-toggle="dropdown"
-							style="background-color: #B5D3DB; margin-top: 1px; color: black; border: 2px solid royalblue;">
-							<span class="icon_cloud-upload_alt logo"
-								style="margin-right: 10px; font-size: 20pt; color: #FF9C34;"></span><span
-								style="font-size: 16pt; color: white; font-weight: bold;">Project</span>
-						</button> -->
-						
 						 <button class="btn btn-default dropdown-toggle" type="button" id="project_button"
-						  data-toggle="dropdown" style=" background-color:  #1a2732; margin-top:1px; color: black; border-color: black;"> 
-         				 <span class="icon_cloud-upload_alt logo" style="margin-right: 10px; font-size: 20pt; color: #ffc61a;"></span>
-         				 <span style="font-size: 16pt;" class="lite">Project</span>
+						  data-toggle="dropdown"> 
+         				 <span class="icon_cloud-upload_alt logo" style="margin-right: 10px; font-size: 20pt; color: rgb(255, 82, 82);"></span>
+         				 <span style="font-size: 16pt; color: gray;">Project</span> 
        					<!-- <span class="caret"></span> --></button>
 							
 						<ul class="dropdown-menu" id="project_dropdown"
@@ -1187,37 +1234,10 @@
 
 					</div>
 				</div>
-
-				<%-- <c:if test="${sessionScope.teamList == null }" >
-		    		<li><span style="color: #ff9900;">${sessionScope.loginuser.userid} 님의 가입한 팀이 없습니다.</span></li>
-		    	</c:if>
-		    	
-		    	<c:if test="${not empty sessionScope.teamList}"> 
-			    	<c:forEach var="teamvo" items="${sessionScope.teamList}"> 
-				      
-				      <li><span style="padding-left: 10px; color: yellow;"><a href="#">${teamvo.team_name}<span style="float: right; padding-right: 10px;">${teamvo.admin_userid}</span> </a></span></li>
-				      
-				      <c:if test="${sessionScope.projectList == null }">
-				      	 <li><span style="color: yellow;">${teamvo.team_name}에  프로젝트가 없습니다.</span></li>		      
-				      </c:if>
-				      
-				      <c:if test="${sessionScope.projectList != null && (teamvo.team_idx).equals(session.projectList.fk_team_idx)}">
-				      		<c:forEach var="projectvo" items="${sessionScope.projectList}">
-				      			<li>&nbsp;&deg;${projectvo.project_name}</li>
-				      		</c:forEach>
-				      </c:if>
-				      
-				      <li class="divider"></li>
-				      		      
-			      	</c:forEach>
-		      	</c:if> --%>
-
-
-
-
+				
 				<!--  search form start -->
 				<div class="nav search-row" id="top_menu"
-					style="float: left; padding-left: 1px; padding-bottom: 2px; width: 500px; border: 0px solid yellow;">
+					style="float: left; padding-left: 1px; margin-bottom: 7px; width: 500px; border: 0px solid yellow;">
 					<!--  search form start -->
 					<ul class="nav top-menu">
 						<li>
@@ -1225,7 +1245,7 @@
 								<form class="navbar-form">
 									<input class="form-control" id="search_input"
 										name="search_input" data-toggle="dropdown"
-										placeholder="Search" type="text" style="height: 35px;">
+										placeholder="Search" type="text" style="height: 35px; margin-bottom: 5px;">
 								</form>
 							</div>
 						</li>
@@ -1330,16 +1350,12 @@
 	   </div> -->
 
 					</ul>
-					<!--  search form end -->
+					<!--  search form end -->    
 				</div>
 
-				<div style="padding-left: 47%; border: 0px solid red;">
-					<!-- logo start -->
-					  <a href="index.action" class="logo"> FINAL <span class="lite">INS</span></a>
-					<!-- logo end -->
-				</div>
+				  
 				
-				<div class="top-nav notification-row" >
+				<div class="top-nav notification-row" style="float: right;">  
 					    <div class="scrollbar" id="style-2">
 					      <div class="force-overflow"></div>
 					    </div>
@@ -1577,10 +1593,19 @@
             </ul>
           </li> -->
 						<!-- task notificatoin end -->
-<!-- <span style="font-weight: "></span> -->
+			<!-- <span style="font-weight: "></span> -->
 					</ul>
 					<!-- notificatoin dropdown end-->
 				</div>
+				
+				
+			</div>
+				
+
+
+
+
+				
 			</header>
 		</c:if>
 		<!--header end-->
