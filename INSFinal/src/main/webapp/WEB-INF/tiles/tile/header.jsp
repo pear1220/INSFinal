@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<link href="https://fonts.googleapis.com/css?family=Stylish" rel="stylesheet">
+<!-- <link href="https://fonts.googleapis.com/css?family=Sunflower:300" rel="stylesheet"> -->
 
 <style type="text/css">
 
@@ -20,16 +20,17 @@
 	}
 	
 	#drop1 {
-		margin-left: 193px;
+		margin-left: 10.5%;
 		width: 500px;
 	}
+	
 	
 	#drop2{
-		margin-left: 193px;
+		margin-left: 10.5%;
 		width: 500px;
 	}
 	
-	input[type=text] {
+	input[id="search_input"] {
 		width: 130px;
 		box-sizing: border-box;
 		border: 2px solid #ccc;
@@ -44,19 +45,16 @@
 		transition: width 0.4s ease-in-out;
 	}
 	
-	input[type=text]:focus {
+	input[id="search_input"]:focus {
 		width: 100%;
+		border-color: rgba(255, 82, 82, 0.8);
 	}
 	
 	
 	#team_name{
-		/* font-family: 'Do Hyeon', sans-serif; */
+		color: rgb(255, 82, 82);
 	} 
-	
-	/* #newMsgList{
-		width: 300px;
-	} */
-	
+
 	#newMsgList{
 	   width: 300px;
 	   overflow-x: hidden;
@@ -64,7 +62,7 @@
 	   height: 500px;
 	}
 
-	input[type=checkbox] + label {
+/*    	input[type="checkbox"] + label {
         display: inline-block;
         width: 14px;
         height: 14px;
@@ -72,15 +70,14 @@
         border-radius: 7px;
         cursor: pointer;
       }
-      input[type=checkbox]:checked + label {
-        background-color: #00a0df;
-        
-        
-        
-      }
-      input[type=checkbox] {
+      
+    input[type="checkbox"]:checked + label {
+        background-color: rgba(255, 82, 82, 0.6);  
+      } 
+      
+      input[type="checkbox"] {
         display: none;
-      }
+      }  */
 
 	
 	.header {
@@ -90,6 +87,7 @@
 		box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.08);
 		font-weight: lighter;
 		margin-bottom: 0%;
+		/* font-family: 'Sunflower', sans-serif; */
 	}             
 
 	#project_button {
@@ -104,23 +102,84 @@
 		font-weight: bold; 
 		color: rgba(0, 0, 0, 0.54);       
 		font-size: 20pt;   
-		font-weight: bold;  
-		/* padding-top: 5px; */                    
+		font-weight: bold;                    
 	}  
 	
 	a:hover {
 		text-decoration: none;
+		background-color: rgba(0, 0, 0, 0.54);    
 	}
 
-	.menu_header{
+	.menu_header{       
 		align: center;
-		border: 1px solid red;   
-		
+		border: 0px solid red;   
 	}
 	
 	.dropSearch{
 		width: 80%;
 	}
+	
+	#newMsg_img{
+		width: 50px;
+		height: auto;   
+		border: none;  
+	}
+	
+	.project_record_tb{
+		color: black;
+	}
+	
+	.dropdown-menu.extended li p.blue {
+   		background-color: rgba(255, 82, 82, 0.8);
+    } 
+         
+    .projectList_div1{
+    	position: relative;
+    	width: 90%; 
+    	height: 45px; 
+    	border: 0px solid green;     
+    	padding-left: 5%;                      
+    }        
+    
+    .projectList_img {
+    	position: absolute;
+    	width: 100%;       
+    	height: 40px;   
+    	border-radius: 5px;
+    }
+    
+    .projectList_div2{         
+    	position: absolute;
+    	margin-left: 20%;     
+    	width: 80%; 
+    	height: 40px;                             
+    	border: 0px solid red; 
+    	border-radius: 0 5px 5px 0;
+    	float: right;     
+    	background-color: rgba(255, 255, 255, 0.9);
+    	
+    }
+    
+    .projectList_ul{
+    	position: relative;
+    	border: 0px solid yellow;         
+    }	
+    
+    .projectList_div3{
+    	position: absolute;
+    	width: 100%;
+    	height: 40px;
+    	border: 0px solid red;
+    }
+                   
+    .projectList_div4{                              
+    	position: relative;
+    	width: 19%;                                   
+    	height: 40px;
+    	border: 0px solid green;             
+    	float: right;  
+    	padding-top: 6%;            
+    }
 </style>
 
 
@@ -261,8 +320,6 @@
 					  		
 					  		 dropShow2();
 					  		 
-					  		
-					  		
 							 var html2 = "";
 							 
 							 html2 += "<span style='color: rgba(0, 0, 0, 0.54); font-weight: bold; font-size: 15pt;'>Teams</span>";
@@ -850,13 +907,13 @@
 								 html += "<br/><img src='<%=request.getContextPath()%>/resources/img/avatar1.jpg' style='float: left;' class='avatar'/>";
 								 
 								 if( (entry.userid.trim()).indexOf($("#search_input").val()) != -1 ){
-										html2 += "<a href='#'><span class='result'>"+str+"("+entry.nickname+")"+"--"+entry.name+"</span></a>";
+										html2 += "<a href='#'><span class='result'><span class='userid'>"+str+"</span>("+entry.nickname+")"+"--"+entry.name+"</span></a>";
 								 }
 								 else if( (entry.nickname.trim()).indexOf($("#search_input").val()) != -1 ){
-									 html2 += "<a href='#'><span class='result'>"+entry.userid+"("+str+")"+"--"+entry.name+"</span></a>";
+									 html2 += "<a href='#'><span class='result'><span class='userid'>"+entry.userid+"</span>("+str+")"+"--"+entry.name+"</span></a>";
 								 }
 								 else if( (entry.name.trim()).indexOf($("#search_input").val()) != -1 ){
-									 html2 += "<a href='#'><span class='result'>"+entry.userid+"("+entry.nickname+")"+"--"+str+"</span></a>";
+									 html2 += "<a href='#'><span class='result'><span class='userid'>"+entry.userid+"</span>("+entry.nickname+")"+"--"+str+"</span></a>";
 								 }
 								 
 							 $("#member_drop2").html(html2);
@@ -899,6 +956,9 @@
 				}
 				else if($target.is(".third")){
 					word = $target.prev().prev().text() + $target.prev().text() + $target.text();
+				}
+				else if($target.is(".userid")){
+					word = $target.text();
 				}
 				
 				$("#search_input").val(word);
@@ -981,7 +1041,7 @@
 					
 					$.each(json, function(entryIndex, entry){
 												
-						html += "<li><span id='team_name' style='padding-left: 10px; color: yellow;'><a href='#'>"+entry.team_name+"<span style='float: right; padding-right: 10px;'>"+entry.admin_userid+"</span></a></span></li>";
+						html += "<li><span id='team_name' style='padding-left: 10px;'><a href='#' style='color: rgb(255, 82, 82, 0.8); font-size: 13pt; font-weight: bold;'>"+entry.team_name+"<span style='float: right; padding-right: 10px;'>"+entry.admin_userid+"</span></a></span></li>";
 															
 						html += "<li id='teamlist"+entryIndex+"'></li>";
 					
@@ -994,15 +1054,40 @@
 							data: form_data,
 							dataType: "json",
 							success: function(json){
-								
+								                        
 								var html2 = "";
 								
 								if(json.length > 0){
-														
+														      
 									$.each(json, function(entryIndex2, entry){
-																				
-										html2 += "<ul><li><span style='color: blue;'>"+entry.project_name+"</span></li></ul>";
-																				
+																				        
+										html2 += "<div class='projectList_div1' id='projectList_div"+entryIndex+"'>";       
+										html2 += "<img class='projectList_img' src='<%= request.getContextPath() %>/resources/images/"+entry.project_image_name+"' >";
+										html2 += "<div class='projectList_div2'>";
+										
+										html2 += "<div class='projectList_div3'>";
+										html2 += "<ul class='projectList_ul'><li style='padding-top: 7%;'><span style='color: rgba(0, 0, 0, 0.7); font-weight: bold; float: left;'>"+entry.project_name+"</span></li></ul>";
+										html2 += "</div>";
+										html2 += "<div class='projectList_div4' id='projectList_div4"+entry.project_idx+"'>"
+										
+										if(entry.project_favorite_status == 1){
+											
+											/* html2 += "<a class='clickA' id='clickA"+entry.project_idx+"' value onclick='updateFavoriteStatus("+entry.project_idx+");return false;' href='javascript:void(0);'>"; */
+											
+											html2 += "<a class='clickA' id='clickA"+entry.project_idx+"' >";
+											
+											html2 += "<i class='fa fa-star'></i>";
+											
+											html2 += "</a>";
+
+											html2 += "<input type='hidden' id='idx"+entryIndex2+"' value='"+entry.project_idx+"' />";
+											
+										}
+										
+										html2 += "</div>";                       
+										html2 += "</div>";
+										html2 += "</div>";				   
+										
 										$("#teamlist"+entryIndex).html(html2);
 									});
 										
@@ -1022,7 +1107,7 @@
 							
 						}); // end of ajax({}) ----------------------------------------
 						
-						html += "<li class='divider'></li>";
+						html += "<li class='divider' style='border-color: rgb(255, 82, 82, 0.8);'></li>";
 												
 					});
 									
@@ -1037,6 +1122,113 @@
 				$(".dropdown").show(html);
 				
 				
+				<%-- $(".clickA").click(function()){
+					
+					var form_data = {"project_idx": $("#clickA")}
+					
+					ajax({
+							
+						url: "<%= request.getContextPath() %>/clickA.action",
+						type: "POST",
+						dataType: "json",
+						data: form_data,
+						success: function(json){
+							
+							var n = json[0].n;
+							
+							if(n==1){
+								$("#clickA"+project_idx).fadeOut();	
+							}
+							
+							
+						},
+						error: function(request, status, error){
+							alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
+						}
+						
+						
+					}); 
+					
+					
+				}--%>
+				
+			},
+			error: function(request, status, error){
+				alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
+			}
+			
+		});
+					
+		
+	}
+	
+/* 		 
+	function updateFavoriteStatus(project_idx){
+	
+		alert("ajax 확인용");
+		
+		event.preventDefault();	 
+			 
+		var form_data = {"project_idx" : project_idx}
+		
+		ajax({
+					
+			url: "clickA.action",
+			type: "POST",
+			dataType: "JSON",
+			data: form_data,
+			success: function(json){
+			
+				alert("성공했다용");
+				
+				var n = json[0].n;
+								
+				if(n == 1){
+					$("#projectList_div4"+project_idx).hide();
+				}
+				
+			},
+			error: function(request, status, error){
+				alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
+			}
+			
+		});
+			 
+	} */
+	
+	$(document).on("click", ".clickA", function(event){
+		var project_idx = $(this).next().val();
+		event.preventDefault();
+		
+		/* var $target = $(event.target);
+		//var project_idx = $target.next().next().val();
+				
+	//	var project_idx = $(this).val(); */
+		 
+		var form_data = {"project_idx" : project_idx}
+		
+		alert("실행 확인" + project_idx);
+		
+		$.ajax({
+					
+			url: "<%= request.getContextPath()%>/clickA.action",
+			type: "POST",
+			dataType: "JSON",
+			data: form_data,
+			success: function(json){   
+			
+				alert("성공했다용");
+				
+				var n = json.n;
+								
+				if(n == 1){
+					$("#projectList_div4"+project_idx).hide();
+					
+					alert("실행확인>>>>>>>>>>>>>>>");
+					
+					teamlistButton();
+				}
+				
 			},
 			error: function(request, status, error){
 				alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
@@ -1044,32 +1236,17 @@
 			
 		});
 		
-		
-	}
+	});
 	
-	/*  $(document).click(function(event){
-		 
-		  if(!$(event.target).closet('#drop1').length){
-			  
-			  if($('#drop1').is(":visible")){
-				  $('#drop1').hide();
-			  }
-			  
-		  }
-		  
-	  }); 
-	 
-	 $(document).click(function(event){
-		 
-		  if(!$(event.target).closet('#drop2').length){
-			  
-			  if($('#drop2').is(":visible")){
-				  $('#drop2').hide();
-			  }
-			  
-		  }
-		  
-	  });  */
+	$(document).mouseup(function (e){
+		
+		if(!$(".list-group.drop.dropdown-menu").is(e.target) && $(".list-group.drop.dropdown-menu").has(e.target).length == 0 ){
+			
+ 			$(".list-group.drop.dropdown-menu").fadeOut();
+			
+		}
+				
+	});
 	
 	function personalAlarm(){
 		  
@@ -1082,6 +1259,8 @@
 				
 				var html = "";
 				
+				/* html += "<ul class='dropdown-menu extended inbox' id='newMsgList'>"; */
+				
 				html += "<div class='notify-arrow notify-arrow-blue'></div>"; 
 				
 				html += "<li style='width: 300px;'>";
@@ -1090,34 +1269,54 @@
 				
 				html += "<div class='wrap' style='border: 0px solid yellow; width: 300px;'>";
 				
+				
+				
+				
+				
 				if(json.length > 0){
 					
-					$.each(json, function(entryIndex, entry){
+					 $.each(json, function(entryIndex, entry){
+							
+							/* html += "<span style='color: gray; font-weight: bold; font-size: 15pt;'><p>"*/
+							/* html += entry.record_userid + "</p></span>" ; */ 
+							html += "<li id='checkbox"+entry.project_record_idx+"' >";
+							/* html += "<input type='checkbox' id='select"+entryIndex+ "' name='current_proudct' class='custom_checkbox' value='"+entry.project_record_idx+"' onclick='goHide();'/>";
+							html += "<label for='select'"+entryIndex+">"; */
+							html += "<input type='checkbox' name='current_proudct' class='custom_checkbox' value='"+entry.project_record_idx+"' onclick='goHide();'/>";
+							html += "<label for='select'"+entryIndex+">";
+							html += "</label><br/>";
+							
+							/* html += "<input type='checkbox' id='select'"+entryIndex+ "class='custom_checkbox'>";
+							html += "<label for='select'"+entryIndex+">"; */
+							html += "<span class='profile-ava'><img id='newMsg_img' src='<%= request.getContextPath() %>/resources/img/avatar1.jpg'></span>&nbsp;&nbsp;"
+							html += "<span style='color: gray; font-weight: bold; font-size: 12pt; color: rgba(255, 82, 82, 0.7);'>"+ entry.record_userid + "</span><br/>" ;
+							html += "<span style='color: gray; font-weight: lighter;'>" + entry.record_dml_status + "</span><br/>";
+							html += "<span style='color: gray; font-weight: lighter; font-size: 7pt;'>on CARD "+entry.card_title+" on LIST "+entry.list_name;
+							html += "on PROJECT "+entry.project_name+"&nbsp;&nbsp;</span><br/>";
+			
+							html += "<span style='color: gray; font-weight: lighter; font-size: 7pt; float: right; padding-top: 5%; padding-right: 5%;'><br/>"+entry.project_record_time+"</span>";
+							
+							html += "<li class='divider'></li>";
+							html += "</li>";
+							
+							
+						});
 						
+
+					
+					/* $.each(json, function(entryIndex, entry){
 						
-						/* html += "<span style='color: gray; font-weight: bold; font-size: 15pt;'><p>"*/
-						   <%-- html +=  "<img src='<%= request.getContextPath() %>/img/"+entry.server_filename+"'>" --%> 
-						/* html += entry.record_userid + "</p></span>" ; */ 
-						html += "<li id='checkbox"+entry.project_record_idx+"' >"
-						html += "<input type='checkbox' id='select"+entryIndex+ "' name='current_proudct' class='custom_checkbox' value='"+entry.project_record_idx+"' onclick='goHide();'/>";
-	  					html += "<label for='select'"+entryIndex+">";
+						html += "<li id='checkbox"+entry.project_record_idx+"' >
+						html += "<input type='checkbox' name='current_proudct' class='custom_checkbox' value='"+entry.project_record_idx+"' onclick='goHide();'/>";
+	  					html += "<label for='select"+entryIndex+"'>";
 	  					html += "</label><br/>";
-						
-						/* html += "<input type='checkbox' id='select'"+entryIndex+ "class='custom_checkbox'>";
-						html += "<label for='select'"+entryIndex+">"; */
-						html += "<span style='color: gray; font-weight: bold; font-size: 15pt;'>"+ entry.record_userid + "</span><br/>" ;
-						html += "<span style='color: gray; font-weight: lighter;'>" + entry.record_dml_status + "</span><br/>";
-						html += "<span style='color: gray; font-weight: lighter; font-size: 7pt;'>프로젝트 "+entry.project_name+"&nbsp;&nbsp;";
-						html += "리스트"+entry.list_name+"카드"+entry.card_title;
-						html += "<br/>등록일자"+entry.project_record_time;
-						
-						html += "<li class='divider'></li>";
 						html += "</li>";
 						
-					});
+					}); */
+					 
+					
 					
 					html += "</div>";
-					
 					
 					$("#newMsgList").html(html);
 					
@@ -1144,7 +1343,7 @@
 		  $("input[name=current_proudct]:checked").each(function() {
 			 
 			  test = $(this).val();
-			  // alert("test : " + test); 1078 	  		
+			  alert("test : " + test);  		
 		      var form_data = {checkboxVal: test}
 		  		   			  
 			  $.ajax({
@@ -1181,9 +1380,68 @@
 	  }
 	  
 	  
-	
+	  <%-- $.each(json, function(entryIndex, entry){
+			
+			/* html += "<span style='color: gray; font-weight: bold; font-size: 15pt;'><p>"*/
+			   html +=  "<img src='<%= request.getContextPath() %>/img/"+entry.server_filename+"'>" 
+			/* html += entry.record_userid + "</p></span>" ; */ 
+			html += "<li id='checkbox"+entry.project_record_idx+"' >";
+			/* html += "<input type='checkbox' id='select"+entryIndex+ "' name='current_proudct' class='custom_checkbox' value='"+entry.project_record_idx+"' onclick='goHide();'/>";
+			html += "<label for='select'"+entryIndex+">"; */
+			html += "<input type='checkbox' name='current_proudct' class='custom_checkbox' value='"+entry.project_record_idx+"' onclick='goHide();'/>";
+			html += "<label for='select'"+entryIndex+">";
+			html += "</label><br/>";
+			
+			/* html += "<input type='checkbox' id='select'"+entryIndex+ "class='custom_checkbox'>";
+			html += "<label for='select'"+entryIndex+">"; */
+			html += "<span class='profile-ava'><img id='newMsg_img' src='<%= request.getContextPath() %>/resources/img/avatar1.jpg'></span>&nbsp;&nbsp;"
+			html += "<span style='color: gray; font-weight: bold; font-size: 12pt; color: rgba(255, 82, 82, 0.7);'>"+ entry.record_userid + "</span><br/>" ;
+			html += "<span style='color: gray; font-weight: lighter;'>" + entry.record_dml_status + "</span><br/>";
+			html += "<span style='color: gray; font-weight: lighter; font-size: 7pt;'>프로젝트 "+entry.project_name+"&nbsp;&nbsp;";
+			html += "리스트"+entry.list_name+"카드"+entry.card_title;
+			html += "<br/>등록일자"+entry.project_record_time;
+			
+			html += "<li class='divider'></li>";
+			html += "</li>";
+			
+			
+		});
+		 --%>
 
+		 
+		 
+
+			<%-- html += "<li rowspan='2'><span class='profile-ava'>";
+			html += "<img id='newMsg_img' src='<%= request.getContextPath() %>/resources/img/avatar1.jpg'></span></li>"; --%>
+			<%-- html += "<li><span class='profile-ava'>";
+			html += "<img id='newMsg_img' src='<%= request.getContextPath() %>/resources/img/avatar1.jpg'></span></li>"; --%>
+			
+			/* html += "<li><span style='font-weight: bold;'>"+ entry.record_userid +"</span>";
+			html += "<span>"+entry.record_dml_status+"</span>&nbsp;&nbsp;on<span>"+entry.card_title+"</span></li>";  */
+			/* html += "</ul>"; */
+									
+			/* html += "<ul>";
+			html += "<li><span>"+ entry.project_record_time +"</span><span>&nbsp;on&nbsp;project&nbsp;"+entry.project_name+"</li>";
+			html += "</ul>";  */
 		
+			
+			/* html += "<ul class='project_record_tb'>"; */
+			/* html += "<li rowspan='2' id='checkbox"+entry.project_record_idx+"' >
+			html += "<input type='checkbox' name='current_proudct' class='custom_checkbox' value='"+entry.project_record_idx+"' onclick='goHide();'/>";
+				html += "<label for='select'"+entryIndex+">";
+				html += "</label><br/>";
+			html += "</li>"; */
+			
+
+			/* 
+			$("#newMsgList").html(html);
+			
+			$.each(json, function(entryIndex, entry){
+				
+				
+										
+			});
+*/
  
 </script>
 
@@ -1210,14 +1468,7 @@
 
 			<header class="header dark-bg">
 			
-			<div style="padding-left: 47%; border: 0px solid red;">      
-					<!-- logo start -->
-					   <a href="index.action" class="title">FINAL <span style="color: rgb(255, 82, 82);">INS</span></span></a>
-					<!-- logo end -->
-			</div>  
-			
-			
-			<div class="menu_header">
+			<div class="menu_header" style="position: relative; padding-top: -15%;">
 				<div class="container"
 					style="border: 0px solid yellow; width: 150px; float: left; padding-top: 2px;">
 					<div class="dropdown" style="border: 0px solid yellow;">
@@ -1225,7 +1476,7 @@
 						 <button class="btn btn-default dropdown-toggle" type="button" id="project_button"
 						  data-toggle="dropdown"> 
          				 <span class="icon_cloud-upload_alt logo" style="margin-right: 10px; font-size: 20pt; color: rgb(255, 82, 82);"></span>
-         				 <span style="font-size: 16pt; color: gray;">Project</span> 
+         				 <span style="font-size: 16pt; color: gray; font-weight: bold;">Project</span> 
        					<!-- <span class="caret"></span> --></button>
 							
 						<ul class="dropdown-menu" id="project_dropdown"
@@ -1353,7 +1604,7 @@
 					<!--  search form end -->    
 				</div>
 
-				  
+				 
 				
 				<div class="top-nav notification-row" style="float: right;">  
 					    <div class="scrollbar" id="style-2">
@@ -1368,41 +1619,7 @@
 								class="icon-envelope-l"></i> <!-- <span class="badge bg-important">5</span> -->
 						</a>
 							<ul class="dropdown-menu extended inbox" id="newMsgList">
-								<!-- <div class="notify-arrow notify-arrow-blue"></div> -->
-								<!-- <li>
-									<p class="blue">You have 5 new messages</p>
-								</li> -->
-							
 								
-								
-								<!-- 
-								<li><a href="#"> <span class="photo"><img
-											alt="avatar" src="./img/avatar-mini.jpg"></span> <span
-										class="subject"> <span class="from">Greg Martin</span>
-											<span class="time">1 min</span>
-									</span> <span class="message"> I really like this admin panel.
-									</span>
-								</a></li>
-								<li><a href="#"> <span class="photo"><img
-											alt="avatar" src="./img/avatar-mini2.jpg"></span> <span
-										class="subject"> <span class="from">Bob Mckenzie</span>
-											<span class="time">5 mins</span>
-									</span> <span class="message"> Hi, What is next project plan? </span>
-								</a></li>
-								<li><a href="#"> <span class="photo"><img
-											alt="avatar" src="./img/avatar-mini3.jpg"></span> <span
-										class="subject"> <span class="from">Phillip Park</span>
-											<span class="time">2 hrs</span>
-									</span> <span class="message"> I am like to buy this Admin
-											Template. </span>
-								</a></li>
-								<li><a href="#"> <span class="photo"><img
-											alt="avatar" src="./img/avatar-mini4.jpg"></span> <span
-										class="subject"> <span class="from">Ray Munoz</span> <span
-											class="time">1 day</span>
-									</span> <span class="message"> Icon fonts are great. </span>
-								</a></li>
-								<li><a href="#">See all messages</a></li>-->
 							</ul></li> 
 						<!-- inbox notificatoin end -->
 
@@ -1410,82 +1627,7 @@
 
 						<!-- alert notification start-->
 						<li id="alert_notificatoin_bar" class="dropdown">
-							<!--           <div class="dropdown" style="width: 5%; padding-left:0.2px; padding-top: 7px; float: left;">
-	             <a data-toggle="dropdown" class="dropdown-toggle" id="menu1" href="#">           
-	                                         
-	                            <i class="icon-bell-l"></i>         
-	                            <span class="badge bg-important" style="margin-left: 30pt;">7</span>
-	             </a>			 
-	                   
-		         <ul class="dropdown-menu extended notification" >     
-				    <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown" style=" background-color: black; margin-top:1px; color: black; border-color: black;"> 
-				    	<span class="icon_cloud-upload_alt logo" style="margin-right: 10px; font-size: 20pt; color: #ffc61a;"></span><span style="font-size: 16pt;" class="lite">Project</span>
-				    <span class="caret"></span></button>
-				    <ul class="dropdown-menu" role="menu" aria-labelledby="menu1" style="width: 500px;">
-				      <li role="presentation"><a role="menuitem" tabindex="-1" href="#">프로젝트이름</a></li>
-				      <li role="presentation"><a role="menuitem" tabindex="-1" href="#">CSS</a></li>
-				      <li role="presentation"><a role="menuitem" tabindex="-1" href="#">JavaScript</a></li>
-				      <li role="presentation" class="divider"></li> 
-				      <li role="presentation"><a role="menuitem" tabindex="-1" href="#">About Us</a></li>
-				 	</ul>
-				 </ul>
-			 
-	 		</div>  -->
-
-						<!--	
-							<div class="dropdown" style="width: 5%; padding-left: 0.2px; padding-top: 7px; float: left; border: 0px solid yellow;">
-								 
-								<button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown" style=" background-color: black; margin-top:1px; color: black; border-color: black;"> 
-					    			<span class="icon_cloud-upload_alt logo" style="margin-right: 10px; font-size: 20pt; color: #ffc61a;"></span><span style="font-size: 16pt;" class="lite">Project</span>
-					    			<span class="caret"></span>
-					    		</button>  
-					    		
-
-								<a data-toggle="dropdown" class="dropdown-toggle" id="menu1" href="#"> 
-									<i class="icon-bell-l"></i>
-									<span class="badge bg-important" style="margin-left: 30pt;">7</span>
-								</a> 
-								
-							</div> 
 							
-							-->
-							
-							
-							
-							<!-- <div class="dropdown" style="width: 5%; padding-left: 0.2px; padding-top: 7px; float: left; border: 1px solid yellow;">
-							  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Dropdown Example
-							  <span class="caret"></span></button>
-							  <a data-toggle="dropdown" class="dropdown-toggle" data-toggle="dropdown" id="menu1" href="#"> 
-									<i class="icon-bell-l"></i>
-									<span class="badge bg-important" style="margin-left: 30pt;">7</span>
-							  </a>
-							  
-							  <ul class="dropdown-menu" style="border: 1px solid yellow; width: 400px; margin-left: 200px;">
-							    <li><a href="#">HTML</a></li>
-							    <li><a href="#">CSS</a></li>
-							    <li><a href="#">JavaScript</a></li>
-							  </ul>
-							  
-							  
-							  <div class="dropdown-menu" style="width: 400px; margin-left: 50px;">
-							   	<h2>Basic List Group</h2>
-								  	<ul class="list-group">
-								    	<li class="list-group-item">First item</li>
-								    	<li class="list-group-item">Second item</li>
-								    	<li class="list-group-item">Third item</li>
-								  	</ul>
-							  </div>
-							   
-							</div>
-							 -->
-							<!-- <div class="container">
-								<div class="checkbox checkbox-warning">
-			                        <input id="check2" type="checkbox" class="styled" checked>
-			                        <label for="check2">
-			                            Style 2
-			                        </label>
-			                    </div>
-							</div> -->
 
 						</li>
 						<!-- alert notification end-->
@@ -1499,7 +1641,7 @@
 						</a>
 							<ul class="dropdown-menu extended logout">
 								<div class="log-arrow-up"></div>
-								<li class="eborder-top"><a href="#"><i
+								<li class="eborder-top"><a href="mypage.action"><i
 										class="icon_profile"></i> My Profile</a></li>
 								<li><a href="<%= request.getContextPath() %>/logout.action"><i class="icon_key_alt"></i>
 										Log Out</a></li>
@@ -1599,13 +1741,30 @@
 				</div>
 				
 				
+				 <div style="padding-left: 47%; padding-top: 1%; border: 0px solid red;">      
+					<!-- logo start -->
+					   <a href="index.action" class="title">FINAL <span style="color: rgb(255, 82, 82);">INS</span></span></a>
+					<!-- logo end -->
+				 </div> 
+				
 			</div>
 				
 
+			<!-- <ul>
+				<li rowspan="2"><input></li>
+				<li rowspan="2"><img /></li>
+				<li></li>
+			</ul>
+			<ul>
+				<li></li>			
+			</ul> -->
 
 
-
+			
 				
 			</header>
 		</c:if>
 		<!--header end-->
+		
+
+		

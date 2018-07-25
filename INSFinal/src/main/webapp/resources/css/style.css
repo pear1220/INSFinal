@@ -10,7 +10,12 @@
 
 @import url(line-icons.css);
 
-
+/* 박다솜! */
+html, body{
+	margin: 0;
+	padding: 0;
+	height: 100%;
+}
 
 body {
 
@@ -1196,13 +1201,13 @@ ul.top-menu > li > a:hover, ul.top-menu > li > a:focus {
 
     max-width: 300px !important;
 
-     min-width: 160px !important; 
-  
-    top: 42px;
+    min-width: 160px !important;
 
-   /* width: 235px !important;  header의 dropmenu width 길이 수정 위해 important 주석 -- 민재*/
- 
-     width: 235px;
+    top: 42px;
+     
+   /*  width: 235px !important; */
+   
+    width: 300px;
 
     padding: 0;
 

@@ -77,7 +77,7 @@ public class LoginCheck {
 					// request에 데이터를 담아 /WEB-INF/viewsnotiles/msg.jsp페이지로 보낸다.
 					dispatcher.forward(request, response); 
 					//dispatcher는 데이터를 다른 페이지로 이동시키지만 url이 바뀌지는 않는다.
-					//response.sendRedirect("/board/index.action"); 데이터 이동 없이 페이지(url)만 이동한다.
+				// response.sendRedirect("/finalins/index.action"); //데이터 이동 없이 페이지(url)만 이동한다.
 					
 				} catch(ServletException e) {
 					e.printStackTrace();
@@ -85,6 +85,8 @@ public class LoginCheck {
 					e.printStackTrace();
 				} // end of try-catch 
 			} // end of if
+			
+			return;
 			
 		} // end of before()
 	

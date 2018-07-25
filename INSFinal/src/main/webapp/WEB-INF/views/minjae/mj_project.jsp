@@ -56,14 +56,7 @@
 	}
 	
 
-	table, td {
-		/* border: 1px solid gray; */
-		/* width: 50px; */
-	}
 	
-	/* td {
-		border: 1px solid red; 
-	} */
 	
 	.imgtd {
 		width: 100px;
@@ -240,8 +233,8 @@
 						
 						html += "<tr style='height: 50px; text-align:center; border: 1px solid red;' >";
 						html += "<td colspan='2' style='padding-top: 15px;'>";
-						/* html += "<a style='cursor: pointer; color: #00a0df;' href='javascript:void(0);'>view all activity</a></td>"; */
-						html += "<a href='javascript:void(0);' id='clickFUN'>클릭확인</a></td>"
+						html += "<a style='cursor: pointer; color: #00a0df;' id='viewallactivity' href='javascript:void(0);'>view all activity</a></td>"; 
+						/* html += "<a href='javascript:void(0);' id='clickFUN'>클릭확인</a></td>" */
 						html += "</tr>";
 						
 				 	 } 
@@ -250,12 +243,6 @@
 					
 					$("#activitylist").html(html);
 					
-					
-					$("#clickFUN").click(function(){
-						
-						alert("클릭확인");
-					});
-					<%-- 
 					$("#viewallactivity").click(function(){
 						
 						var html2 = "";
@@ -289,8 +276,6 @@
 							$("#activitylistMore").html(html2);
 												
 					});// end of $("#viewallactivity1").click()------------------------------------------------
-					 --%>
-					
 					
 				}
 				else{
@@ -331,8 +316,7 @@
 				var html = "";
 				
 				if($("#sel3").val() == 'list'){
-					
-					
+										
 					
 				}
 				else if($("#sel3").val() == 'card'){
@@ -394,7 +378,16 @@
 	}  */
 	
 	
-	/* */
+	
+ 	$(document).mouseup(function (e){
+		
+		if(!$(".sidenav").is(e.target) && $(".sidenav").has(e.target).length == 0 ){
+			
+			closeNav(); 
+			
+		}
+				
+	});
 	
 	
 </script>
@@ -439,38 +432,15 @@
 	   <div id="mySideactivity" class="sidenav" style="border: 0px solid yellow;">
    		       
 	  	  <span style="font-size: 40pt; font-weight: bold; cursor: pointer; float: left;" onclick="closeNav2();">Activity</span>
-	  	  <ul class="w3-ul">
-		    <span style="font-size: 30pt; margin-top: 20px; float: left;"><i class="fa fa-arrow-left" onclick="closeNav3();"></i></span>
-	  	  </ul>
+		  	  <ul class="w3-ul">
+			    <span style="font-size: 30pt; margin-top: 20px; float: left;"><i class="fa fa-arrow-left" onclick="closeNav3();"></i></span>
+		  	  </ul>
 	  	  
 	  	    
 	  	  <div style="border: 0px solid yellow; margin-top: 100px;">
-		  	  <!-- <button type="button" class="btn btnActivity" id="cardEditbtn" value="수정" onclick="selVal();">CARD<br/>EDIT</button>
-		  	  <button type="button" class="btn btnActivity" id="cardDeletebtn" value="삭제" onclick="selVal();">CARD<br/>DELETE</button>
-		  	  <button type="button" class="btn btnActivity" id="cardAddbtn" value="추가" onclick="selVal();">CARD<br/>ADD</button>
-		  	  <button type="button" class="btn btnActivity" id="listCreatebtn" value="생성" onclick="selVal();">LIST<br/>CREATE</button> -->
-		  	  <!-- <input type="button" class="btn btnActivity" id="cardEditbtn" onclick="btnVal();" value="수정" />
-		  	  <input type="button" class="btn btnActivity" id="cardDeletebtn" onclick="btnVal();" value="삭제" />
-		  	  <input type="button" class="btn btnActivity" id="cardAddbtn" onclick="btnVal();" value="추가" />
-		  	  <input type="button" class="btn btnActivity" id="listCreatebtn" onclick="btnVal();" value="생성" /> -->
-		  	  <!-- <select class="form-control" class="sel" id="sel2" name="sel2" onchange="selVal();">     onclick="Activity();"
-		        <option selected value="수정">CARD EDIT</option>
-		        <option value="삭제">CARD DELETE</option>
-		        <option value="추가">CARD ADD</option>
-		        <option value="생성">LIST CREATE</option>
-		      </select> -->
+		  
 	  	  </div>
-		  <!-- <a href="javascript:void(0)" onclick="closeNav();"><span style="padding-left: 80%; font-size: 20pt;">&times;</span></a>
-		  <span>&nbsp;&nbsp;&nbsp;Search in PROJECT</span> -->             
-		   <!-- <div class="form-group" style="padding-left:18pt; padding-top: 10pt; width: 120px; border: 0px solid yellow;">
-		      <h2><span>Activity</span></h2>
-		      <select class="form-control" id="sel2" name="sel2" onclick="Activity();">     onclick="Activity();"
-		        <option selected value="수정">CARD EDIT</option>
-		        <option value="삭제">CARD DELETE</option>
-		        <option value="추가">CARD ADD</option>
-		        <option value="생성">LIST CREATE</option>
-		      </select>
-		    </div> -->
+
 		    
 		    
 		  
@@ -528,16 +498,7 @@
 	  	<input type="text" name="fk_project_idx" value="31" /><%-- value="${project_membervo.fk_project_idx}" --%>
 	  	<input type="text" name="sel1Val" />
 	  </form>
-	  
-	  <input type="checkbox" id="mj_checkbox" class="" />
-	  <label for="mj_checkbox">체크박스</label>
-	  
-	  <%-- <c:forEach items="${adminList}" var="map">
-		  	<c:if test="project_member_userid.equals('${sessionScope.loginuser.userid}')">
-		  		<span style="cursor: pointer;" onclick="location.href='<%= request.getContextPath() %>/deleteProject.action'" onclick="deleteProject();" >Delete PROJECT</span>
-		  		<input type="text" value="집에가고 싶다"/>
-		  	</c:if>
-		</c:forEach> --%>
+
 	  <div style="float: right;">
 	  		<input type="text" id="sel1" name="sel1" value=""/>	
 	  </div>

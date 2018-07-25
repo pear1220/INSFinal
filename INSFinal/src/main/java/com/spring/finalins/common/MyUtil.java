@@ -1,11 +1,9 @@
-package com.spring.finalins.common;
+﻿package com.spring.finalins.common;
 
 import java.text.DecimalFormat;
+import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import com.spring.finalins.model.MemberVO;
 
 
 public class MyUtil {
@@ -56,7 +54,7 @@ public class MyUtil {
 		
 		// 1페이지부터 totalPage까지 페이지넘버를 표현하기 위해 while문 사용
 		// 페이지마다 링크를 걸어준다
-		while(loop <= blocksize && pageNo <= totalPage) { 
+	   while(loop <= blocksize && pageNo <= totalPage) { 
 			if(pageNo == currentPage) { //페이지 번호가 현재페이지라면 링크를 걸지 않는다
 				pageBar += "&nbsp;<span style='color:red; font-weight:bold; text-decoration:underline;'>" + pageNo + "</span>";
 			}
@@ -84,6 +82,74 @@ public class MyUtil {
 	} // end of getPageBar(String url, int currentPage, int sizePerPage, int totalPage, int blocksize)
 	
 	
+	// ===== *** 검색어가 포함된 페이지바 만들기 *** ======= //
+		public static String getSearchPageBar(String url
+				                            , int currentShowPageNo
+				                            , int sizePerPage
+				                            , int totalPage
+				                            , int blockSize
+				                            , String colname, String search, String period) {
+			
+			String pageBar = "";
+		    
+			int pageNo = 1;
+			int loop = 1;
+			
+			pageNo = ((currentShowPageNo - 1) / blockSize) * blockSize + 1;
+			// 공식임.
+			
+			//     currentShowPageNo      pageNo
+			//    -------------------------------
+			//           1                  1
+			//           2                  1
+			//          ..                 ..
+			//          10                  1
+			//          
+			//          11                 11
+			//          12                 11
+			//          ..                 ..
+			//          20                 11
+			//          
+			//          21                 21                 
+			//          22                 21 
+			//          ..                 ..
+			//          30                 21 
+			
+			if(pageNo == 1) {
+				pageBar += "";
+			}
+			else {
+				pageBar += "&nbsp;<a class='previous round' href=\""+url+"?currentShowPageNo="+(pageNo-1)+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"&period="+period+"\"><span style=' font-weight: bold;'> << </span></a>";
+			}
+			
+			while( !(loop > blockSize || pageNo > totalPage) ) {
+				
+				if(pageNo == currentShowPageNo) {
+					pageBar += "&nbsp;<span style=\"color: #fed189; font-size: 13pt; font-weight: bold; text-decoration: underline;\">"+pageNo+"</span>&nbsp;"+"/ 총 "+totalPage+"페이지 &nbsp;";
+				}
+				else {
+					pageBar += "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"&period="+period+"\">"+pageNo+"</a>&nbsp;";
+				}
+				
+				pageNo++;
+				loop++;
+			}// end of while-------------------------
+			
+			if(pageNo > totalPage) {
+				pageBar += "";
+			}
+			else {
+				pageBar += "&nbsp;<a class='next round' href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&colname="+colname+"&search="+search+"&period="+period+"\"><span style=' font-weight: bold;'> >> </span></a>";
+			}
+
+			return pageBar;
+			
+		}// end of getPageBar(String url, int currentShowPageNo, int sizePerPage, int totalPage, int blockSize)-------------------	
+		
+	
+	
+	
+/*	
 	public static String getSearchPageBar(String url, int currentPage, int sizePerPage, int totalPage, int blockSize
 					, String searchtype, String searchword, String period) {
 
@@ -116,7 +182,7 @@ public class MyUtil {
 		pageBar += "";
 		}
 		else {
-		pageBar += "&nbsp;<a href=\""+url+"?currentShowPageNo="+(pageNo-1)+"&sizePerPage="+sizePerPage+"&colname="+searchtype+"&search="+searchword+"&period="+period+"\">[이전]</a>";
+		pageBar += "&nbsp;<a class='previous' href=\""+url+"?currentShowPageNo="+(pageNo-1)+"&sizePerPage="+sizePerPage+"&colname="+searchtype+"&search="+searchword+"&period="+period+"\" >previous</a>";
 		}
 		
 		while( !(loop > blockSize || pageNo > totalPage) ) {
@@ -136,13 +202,13 @@ public class MyUtil {
 		pageBar += "";
 		}
 		else {
-		pageBar += "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&colname="+searchtype+"&search="+searchword+"&period="+period+"\">[다음]</a>";
+		pageBar += "&nbsp;<a class='next' href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&colname="+searchtype+"&search="+searchword+"&period="+period+"\">next</a>";
 		}
 		
 		return pageBar;
 		
 	}// end of getPageBar(String url, int currentShowPageNo, int sizePerPage, int totalPage, int blockSize)-------------------	
-	
+*/	
 	
 	// 숫자를 입력받아 세자리마다 콤마를 찍어 리턴시켜주는 메소드
 	public static String getComma(long number) {
@@ -152,17 +218,13 @@ public class MyUtil {
 		
 		return result;
 	} // getComma(long number)
-	
-/*	// loginuser의 userid 를 리턴시켜주는 메소드
-	public static String getLoginuser(HttpSession session) {
-		
-		MemberVO loginser = (MemberVO)session.getAttribute("loginuser");
-		
-		String userid = loginser.getUserid();
-		
-		return userid;
-		
-	}*/
-	
+
+	// ****  현재시각을 나타내기  **** //
+	public static String getNowTime() {
+		Date now = new Date();
+		String today = String.format("%tF %tT", now, now);
+        return today;
+	}
+
 
 }

@@ -4959,7 +4959,7 @@ body.modal-open,
 }
 @media screen and (min-width: 768px) {
   .modal-dialog {
-    left: 50%;
+ /*    left: 50%;  다솜 모달창 옵션 수정*/
     right: auto;
     width: 600px;
     padding-top: 30px;

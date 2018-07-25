@@ -29,21 +29,15 @@ public class MinjaeService implements InterMinjaeServie {
 	public List<TeamVO> getTeamList(String userid) {
 		
 		List<TeamVO> teamList = dao.getTeamList(userid);
-		
-		System.out.println("service teamList" + teamList);
-		
+				
 		return teamList;
 	}
 	
 	// header : 해당 user의 팀에 해당하는 프로젝트 리스트를 얻음
 	@Override
-	public List<ProjectVO> getProjectList(HashMap<String, String> map) {
+	public List<HashMap<String, String>> getProjectList(HashMap<String, String> map) {
 		
-		List<ProjectVO> projectList = dao.getProjectList(map);
-		
-		for(int i=0; i<projectList.size(); i++) {
-			System.out.println("서비스단" + projectList.get(i).getProject_name());
-		}
+		List<HashMap<String, String>> projectList = dao.getProjectList(map);
 		
 		return projectList;
 	}
@@ -140,13 +134,12 @@ public class MinjaeService implements InterMinjaeServie {
 	public int deleteProject(String fk_project_idx) {
 		
 		int n = dao.deleteProject(fk_project_idx); // ins_project 테이블에서의 project_delete_status = 0 
-		System.out.println("service 단nnnnnn :" +n);
-				
+						
 		int m =0;
 		
 		if(n == 1) {
 			m = dao.deleteProjectMember(fk_project_idx); // ins_project_member 테이블에서의 project_member_status = 1 project_favorite_status = 0
-			System.out.println("service 단 mmmmmmm :" +m);
+			
 			return n+m;
 		}
 		else {
@@ -177,7 +170,7 @@ public class MinjaeService implements InterMinjaeServie {
 		
 		int newmsg = dao.getNewMessageCount(userid);
 		
-		System.out.println("service 에서 newmsg1111111111111111111111"+newmsg);
+		// System.out.println("service 에서 newmsg1111111111111111111111"+newmsg);
 		
 		return newmsg;
 	}
@@ -196,6 +189,15 @@ public class MinjaeService implements InterMinjaeServie {
 	public int setPersonal_alarm_read_status(String checkboxVal) {
 		
 		int n = dao.setPersonal_alarm_read_status(checkboxVal);
+		
+		return n;
+	}
+
+	// projectList의 favorite_status를 변경
+	@Override
+	public int projectList_updateFavoriteStatus(HashMap<String, String> map) {
+		
+		int n = dao.projectList_updateFavoriteStatus(map);
 		
 		return n;
 	}

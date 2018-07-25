@@ -1,7 +1,7 @@
 package com.spring.finalins.model;
 
 public class CardVO {
-
+	
 	private String card_idx;
 	private String fk_list_idx;
 	private String card_userid;
@@ -10,11 +10,11 @@ public class CardVO {
 	private String card_date;
 	private String card_delete_status;
 	
+	
 	public CardVO() {}
 	
 	public CardVO(String card_idx, String fk_list_idx, String card_userid, String card_title, String card_commentcount,
 			String card_date, String card_delete_status) {
-		
 		this.card_idx = card_idx;
 		this.fk_list_idx = fk_list_idx;
 		this.card_userid = card_userid;
@@ -80,4 +80,7 @@ public class CardVO {
 		this.card_delete_status = card_delete_status;
 	}
 	
+	
+	
+
 }

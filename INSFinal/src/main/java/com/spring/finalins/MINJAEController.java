@@ -101,24 +101,19 @@ public class MINJAEController {
 		map.put("userid", loginuser.getUserid());
 		
 		// 해당하는 팀의 프로젝트 목록을 갖고 옴
-		List<ProjectVO> projectList = service.getProjectList(map);
-		
-		for(int i=0; i<projectList.size(); i++) {
-			System.out.println(projectList.get(i).getProject_name());
-		}
+		List<HashMap<String, String>> projectList = service.getProjectList(map);
 		
 		JSONArray jsonArr = new JSONArray();
 		
 		if(projectList.size() > 0) {
-			for(ProjectVO projectvo:projectList) {
+			for(HashMap<String, String> projectmap:projectList) {
 				JSONObject jsonObj = new JSONObject();
 				
-				jsonObj.put("project_idx", projectvo.getProject_idx());
-				jsonObj.put("fk_team_idx", projectvo.getFk_team_idx());
-				jsonObj.put("project_name", projectvo.getProject_name());
-				jsonObj.put("project_visibility_st", projectvo.getProject_visibility_st());
-				jsonObj.put("project_delete_status", projectvo.getProject_delete_status());
-				jsonObj.put("fk_project_image_idx", projectvo.getFk_project_image_idx());
+				jsonObj.put("project_idx", projectmap.get("project_idx"));
+				jsonObj.put("fk_team_idx", projectmap.get("fk_team_idx"));   
+				jsonObj.put("project_name", projectmap.get("project_name"));
+				jsonObj.put("project_image_name", projectmap.get("project_image_name"));
+				jsonObj.put("project_favorite_status", projectmap.get("project_favorite_status"));
 				
 				jsonArr.put(jsonObj);
 				
@@ -133,6 +128,33 @@ public class MINJAEController {
 		
 		return "projectlist.notiles";
 		
+	}
+	
+	// project_favorite_status 
+	@RequestMapping(value="/clickA.action", method= {RequestMethod.POST})
+	public String clickASearch(HttpServletRequest req, HttpServletResponse res) {
+	
+		HttpSession session = req.getSession();
+		MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
+		
+		String project_idx = req.getParameter("project_idx");
+	
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("userid", loginuser.getUserid());
+		map.put("project_idx", project_idx);
+		
+		int n = service.projectList_updateFavoriteStatus(map);
+	
+		System.out.println("click 확인용>>>>>>>>>>>>>>>>>>>>>>>>>");
+		
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("n", n);
+		
+		String str_jsonObj = jsonObj.toString();
+		req.setAttribute("str_jsonObj", str_jsonObj);
+		
+		return "projectList_updateFavoriteStatus2.notiles";
+				
 	}
 
 	// header : 검색을 위해 teamList 를 얻음
@@ -490,7 +512,7 @@ public class MINJAEController {
 			
 	//	String fk_project_idx = "3";
 		
-		System.out.println("sel1Val>>>>>>>>>>>" + sel1Val);
+	//	System.out.println("sel1Val>>>>>>>>>>>" + sel1Val);
 		System.out.println("fk_project_idx>>>>>>>>>>>>>" + fk_project_idx);
 		
 		HttpSession session = req.getSession();
@@ -554,7 +576,7 @@ public class MINJAEController {
 		MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
 		
 		String fk_project_idx = req.getParameter("fk_project_idx");
-		String sel2Val = req.getParameter("sel2Val");
+		String sel3Val = req.getParameter("sel3Val");
 		String listsearchINproject = req.getParameter("listsearchINproject");
 		
 		HashMap<String, String> map = new HashMap<String, String>();
@@ -566,7 +588,7 @@ public class MINJAEController {
 		
 		List<HashMap<String, String>> searchINprojectList = null;
 		
-		if(("list").equals(sel2Val)) {
+		if(("list").equals(sel3Val)) {
 			searchINprojectList = service.getSearchlistINproject(map);
 			
 			if(searchINprojectList != null && searchINprojectList.size() > 0) {
@@ -582,11 +604,11 @@ public class MINJAEController {
 			}
 			
 		}
-		else if(("card").equals(sel2Val)) {
+		/*else if(("card").equals(sel3Val)) {
 		
-			/*List<HashMap<String, String>> searchINprojectList = service.getSearchcardINproject(map);*/
+			List<HashMap<String, String>> searchINprojectList = service.getSearchcardINproject(map);
 		}
-		
+		*/
 		
 		String str_jsonArr = jsonArr.toString();
 		req.setAttribute("str_jsonArr", str_jsonArr);
@@ -668,6 +690,14 @@ public class MINJAEController {
 	   return "personalAlarmCheckbox.notiles";
 	}
 	
+	/*
+	@RequestMapping(value="/test.action", method=RequestMethod.GET)
+	public String test() {
+	
+		
+		return "test.notiles";
+		
+	}	*/
 	
 	
 }

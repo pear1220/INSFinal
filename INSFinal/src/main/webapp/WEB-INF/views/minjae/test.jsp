@@ -7,15 +7,8 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<table style="border: 1px solid black; padding-right: 50%;">
-		<tr>
-			<td rowspan="3">img</td>
-		</tr>
-		<tr>
-			<td>d</td>
-			<td>c</td>
-			<td>c</td>
-		</tr>
-	</table>
+		
+	<div style="background-image: url('<%= request.getContextPath() %>/resources/images/04113_london_1920x1080.jpg');"></div>
+	
 </body>
 </html>

@@ -27,9 +27,9 @@ public class MinjaeDAO implements InterMinjaeDAO {
 
 	// header : 해당 user의 팀에 해당하는 프로젝트 리스트를 얻음
 	@Override
-	public List<ProjectVO> getProjectList(HashMap<String, String> map) {
+	public List<HashMap<String, String>> getProjectList(HashMap<String, String> map) {
 		
-		List<ProjectVO> projectList = sqlsession.selectList("mj.getProjectList", map);
+		List<HashMap<String, String>> projectList = sqlsession.selectList("mj.getProjectList", map);
 				
 		return projectList;
 	}
@@ -182,6 +182,15 @@ public class MinjaeDAO implements InterMinjaeDAO {
 	public int setPersonal_alarm_read_status(String checkboxVal) {
 		
 		int n = sqlsession.update("mj.setPersonal_alarm_read_status", checkboxVal);
+		
+		return n;
+	}
+
+	// projectList의 favorite_status를 변경
+	@Override
+	public int projectList_updateFavoriteStatus(HashMap<String, String> map) {
+		
+		int n = sqlsession.update("mj.projectList_updateFavoriteStatus", map);
 		
 		return n;
 	}

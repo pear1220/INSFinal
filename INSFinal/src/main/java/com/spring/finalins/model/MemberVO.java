@@ -1,5 +1,7 @@
 package com.spring.finalins.model;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class MemberVO {
 
 	private String userid;
@@ -13,20 +15,23 @@ public class MemberVO {
 	private String leave_status;
 	private String job;
 	private String birthday;
-	private String org_filename;
+
 	private String ins_personal_alarm;
-	private String server_filename;
-	private String file_size;
+	
+	/////////////////////// 이미지 업로드 /////////////////
+	private String org_filename; // 원본 사진명
+	private String server_filename; // 서버 사진명
+	private String file_size; // 사진 크기
+	
+	private MultipartFile attach; // 진짜 파일 (위에 것은 파일이름일뿐 이것이 진짜 파일이다!!) ==> WAS(톰캣) 디스크에 저장됨.
+    // MultipartFile attach 는 오라클 데이터베이스 tblBoardd 테이블의 컬럼이 아니다!!!!!!
 	
 	public MemberVO() {}
-	
-	
-	
 
 	public MemberVO(String userid, String pwd, String name, String nickname, String email, String tel1, String tel2,
-			String tel3, String leave_status, String job, String birthday, String org_filename,
-			String ins_personal_alarm, String server_filename, String file_size) {
-		super();
+			String tel3, String leave_status, String job, String birthday, String ins_personal_alarm,
+			String org_filename, String server_filename, String file_size, MultipartFile attach) {
+		
 		this.userid = userid;
 		this.pwd = pwd;
 		this.name = name;
@@ -38,10 +43,11 @@ public class MemberVO {
 		this.leave_status = leave_status;
 		this.job = job;
 		this.birthday = birthday;
-		this.org_filename = org_filename;
 		this.ins_personal_alarm = ins_personal_alarm;
+		this.org_filename = org_filename;
 		this.server_filename = server_filename;
 		this.file_size = file_size;
+		this.attach = attach;
 	}
 
 	public String getUserid() {
@@ -132,7 +138,6 @@ public class MemberVO {
 		this.birthday = birthday;
 	}
 
-
 	public String getIns_personal_alarm() {
 		return ins_personal_alarm;
 	}
@@ -140,7 +145,6 @@ public class MemberVO {
 	public void setIns_personal_alarm(String ins_personal_alarm) {
 		this.ins_personal_alarm = ins_personal_alarm;
 	}
-
 
 	public String getOrg_filename() {
 		return org_filename;
@@ -154,11 +158,9 @@ public class MemberVO {
 		return server_filename;
 	}
 
-
 	public void setServer_filename(String server_filename) {
 		this.server_filename = server_filename;
 	}
-
 
 	public String getFile_size() {
 		return file_size;
@@ -167,8 +169,19 @@ public class MemberVO {
 	public void setFile_size(String file_size) {
 		this.file_size = file_size;
 	}
+
+	public MultipartFile getAttach() {
+		return attach;
+	}
+
+	public void setAttach(MultipartFile attach) {
+		this.attach = attach;
+	}
 	
 	
 	
+
+
+
 	
 }

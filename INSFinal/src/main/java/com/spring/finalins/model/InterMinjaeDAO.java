@@ -7,7 +7,7 @@ public interface InterMinjaeDAO {
 
 	List<TeamVO> getTeamList(String userid); // header : 로그인한 userid의 팀의 리스트를 얻음
 
-	List<ProjectVO> getProjectList(HashMap<String, String> map); // header : 해당 user의 팀에 해당하는 프로젝트 리스트를 얻음
+	List<HashMap<String, String>> getProjectList(HashMap<String, String> map); // header : 해당 user의 팀에 해당하는 프로젝트 리스트를 얻음
 
 	List<TeamVO> getSearch_team(String search_input); // header : 검색을 위해 teamList 를 얻음
 
@@ -44,6 +44,8 @@ public interface InterMinjaeDAO {
 	List<HashMap<String, String>> getNewMessageList(String userid); // user가 읽지 않은 메세지의 리스트를 얻어옴
 
 	int setPersonal_alarm_read_status(String checkboxVal); // personl_alarm 테이블의 personal_alarm_read_status 변경
+
+	int projectList_updateFavoriteStatus(HashMap<String, String> map); // projectList의 favorite_status를 변경
 
 
 	
