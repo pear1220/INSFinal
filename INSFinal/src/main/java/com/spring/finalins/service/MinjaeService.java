@@ -156,13 +156,6 @@ public class MinjaeService implements InterMinjaeServie {
 		return projectRecordList;
 	}
 
-	@Override
-	public List<HashMap<String, String>> getSearchlistINproject(HashMap<String, String> map) {
-		
-		List<HashMap<String, String>> searchINprojectList = dao.getSearchlistINproject(map);
-		
-		return searchINprojectList;
-	}
 
     // user가 읽지 않은 메시지의 갯수를 얻어옴
 	@Override
@@ -201,6 +194,74 @@ public class MinjaeService implements InterMinjaeServie {
 		
 		return n;
 	}
+
+	// project : 프로젝트 내에 리스트 검색
+	@Override
+	public List<HashMap<String, String>> getSearchlistINproject(HashMap<String, String> map) {
+		
+		List<HashMap<String, String>> searchINprojectList = dao.getSearchlistINproject(map);
+		
+		return searchINprojectList;
+	}
+	
+	
+	@Override
+	public List<HashMap<String, String>> getSearchcardINproject(HashMap<String, String> map) {
+		
+		List<HashMap<String, String>> cardsearchINprojectList = dao.getSearchcardINproject(map);
+		
+		return cardsearchINprojectList;
+	}
+
+
+	@Override
+	public List<HashMap<String, String>> getcardsearchINproject_list(HashMap<String, String> map) {
+		
+		List<HashMap<String, String>> cardsearchINprojectList_list = dao.getcardsearchINproject_list(map);
+		
+		return cardsearchINprojectList_list;
+	}
+
+	@Override
+	public List<HashMap<String, String>> getcardsearchINproject_card(HashMap<String, String> map) {
+	
+		List<HashMap<String, String>> cardsearchINprojectList_card = dao.getcardsearchINproject_card(map);
+		
+		return cardsearchINprojectList_card;
+	}
+
+	//project_idx로 배경이미지 테이블에서 프로젝트의 배경이미지명을 가져오는 메소드
+	@Override
+	public String getBackgroundIMG(String project_idx) {
+		
+		String project_image_name = dao.getBackgroundIMG(project_idx);
+		
+		return project_image_name;
+		
+	}
+	
+	//유저가 접속한 프로젝트의 정보를 가져오는 메소드
+	@Override
+	public HashMap<String, String> getProjectInfo(HashMap<String, String> map) {
+		HashMap<String, String> projectInfo = dao.getProjectInfo(map);
+		return projectInfo;
+	} // end of getProjectInfo(HashMap<String, String> map)
+
+	//프로젝트의 리스트 목록을 가져오는 메소드
+	@Override
+	public List<ListVO> getListInfo(String project_idx) {
+		List<ListVO> listvo = dao.getListInfo(project_idx);
+		return listvo;
+	} // end of getListInfo(String project_idx)
+
+
+	//프로젝트에 포함된 리스트의 카드목록을 가져오는 메소드
+	@Override
+	public List<CardVO> getCardInfo(String list_idx) {
+		List<CardVO> cardlist = dao.getCardInfo(list_idx);
+		return cardlist;
+	} // end of getCardInfo(String list_idx)
+
 
 	
 	

@@ -151,13 +151,6 @@ public class MinjaeDAO implements InterMinjaeDAO {
 		return projectRecordList;
 	}
 
-	@Override
-	public List<HashMap<String, String>> getSearchlistINproject(HashMap<String, String> map) {
-		
-		List<HashMap<String, String>> searchINprojectList = sqlsession.selectList("mj.getSearchlistINproject", map);
-	
-		return searchINprojectList;
-	}
 
 	// user가 읽지 않은 메시지의 갯수를 얻어옴
 	@Override
@@ -193,6 +186,73 @@ public class MinjaeDAO implements InterMinjaeDAO {
 		int n = sqlsession.update("mj.projectList_updateFavoriteStatus", map);
 		
 		return n;
+	}
+	
+	// project: 프로젝트 내에서 list 검색
+	@Override
+	public List<HashMap<String, String>> getSearchlistINproject(HashMap<String, String> map) {
+		
+		List<HashMap<String, String>> searchINprojectList = sqlsession.selectList("mj.getSearchlistINproject", map);
+	
+		return searchINprojectList;
+	}
+
+	// project: 프로젝트 내에서 card 검색
+	@Override
+	public List<HashMap<String, String>> getSearchcardINproject(HashMap<String, String> map) {
+		
+		List<HashMap<String, String>> cardsearchINprojectList = sqlsession.selectList("mj.getSearchcardINproject", map);
+		
+		return cardsearchINprojectList;
+	}
+
+	// project: 프로젝트 내에서 card 검색 list_idx 얻어옴
+	@Override
+	public List<HashMap<String, String>> getcardsearchINproject_list(HashMap<String, String> map) {
+		
+		List<HashMap<String, String>> cardsearchINprojectList_list  = sqlsession.selectList("mj.getcardsearchINproject_list", map);
+		
+		return cardsearchINprojectList_list;
+	}
+
+	@Override
+	public List<HashMap<String, String>> getcardsearchINproject_card(HashMap<String, String> map) {
+		
+		List<HashMap<String, String>> cardsearchINprojectList_card = sqlsession.selectList("mj.getcardsearchINproject_card", map);
+		
+		return cardsearchINprojectList_card;
+	}
+	
+	//project_idx로 배경이미지 테이블에서 프로젝트의 배경이미지명을 가져오는 메소드
+	@Override
+	public String getBackgroundIMG(String project_idx) {
+		
+		String project_image_name = sqlsession.selectOne("dasom.getBackgroundIMG", project_idx);
+		return project_image_name;
+		
+	} // end of getBackgroundIMG(String project_idx)
+
+
+	//유저가 접속한 프로젝트의 정보를 가져오는 메소드
+	@Override
+	public HashMap<String, String> getProjectInfo(HashMap<String, String> map) {
+		HashMap<String, String> projectInfo = sqlsession.selectOne("dasom.getProjectInfo", map);
+		return projectInfo;
+	} // end of getProjectInfo(HashMap<String, String> map)
+
+
+	//프로젝트의 리스트 목록을 가져오는 메소드
+	@Override
+	public List<ListVO> getListInfo(String project_idx) {
+		List<ListVO> listvo = sqlsession.selectList("dasom.getListInfo", project_idx);
+		return listvo;
+	}
+
+	//프로젝트에 포함된 리스트의 카드목록을 가져오는 메소드
+	@Override
+	public List<CardVO> getCardInfo(String list_idx) {
+		List<CardVO> cardlist = sqlsession.selectList("dasom.getCardInfo", list_idx);
+		return cardlist;
 	}
 
 

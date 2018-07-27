@@ -139,24 +139,48 @@
 			}
 		}); // end of $(".btn-addcard").click
 		
-		
+////////////////////////////////////////////////// 민재 ///////////////////////////////////////////////////////////////////////////////		
 		$("#listsearchINproject").keyup(function(){
 			
 			 // alert("실행성공이다222222222222");
+			 
+			  if(${sessionScope.loginuser == null}){
+					alert("로그인이 필요합니다.");
+					location.href = "<%=request.getContextPath()%>/index.action";
+					return;
+			  }
 			
 			  if($("#listsearchINproject").val().trim() != ""){
-				  searchINproject();
+				  
+				  if($("#sel3").val() == 'list'){
+					
+					  searchListINproject();
+					  
+				  }
+				  else if($("#sel3").val() == 'card'){
+					  
+					  searchCardINproject();
+					  
+				  }
+				   
 				  
 				// alert("실행성공이다");
 			  }
-			  else if($("#listsearchINproject").val().trim() == ""){
-				  //
-			  }
-			 
+			  
+			  if($("#listsearchINproject").val().trim() == ""){
+				 
+				 	/* $(".list-wrapper").show(); */
+				 	// return;
+				 	//abortRequest();
+				 	alert("널");
+				 	projectINlistRe();
+				 	
+			  } 
+			  
 		   }); // $("#search_input").keyup()-------------------------------------------------------------------
 		  
 		
-		
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
 		
 	}); // end of $(document).ready
 	
@@ -416,85 +440,88 @@
 	   }); // $("#search_input").keyup()-------------------------------------------------------------------
 	  */
 	
-	
-	function searchINproject(){
-		
+	/* 프로젝트 내 리스트를 검색하는 함수 */
+	function searchListINproject(){
+		   
+		var listsearchINproject = $("#listsearchINproject").val();
+		var sel = $("#sel3").val()
+		/* 리스트 form */
 		var form_data2 = {fk_project_idx: "${projectInfo.project_idx}",
 				          sel3Val : $("#sel3").val(),
-				          listsearchINproject: $("#listsearchINproject").val()}
+				          listsearchINproject: listsearchINproject}
+		
+		/* if($("#listsearchINproject").val().trim() == ""){
+			 
+		 	projectINlistre();
+		 	
+	  	} */
+
+
 		
 		$.ajax({
 			
-			url: "<%= request.getContextPath() %>/searchINproject.action",
+			url: "<%= request.getContextPath() %>/listsearchINproject.action",
 			type: "get",
 			data: form_data2,
 			dataType: "json",
 			success: function(json){
 				
 				// 우선은 리스트나 카드의 정보를 json 으로 받아서 css 처리를 한다. 
-				
 				var html = "";
 				
 				if($("#sel3").val() == 'list'){
-					
+							
+					 $(".list-wrapper").empty();
+					 var html = "";
 					
 					$.each(json, function(entryIndex, entry){
-						
-						var tagName = "";
-						
-						if(entry.list_name  == $(".project_listname").val() ) {
-														
-							tagName = $(".project_listname").closest('div').prop('tagName');	
-							
-							alert("태그 이름 확인"+ tagName);
-							
-							$(tagName).show();
-						} 
-						else{
-							$(tagName).hide();
-						}
-						
-					});
-					
-					/* $.each(json, function(entryIndex, entry){
-						
-						 var word = entry.list_name.trim();
-						 // "ajax 프로그래밍"
-							
-						 var index = word.toLowerCase().indexOf( $("#listsearchINproject").val().toLowerCase() ); // 해당 문자열을 전부 다 소문자로 바꾸는 자바스크립트 함수 (toUpperCase())
-						 
-						 
-						 var len = $("#listsearchINproject").val().length;
-													
-						 var str ="";
-						
-							 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: rgb(255, 82, 82); font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+len) + "</span>"; 
-													
-							// html += "<br/><a href='#'><span class='result'>"+str+"</span></a>";
-							 
-							// $("#card_drop1").html(html);
-							
-							if(entry.list_idx == $("#list_idx_input"+entry.list_idx).val()){
-								$("#list"+entryIndex).show();
-							}
-							else{
-								$(!"#list"+entryIndex).hide();
-							}
-													
-						}
-						
-					}); */
-					/* $("#list_idx_input"+ json.list_idx).show();
-					
-					$(!"#list_idx_input"+ json.list_idx).hide(); */
-					
-				}
-				/* else if($("#sel3").val() == 'card'){
-					
-					
-				} */
 				
+						/* 카드 form */
+						var project_idx = ${projectInfo.project_idx}; 
+						
+						
+	
+					  	if(entry.list_delete_status != 0){ 
+					  		
+								html += "<input type='text' class='project_listname newval' value='"+entry.list_name+"' style='background-color:transparent; border:none; font-size: 14pt; color: gray; font-weight: bold;'/>";
+								html += "<div id='list"+entryIndex+"' class='well list-hover' style='width:300px;display:inline-block; vertical-align: top; border-radius: 1em;'>";
+								html += "<input type='text' class='project_listname newval' value='"+entry.list_name+"' style='background-color:transparent; border:none; font-size: 14pt; color: gray; font-weight: bold;'/>";
+								html += "&nbsp;&nbsp;&nbsp;<i class='fa fa-align-justify' style='font-size:24px'></i>";
+								html += "<input type='hidden' class='project_listname oldval' value='"+entry.list_name+"' style='background-color:transparent; border:none; font-size: 14pt; color: gray; font-weight: bold;'/>";
+								html += "<input type='hidden' class='project_listname oldval' value='"+entry.list_name+"' style='background-color:transparent; border:none; font-size: 14pt; color: gray; font-weight: bold;'/>";
+								html += "<div class='card-wrapper' style='max-height:500px;overflow-y:auto; margin-top: 5%;'>";
+								
+								var listidx = entry.list_idx
+								// alert("listidx"+ listidx);
+					 	        cardinfo(project_idx, sel,listsearchINproject,listidx);
+					 
+								
+								html += "</div>";
+								html += "<div class='div-addcard'>";
+/* 								html += "<textarea rows='2' cols='33' placeholder=;'Enter card title...'></textarea><br/>"; 
+								html += "<button class='btn btn-default btn-addcard' style='margin-top: 10px;' >add Card</button>";  */
+								html += "<input type='hidden' value='"+entry.list_idx+"'>";
+								html += "</div>";
+								/* html += "<span style='font-size: 12pt; color: gray;' id='addCardstyle"+entryIndex+"' class='addCardstyle'><i class='fa fa-plus'></i>&nbsp;add another card...</span>"; */
+								html += "</div>";
+								html += "</div>";
+								
+						}
+					  	
+							
+						
+						
 				
+				});
+			
+					$(".list-wrapper").html(html);
+
+					
+	/////////////////////////////////////////for 문				
+					
+				
+			    }
+		
 			},
 			error: function(request, status, error){
 				alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
@@ -504,7 +531,178 @@
 		
 		
 	}
+	   
+	/* 프로젝트 내에서 리스트를 검색할 시 카드 리스트를 불러오는 함수 */   
+  	function cardinfo(fk_project_idx,sel3Val,listsearchINproject,fk_list_idx){
+		// alert("시작");
+		
+		var form_data = {fk_project_idx: fk_project_idx,
+				          sel3Val : sel3Val,
+				          listsearchINproject: listsearchINproject,
+				          fk_list_idx : fk_list_idx}
+		
+		$.ajax({
+			
+			url: "<%= request.getContextPath() %>/listsearchINproject_card.action",
+			type: "get",
+			data: form_data,
+			dataType: "json",
+			success: function(json){
+				
+				html = "";
+				
+				if(json.length > 0){
+					
+					$.each(json, function(entryIndex, entry){
+						
+						html += "<div class='panel panel-default'>";
+						html += "<div class='panel-body' onClick='window.open('carddetail.action?projectIDX="+entry.fk_project_idx+"&listIDX="+entry.fk_list_idx+"&cardIDX="+entry.card_idx+"','window_name','width=800,height=710,location=no,status=no,scrollbars=yes');'>"+entry.card_title+"</div>";
+						html += "</div>";
+					});
+					
+					
+						
+				}
+				
+				$(".card-wrapper").html(html);
+				
+			},
+			error: function(request, status, error){
+				alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
+		    }
+			
+		}); // $.ajax({searchCardINproject.action});
+	}
+		
+	// 프로젝트 내에서 카드를 검색하는 함수 
+	  function searchCardINproject(){
+		
+			// alert("실행 성공");
+		  
+			var cardsearchINproject = $("#listsearchINproject").val();
+			var sel = $("#sel3").val()
+			/* 리스트 form */
+			
+			var form_data = {fk_project_idx: "${projectInfo.project_idx}",
+					          sel3Val : sel,
+					          cardsearchINproject: cardsearchINproject}
+			
+			$(".list-wrapper").empty();
+			
+			// alert("cardsearchINproject"+cardsearchINproject);
+			
+			// 프로젝트 내에서 검색한 카드의 list_idx 를 갖고 온다. 
+			$.ajax({
+				
+				url: "<%= request.getContextPath() %>/cardsearchINproject_list.action",
+				type: "get",
+				data: form_data,
+				dataType: "json",
+				success: function(json){
+					
+					var html = "";
+					
+					if($("#sel3").val() == 'card'){
+						
+						if(json.length > 0){
+							
+							$.each(json, function(entryIndex, entry){
+								
+								/* var project_idx = ${projectInfo.project_idx};  */
+								
+								if(entry.list_delete_status != 0){  
+							  		
+									html += "<input type='text' class='project_listname newval' value='"+entry.list_name+"' style='background-color:transparent; border:none; font-size: 14pt; color: gray; font-weight: bold;'/>";
+									html += "<div id='list"+entryIndex+"' class='well list-hover' style='width:300px;display:inline-block; vertical-align: top; border-radius: 1em;'>";
+									html += "<input type='text' class='project_listname newval' value='"+entry.list_name+"' style='background-color:transparent; border:none; font-size: 14pt; color: gray; font-weight: bold;'/>";
+									html += "&nbsp;&nbsp;&nbsp;<i class='fa fa-align-justify' style='font-size:24px'></i>";
+									html += "<input type='hidden' class='project_listname oldval' value='"+entry.list_name+"' style='background-color:transparent; border:none; font-size: 14pt; color: gray; font-weight: bold;'/>";
+									html += "<input type='hidden' class='project_listname oldval' value='"+entry.list_name+"' style='background-color:transparent; border:none; font-size: 14pt; color: gray; font-weight: bold;'/>";
+									html += "<div class='card-wrapper' style='max-height:500px;overflow-y:auto; margin-top: 5%;'>";
+									
+									var fk_list_idx = entry.fk_list_idx;
+									alert("fk_list_idx"+ fk_list_idx);
+									 
+						 	        cardinfo2(fk_project_idx, sel, cardsearchINproject, fk_list_idx);
+						  
+									html += "</div>";
+									html += "<div class='div-addcard'>";
+		/* 							html += "<textarea rows='2' cols='33' placeholder=;'Enter card title...'></textarea><br/>"; 
+									html += "<button class='btn btn-default btn-addcard' style='margin-top: 10px;' >add Card</button>";  */
+									html += "<input type='hidden' value='"+entry.list_idx+"'>";
+									html += "</div>";
+									/* html += "<span style='font-size: 12pt; color: gray;' id='addCardstyle"+entryIndex+"' class='addCardstyle'><i class='fa fa-plus'></i>&nbsp;add another card...</span>"; */
+									html += "</div>";
+									html += "</div>";
+									
+								}
+								
+							});
+						}
+						
+						 
+						
+					}
+					
+					$(".list-wrapper").html(html);
+					
+					//searchCardINproject();
 	
+			},
+			error: function(request, status, error){
+				alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
+		    }
+			
+		});
+			
+			
+	}   
+	
+	function cardinfo2(fk_project_idx, sel, cardsearchINproject, fk_list_idx){
+		alert("시작2222222");
+		var form_data = {fk_project_idx: fk_project_idx,
+				         sel3Val : sel,
+				         cardsearchINproject: cardsearchINproject,
+				         fk_list_idx : fk_list_idx}
+		
+		alert("fk_project_idx" + fk_project_idx );
+		alert("sel3Val" + sel3Val);
+		alert("cardsearchINproject" + cardsearchINproject);
+		alert("fk_list_idx" + fk_list_idx);
+		
+		$.ajax({
+			
+			url: "<%= request.getContextPath() %>/cardsearchINproject_card.action",
+			type: "get",
+			data: form_data,
+			dataType: "json",
+			success: function(json){
+				
+				html = "";
+				
+				if(json.length > 0){
+					
+					$.each(json, function(entryIndex, entry){
+						
+						html += "<div class='panel panel-default'>";
+						html += "<div class='panel-body' onClick='window.open('carddetail.action?projectIDX="+entry.fk_project_idx+"&listIDX="+entry.fk_list_idx+"&cardIDX="+entry.card_idx+"','window_name','width=800,height=710,location=no,status=no,scrollbars=yes');'>"+entry.card_title+"</div>";
+						html += "</div>";
+					});
+					
+					
+						
+				}
+				
+				$(".card-wrapper").html(html);
+				
+			},
+			error: function(request, status, error){
+				alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
+		    }
+			
+		}); // $.ajax({searchCardINproject.action});
+	} 
+	   
 
 	var se1Val = "";
 	
@@ -559,7 +757,138 @@
 				
 	});
 	
+/* 	function abortRequest() {
+
+		alert("ajax 실행 중단");
+		
+	    httpRequest.abort();
+
+	    document.getElementById("text").innerHTML = "Ajax 요청을 취소했습니다.";
+
+	} */
 	
+	
+function projectINlistRe(){
+		
+		alert("값 : ${projectInfo.project_idx}" );
+		
+		var form_data = {project_idx : "${projectInfo.project_idx}"}
+				
+		$(".list-wrapper").empty();
+		
+		$.ajax({
+			url: "<%= request.getContextPath()%>/projectRe_list.action",
+			type: "get",
+			dataType: "json",
+			data: form_data,
+			success: function(json){
+				
+				var html = "";
+										
+				if(json.length == 0){
+					html += "<div id='addList' class='well list-hover' style='width: 300px; display: inline-block; vertical-align: top; border-radius: 1em;'>";
+					html += "<label for='addListstyle'>";
+					html += "<span style='font-size: 14pt; color: gray; font-weight: bold;' id='addListstyle'><i class='fa fa-plus'></i>&nbsp;add another list...</span>";
+					html += "</label>";
+					html += "<div class='div-listname'>";
+					html += "<input type='text' class='list-title' id='listname' placeholder='Enter list title...' maxlength='30'>";
+					html += "<button class='btn btn-default' style='margin-top: 10px;' onClick='insertList();'>add List</button>";
+					html += "</div>";
+					html += "</div>";
+				}
+				else if(json.length > 0){
+					
+					$.each(json, function(entryIndex, entry){
+					
+						if(entry.list_delete_status != 0){
+							html += "<div id='list"+entryIndex+"' class='well list-hover' style='width:300px;display:inline-block; vertical-align: top; border-radius: 1em;'>";
+							html += "<input type='text' class='project_listname newval' value='"+entry.list_name+"' style='background-color:transparent; border:none; font-size: 14pt; color: gray; font-weight: bold;'/>";
+							html += "&nbsp;&nbsp;&nbsp;<i class='fa fa-align-justify' style='font-size:24px'></i>";
+							html += "<input type='hidden' class='project_listname oldval' value='"+entry.list_name+"' style='background-color:transparent; border:none; font-size: 14pt; color: gray; font-weight: bold;'/>";
+							html += "<div class='card-wrapper' style='max-height:500px;overflow-y:auto; margin-top: 5%;'>";
+													
+							var list_idx = entry.list_idx;
+							var fk_project_idx = entry.fk_project_idx;
+							
+							cardlistRe(fk_project_idx);
+							
+							html += "</div>";
+							html += "<div style='margin-top: 5%;'>";
+							html += "<div class='div-addcard'>";
+							html += "<textarea rows='2' cols='33' placeholder='Enter card title...'></textarea><br/>";
+							html += "<button class='btn btn-default btn-addcard' style='margin-top: 10px;' >add Card</button>";
+							html += "<input type='hidden' value='"+entry.list_idx+"'>";
+							html += "</div>";
+							html += "<span style='font-size: 12pt; color: gray;' id='addCardstyle"+entryIndex+"' class='addCardstyle'><i class='fa fa-plus'></i>&nbsp;add another card...</span>";
+							html += "</div>";
+							html += "</div>";
+							
+						}
+						
+					});
+					
+					
+					html += "<div id='addList' class='well list-hover' style='width: 300px; display: inline-block; vertical-align: top; border-radius: 1em;'>";
+					html += "<label for='addListstyle'>";
+					html += "<span style='font-size: 14pt; color: gray; font-weight: bold; padding-bottom: 10%;' id='addListstyle'><i class='fa fa-plus'></i>&nbsp;add another list...</span>";
+					html += "</label>";
+					html += "<div class='div-listname'>";
+					html += "<input type='text' class='list-title' id='listname' placeholder='Enter list title...' maxlength='30'>";
+					html += "<button class='btn btn-default' style='margin-top: 10px;' onClick='insertList();'>add List</button>";
+					html += "</div>";
+					html += "</div>";
+					
+				}
+				
+				$(".list-wrapper").html(html);
+				
+								
+			},
+			error: function(request, status, error){
+				alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
+		    }
+			
+		});
+	}
+	
+	function cardlistRe(fk_project_idx){
+		
+		
+		// alert("cardlistRE 호출됨");
+		var form_data = {projectIDX : fk_project_idx}
+	
+		$.ajax({
+			
+			url: "<%= request.getContextPath()%>/projectRe_card.action",
+			type: "get",
+			dataType: "json",
+			data: form_data,
+			success: function(json){
+				
+				var html = "";
+				
+				if(json.length > 0 ){
+					
+					$.each(json, function(entryIndex, entry){
+						
+						html += "<div class='panel panel-default'>";
+						html += "<div class='panel-body' onClick='window.open('carddetail.action?projectIDX="+entry.fk_project_idx+"&listIDX="+entry.card_idx+"&cardIDX="+entry.card_idx+"','window_name','width=800,height=710,location=no,status=no,scrollbars=yes');'>"+entry.card_title+"</div>";
+						html += "</div>";
+														
+					});
+										
+				}
+				
+				$(".card-wrapper").html(html);
+				
+			},
+			error: function(request, status, error){
+				alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
+		    }
+				
+		});
+		
+	} 
 	
 </script>
 

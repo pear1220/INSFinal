@@ -38,8 +38,6 @@ public interface InterMinjaeServie {
 
 	List<HashMap<String, String>> projectRecordView(HashMap<String, String> map); // project : 프로젝트 기록을 얻어옴
 
-	List<HashMap<String, String>> getSearchlistINproject(HashMap<String, String> map); // project : 프로젝트 내 리스트 검색
-
 	int getNewMessageCount(String userid); // user가 읽지 않은 메시지의 갯수를 얻어옴
 
 	List<HashMap<String, String>> getNewMessageList(String userid); // user가 읽지 않은 메세지의 리스트를 얻어옴
@@ -47,6 +45,23 @@ public interface InterMinjaeServie {
 	int setPersonal_alarm_read_status(String checkboxVal); // personl_alarm 테이블의 personal_alarm_read_status 변경
 
 	int projectList_updateFavoriteStatus(HashMap<String, String> map); // projectList의 favorite_status를 변경
+
+	List<HashMap<String, String>> getSearchlistINproject(HashMap<String, String> map); // project : 프로젝트 내 리스트 검색
+	
+	List<HashMap<String, String>> getSearchcardINproject(HashMap<String, String> map); // project : 프로젝트 내 리스트 검색 카드 리스트
+
+	List<HashMap<String, String>> getcardsearchINproject_list(HashMap<String, String> map); // project : 프로젝트 내 카드 검색 list 알아옴
+
+	List<HashMap<String, String>> getcardsearchINproject_card(HashMap<String, String> map); // project : 프로젝트 내 카드 검색 card 알아옴
+
+	String getBackgroundIMG(String project_idx);
+
+	HashMap<String, String> getProjectInfo(HashMap<String, String> map);
+
+	List<ListVO> getListInfo(String project_idx);
+
+	List<CardVO> getCardInfo(String list_idx);
+	
 
 	
 

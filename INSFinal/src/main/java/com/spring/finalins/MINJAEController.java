@@ -569,15 +569,21 @@ public class MINJAEController {
 		return "projectRecordView.notiles";
 		
 	}
-	@RequestMapping(value="/searchINproject.action", method=RequestMethod.GET)
-	public String requireLogin_searchINproject(HttpServletRequest req, HttpServletResponse res) {
-		
+	
+	// 프로젝트 내에서 리스트를 검색하는 메소드
+	@RequestMapping(value="/listsearchINproject.action", method=RequestMethod.GET)
+	public String searchListINproject(HttpServletRequest req) {
+				
 		HttpSession session = req.getSession();
 		MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
 		
 		String fk_project_idx = req.getParameter("fk_project_idx");
 		String sel3Val = req.getParameter("sel3Val");
 		String listsearchINproject = req.getParameter("listsearchINproject");
+		
+		System.out.println("fk_project_idx"+fk_project_idx);
+		System.out.println("sel3Val"+sel3Val);
+		System.out.println("listsearchINproject"+listsearchINproject);
 		
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("userid", loginuser.getUserid());
@@ -586,36 +592,193 @@ public class MINJAEController {
 		
 		JSONArray jsonArr = new JSONArray();
 		
-		List<HashMap<String, String>> searchINprojectList = null;
+		List<HashMap<String, String>> listsearchINprojectList = null;
 		
 		if(("list").equals(sel3Val)) {
-			searchINprojectList = service.getSearchlistINproject(map);
+			listsearchINprojectList = service.getSearchlistINproject(map);
 			
-			if(searchINprojectList != null && searchINprojectList.size() > 0) {
-				for(HashMap<String, String> searchINprojectMap :searchINprojectList) {
+			if(listsearchINprojectList != null && listsearchINprojectList.size() > 0) {
+				for(HashMap<String, String> searchINprojectMap :listsearchINprojectList) {
 					JSONObject jsonObj = new JSONObject();
 					
 					jsonObj.put("list_idx", searchINprojectMap.get("list_idx"));
 					jsonObj.put("list_name", searchINprojectMap.get("list_name"));
 					jsonObj.put("list_userid", searchINprojectMap.get("list_userid"));
+					jsonObj.put("list_delete_status", searchINprojectMap.get("list_delete_status"));
 					
 					jsonArr.put(jsonObj);
 				}
 			}
 			
 		}
-		/*else if(("card").equals(sel3Val)) {
-		
-			List<HashMap<String, String>> searchINprojectList = service.getSearchcardINproject(map);
-		}
-		*/
-		
+				
 		String str_jsonArr = jsonArr.toString();
 		req.setAttribute("str_jsonArr", str_jsonArr);
 		
+		System.out.println(str_jsonArr);
+		
+		return "listsearchINproject.notiles";
+				
+		
+	}
+	
+
+	// 프로젝트 내에서 리스트를 검색 시 카드 리스트를 불러오는 메소드
+	@RequestMapping(value="/listsearchINproject_card.action", method=RequestMethod.GET)
+	public String searchCardINproject(HttpServletRequest req, HttpServletResponse res) {
+		System.out.println("확인중!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+		HttpSession session = req.getSession();
+		MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
+		
+		String fk_project_idx = req.getParameter("fk_project_idx");
+		String sel3Val = req.getParameter("sel3Val");
+		String fk_list_idx = req.getParameter("fk_list_idx");
+		
+		System.out.println("fk_project_idx"+fk_project_idx);
+		System.out.println("sel3Val"+sel3Val);
+		System.out.println("fk_list_idx"+fk_list_idx);
 		
 		
-		return "searchINproject.notiles";
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("userid", loginuser.getUserid());
+		map.put("fk_project_idx", fk_project_idx);
+		map.put("fk_list_idx", fk_list_idx);
+				
+		JSONArray jsonArr = new JSONArray();
+		
+		List<HashMap<String, String>> cardsearchINprojectList = null;
+		
+		if(("list").equals(sel3Val)) {
+			cardsearchINprojectList = service.getSearchcardINproject(map);
+			
+			if(cardsearchINprojectList != null && cardsearchINprojectList.size() > 0) {
+				for(HashMap<String, String> searchINprojectMap : cardsearchINprojectList) {
+					JSONObject jsonObj = new JSONObject();
+					
+					jsonObj.put("fk_project_idx", searchINprojectMap.get("fk_project_idx"));
+					jsonObj.put("fk_list_idx", searchINprojectMap.get("fk_list_idx"));
+					jsonObj.put("card_idx", searchINprojectMap.get("card_idx"));
+					jsonObj.put("card_title", searchINprojectMap.get("card_title"));
+					
+					jsonArr.put(jsonObj);
+				}
+			}
+			
+		}
+	
+		String str_jsonArr = jsonArr.toString();
+		req.setAttribute("str_jsonArr", str_jsonArr);
+		System.out.println("확인중!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+str_jsonArr);
+		
+		
+		return "listsearchINproject_card.notiles";
+				
+		
+	}
+	
+	// project : 프로젝트 내 카드 검색 list 알아옴 
+	@RequestMapping(value="/cardsearchINproject_list.action", method=RequestMethod.GET)
+	public String cardsearchINproject_list(HttpServletRequest req) {
+		
+		HttpSession session = req.getSession();
+	// 	MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
+		
+		String fk_project_idx = req.getParameter("fk_project_idx");
+		String sel3Val = req.getParameter("sel3Val");
+		String cardsearchINproject = req.getParameter("cardsearchINproject");
+		
+						
+		System.out.println("fk_project_idx"+fk_project_idx);
+		System.out.println("sel3Val"+sel3Val);
+		System.out.println("cardsearchINproject"+cardsearchINproject);
+				
+		HashMap<String, String> map = new HashMap<String, String>();
+	//	map.put("userid", loginuser.getUserid());
+		map.put("fk_project_idx", fk_project_idx);
+		map.put("cardsearchINproject", cardsearchINproject);
+						
+		JSONArray jsonArr = new JSONArray();
+		
+		List<HashMap<String, String>> cardsearchINprojectList_list = null;
+		
+		if(("card").equals(sel3Val)) {
+			cardsearchINprojectList_list = service.getcardsearchINproject_list(map);
+			
+			if(cardsearchINprojectList_list != null && cardsearchINprojectList_list.size() > 0) {
+				for(HashMap<String, String> cardsearchINprojectMap : cardsearchINprojectList_list) {
+					JSONObject jsonObj = new JSONObject();
+										
+					jsonObj.put("fk_list_idx", cardsearchINprojectMap.get("fk_list_idx"));
+					jsonObj.put("list_name", cardsearchINprojectMap.get("list_name"));
+					jsonObj.put("list_userid", cardsearchINprojectMap.get("list_userid"));
+					jsonObj.put("list_delete_status", cardsearchINprojectMap.get("list_delete_status"));
+										
+					jsonArr.put(jsonObj);
+				}
+			}
+			
+		}
+	
+		String str_jsonArr = jsonArr.toString();
+		req.setAttribute("str_jsonArr", str_jsonArr);
+			
+		return "cardsearchINproject_list.notiles";
+				
+		
+	}
+	
+	
+	// 프로젝트 내에서 리스트를 검색 시 카드 리스트를 불러오는 메소드
+	@RequestMapping(value="/cardsearchINproject_card.action", method=RequestMethod.GET)
+	public String cardsearchINproject_card(HttpServletRequest req) {
+	
+	//	HttpSession session = req.getSession();
+	//	MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
+		
+		String fk_project_idx = req.getParameter("fk_project_idx");
+		String sel3Val = req.getParameter("sel3Val");
+		String fk_list_idx = req.getParameter("fk_list_idx");
+		String cardsearchINproject = req.getParameter("cardsearchINproject");
+		
+		System.out.println("fk_project_idx"+fk_project_idx);
+		System.out.println("sel3Val"+sel3Val);
+		System.out.println("fk_list_idx"+fk_list_idx);
+		System.out.println("cardsearchINproject"+cardsearchINproject);
+		
+		HashMap<String, String> map = new HashMap<String, String>();
+	//	map.put("userid", loginuser.getUserid());
+		map.put("fk_project_idx", fk_project_idx);
+		map.put("fk_list_idx", fk_list_idx);
+		map.put("cardsearchINproject", cardsearchINproject);
+		
+		JSONArray jsonArr = new JSONArray();
+		
+		List<HashMap<String, String>> cardsearchINprojectList_card = null;
+		
+		if(("card").equals(sel3Val)) {
+			cardsearchINprojectList_card = service.getcardsearchINproject_card(map);
+			
+			if(cardsearchINprojectList_card != null && cardsearchINprojectList_card.size() > 0) {
+				for(HashMap<String, String> searchINprojectMap : cardsearchINprojectList_card) {
+					JSONObject jsonObj = new JSONObject();
+					
+					jsonObj.put("fk_project_idx", searchINprojectMap.get("fk_project_idx"));
+					jsonObj.put("fk_list_idx", searchINprojectMap.get("fk_list_idx"));
+					jsonObj.put("card_idx", searchINprojectMap.get("card_idx"));
+					jsonObj.put("card_title", searchINprojectMap.get("card_title"));
+					
+					jsonArr.put(jsonObj);
+				}
+			}
+			
+		}
+	
+		String str_jsonArr = jsonArr.toString();
+		req.setAttribute("str_jsonArr", str_jsonArr);
+		// System.out.println("확인중!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+str_jsonArr);
+		
+		
+		return "cardsearchINproject_card.notiles";
 				
 		
 	}
@@ -690,14 +853,120 @@ public class MINJAEController {
 	   return "personalAlarmCheckbox.notiles";
 	}
 	
-	/*
-	@RequestMapping(value="/test.action", method=RequestMethod.GET)
-	public String test() {
-	
+
+	//생성된 프로젝트 페이지로 이동하는 메소드
+	@RequestMapping(value="/projectRe_list.action", method= {RequestMethod.GET})
+	public String showProjectPage_list(HttpServletRequest req) {
 		
-		return "test.notiles";
+		String project_idx= req.getParameter("project_idx");
 		
-	}	*/
+		
+		
+		HttpSession session = req.getSession();
+		//session.removeAttribute("projectInfo");
+//		List<HashMap<String, String>> teamList = (List<HashMap<String, String>>)session.getAttribute("teamList");
+		
+		MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
+		
+		if(loginuser != null) {
+			//String userid = loginuser.getUserid();
+			
+			//project_idx로 배경이미지 테이블에서 프로젝트의 배경이미지명을 가져오는 메소드
+			/*String project_image_name = service.getBackgroundIMG(project_idx);
+			System.out.println("project_image_name" + project_image_name);*/
+			
+			//유저가 접속한 프로젝트의 정보를 가져오는 메소드
+/*			HashMap<String, String> projectInfo = service.getProjectInfo(map);*/
+			
+			//프로젝트의 리스트 목록을 가져오는 메소드
+			List<ListVO> listvo = null;
+			listvo = service.getListInfo(project_idx);
+			
+			/*List<CardVO> cardlist = null;
+			
+			for(int i=0; i<listvo.size(); i++) {
+				//프로젝트에 포함된 리스트의 카드목록을 가져오는 메소드
+				cardlist = service.getCardInfo(listvo.get(i).getList_idx());
+				
+				if(cardlist != null) {
+					listvo.get(i).setCardlist(cardlist);
+				}
+				
+			}
+			*/
+			
+			JSONArray jsonArr = new JSONArray();
+			
+			if(listvo.size() > 0) {
+				for( ListVO list_vo :listvo) {
+					
+					JSONObject jsonObj = new JSONObject();
+					
+					//jsonObj.put("project_image_name", project_image_name);
+					jsonObj.put("list_idx", list_vo.getList_idx());
+					jsonObj.put("fk_project_idx", list_vo.getFk_project_idx());
+					jsonObj.put("list_name", list_vo.getList_name());
+					jsonObj.put("list_delete_status", list_vo.getList_delete_status());
+					
+					jsonArr.put(jsonObj);
+					
+				}
+			}
+			
+			String str_jsonArr = jsonArr.toString();
+			req.setAttribute("str_jsonArr", str_jsonArr);
+			
+			//session.setAttribute("projectInfo", projectInfo);
+			//request.setAttribute("project_image_name", project_image_name);
+			//request.setAttribute("listvo", listvo);
+		}
+		return "projectRe_list.notiles";
+	} // end of showProjectPage(HttpServletRequest request)
+
 	
+	@RequestMapping(value="/projectRe_card.action", method= {RequestMethod.GET})
+	public String showProjectPage_cardlist(HttpServletRequest req) {
+		
+	//	String project_name = req.getParameter("project_name");
+		String project_idx= req.getParameter("projectIDX");
+		
+		List<ListVO> listvo = null;
+		listvo = service.getListInfo(project_idx);
+		
+		List<CardVO> cardlist = null;
+		JSONArray jsonArr = new JSONArray();
+		for(int i=0; i<listvo.size(); i++) {
+			//프로젝트에 포함된 리스트의 카드목록을 가져오는 메소드
+			cardlist = service.getCardInfo(listvo.get(i).getList_idx());
+			
+		
+			for( CardVO cardvo :cardlist) {
+				
+				JSONObject jsonObj = new JSONObject();
+				
+				jsonObj.put("card_idx", cardvo.getCard_idx());
+				jsonObj.put("fk_list_idx", cardvo.getFk_list_idx());
+				jsonObj.put("card_userid", cardvo.getCard_userid());
+				jsonObj.put("card_title", cardvo.getCard_title());
+				jsonObj.put("card_commentcount", cardvo.getCard_commentcount());
+				jsonObj.put("card_date", cardvo.getCard_date());
+				jsonObj.put("card_delete_status", cardvo.getCard_delete_status());
+				
+				jsonArr.put(jsonObj);
+			}
+			
+			
+			if(cardlist != null) {
+				listvo.get(i).setCardlist(cardlist);
+			}
+				
+		}
+		
+		String str_jsonArr = jsonArr.toString();
+		req.setAttribute("str_jsonArr", str_jsonArr);
+		
+		return "projectRe_card.notiles";
+		
+	}
 	
 }

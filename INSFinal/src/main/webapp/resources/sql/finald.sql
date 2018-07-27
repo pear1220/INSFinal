@@ -887,3 +887,85 @@ where team_userid = 'jihye'
 	  from ins_team_member A join ins_team B
 	  on A.fk_team_idx = B.team_idx
 	 where team_userid = #{userid} and team_member_admin_status = 3
+   
+   
+   select *
+   from ins_card
+   
+   select *
+   from ins_list
+   
+   select min(fk_list_idx) as fk_list_idx, min(list_name) as list_name, min(list_userid) as list_userid, min(list_delete_status)
+   from ins_card A, ins_list B
+   where A.fk_list_idx = B.list_idx 
+      and card_title like '%' || '카' || '%'
+      and fk_project_idx = 3 
+      and card_delete_status = 1
+      and list_delete_status = 1
+      
+      
+       select min(fk_list_idx), min(list_name), min(list_userid), min(list_delete_status)
+   from ins_card A, ins_list B
+   where A.fk_list_idx = B.list_idx 
+      and card_title like '%' || '카' || '%'
+      and fk_project_idx = 3 
+      and card_delete_status = 1
+      and list_delete_status = 1
+      
+   select fk_project_idx, fk_list_idx, card_idx, card_title   
+   from ins_card A, ins_list B
+   where A.fk_list_idx = B.list_idx 
+      and card_title like '%' || '카' || '%'
+      and fk_project_idx = 3 
+      and card_delete_status = 1
+      and list_delete_status = 1
+      
+      
+      
+        select fk_project_idx, fk_list_idx, card_idx, card_title   
+		   from ins_card A, ins_list B
+		   where A.fk_list_idx = B.list_idx 
+		      and card_title like '%' || '카' || '%'
+		      and fk_project_idx = 3 
+		      and fk_list_idx = 1
+		      and card_delete_status = 1
+		      and list_delete_status = 1
+         
+         select fk_project_idx, card_title, fk_list_idx, card_delete_status
+         from ins_card A, ins_list B
+         where A.fk_list_idx = B.list_idx
+          
+        commit;
+        
+        
+        
+        
+        select project_image_name
+		  from ins_project_image 
+		 where project_image_idx = (select fk_project_image_idx from ins_project where project_idx = 3)
+
+
+
+
+select list_idx, fk_project_idx, list_name, list_delete_status
+		  from ins_list 
+		 where fk_project_idx = 3
+		 order by list_idx asc
+     
+     
+     
+     
+     select card_idx, fk_list_idx, card_userid, card_title,
+		       card_commentcount, card_date, card_delete_status
+		  from ins_list A, ins_card B
+	     where fk_list_idx = 3
+		   and A.list_idx = B.fk_list_idx
+		 order by card_idx asc
+     
+      select fk_list_idx, list_name, list_userid, list_delete_status
+		   from ins_card A, ins_list B
+		   where A.fk_list_idx = B.list_idx 
+		      and card_title like '%' || '카' || '%'
+		      and fk_project_idx = 3
+		      and card_delete_status = 1
+		      and list_delete_status = 1

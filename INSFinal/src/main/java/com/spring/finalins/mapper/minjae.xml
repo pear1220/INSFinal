@@ -21,7 +21,7 @@
 		select team_idx, admin_userid, team_name, team_delete_status, team_visibility_status, server_filename, file_size, org_filename  
 		from ins_team A join ins_team_member B
 		on A.team_idx = B.fk_team_idx
-		where B.team_userid = #{userid}
+		where B.team_userid = #{userid} and B.team_member_admin_status in (0, 1, 2)
 	</select>
 	
 	<!-- header : 해당 user의 팀에 해당하는 프로젝트 리스트를 얻음 -->
@@ -272,21 +272,6 @@
 	   where fk_project_idx = #{fk_project_idx} and record_dml_status like '%' || #{sel1Val} || '%' 
 	</select>
 	
-	<resultMap type="HashMap" id="getSearchlistINprojectMap">
-		<result property="list_idx" column="list_idx" javaType="String" />
-		<result property="list_name" column="list_name" javaType="String" />
-		<result property="list_userid" column="list_userid" javaType="String" />
-	</resultMap>
-	<select id="getSearchlistINproject" parameterType="HashMap" resultMap="getSearchlistINprojectMap">
-		select list_idx, list_name, list_userid
-    	from ins_list C join ( select project_idx, fk_team_idx, project_name, project_visibility_st, project_delete_status, project_favorite_status, project_profilejpg, fk_project_image_idx
-                               from ins_project A join ins_project_member B
-                               on A.project_idx = B.fk_project_idx
-                               where B.project_member_userid = #{userid} and project_visibility_st in (0, 1) and project_delete_status=1 ) D
-    	on C.fk_project_idx = D.project_idx
-   	 	where fk_project_idx = #{fk_project_idx} and list_name like '%' || #{listsearchINproject} || '%'
-	</select>
-	
 	
 	<select id="getNewMessageCount" parameterType="String" resultType="int">
 		 select count(*) as cnt
@@ -344,6 +329,76 @@
 		update ins_project_member set project_favorite_status = 0
       	where fk_project_idx = #{project_idx} and project_member_userid = #{userid}
 	</update>
+	
+	
+	<!-- 프로젝트 내 검색(list, card) -->
+	<resultMap type="HashMap" id="getSearchlistINprojectMap">
+		<result property="list_idx" column="list_idx" javaType="String" />
+		<result property="list_name" column="list_name" javaType="String" />
+		<result property="list_userid" column="list_userid" javaType="String" />
+		<result property="list_delete_status" column="list_delete_status" javaType="String" />
+	</resultMap>
+	<select id="getSearchlistINproject" parameterType="HashMap" resultMap="getSearchlistINprojectMap">
+		select list_idx, list_name, list_userid, list_delete_status
+    	from ins_list C join ( select project_idx, fk_team_idx, project_name, project_visibility_st, project_delete_status, project_favorite_status, project_profilejpg, fk_project_image_idx
+                               from ins_project A join ins_project_member B
+                               on A.project_idx = B.fk_project_idx
+                               where B.project_member_userid = #{userid} and project_visibility_st in (0, 1) and project_delete_status=1 ) D
+    	on C.fk_project_idx = D.project_idx
+   	 	where fk_project_idx = #{fk_project_idx} and list_name like '%' || #{listsearchINproject} || '%'
+	</select>
+	
+	<resultMap type="HashMap" id="getSearchcardINprojectMap">
+		<result property="fk_project_idx" column="fk_project_idx" javaType="String" />
+		<result property="fk_list_idx" column="fk_list_idx" javaType="String" />
+		<result property="card_idx" column="card_idx" javaType="String" />
+		<result property="card_title" column="card_title" javaType="String" />
+	</resultMap>
+	<select id="getSearchcardINproject" parameterType="HashMap" resultMap="getSearchcardINprojectMap">
+		   select B.fk_project_idx, A.fk_list_idx, A.card_idx, A.card_title 
+		   from ins_card A, ins_list B
+		   where fk_project_idx = #{fk_project_idx} and fk_list_idx = #{fk_list_idx}
+		      and list_delete_status = 1
+		      and card_delete_status = 1
+		      and A.fk_list_idx = B.list_idx
+	</select>
+	 
+	<!-- project : 프로젝트 내 카드 검색 list 알아옴 --> 
+	<resultMap type="HashMap" id="getcardsearchINproject_listMap">
+		<result property="fk_list_idx" column="fk_list_idx" javaType="String" />
+		<result property="list_name" column="list_name" javaType="String" />
+		<result property="list_userid" column="list_userid" javaType="String" />
+		<result property="list_delete_status" column="list_delete_status" javaType="String" />
+	</resultMap> 
+	<select id="getcardsearchINproject_list" parameterType="HashMap" resultMap="getcardsearchINproject_listMap">
+		   select min(fk_list_idx) as fk_list_idx, min(list_name) as list_name, min(list_userid) as list_userid, min(list_delete_status) as list_delete_status
+		   from ins_card A, ins_list B
+		   where A.fk_list_idx = B.list_idx 
+		      and card_title like '%' || #{cardsearchINproject} || '%'
+		      and fk_project_idx = #{fk_project_idx} 
+		      and card_delete_status = 1
+		      and list_delete_status = 1
+	</select>
+	 
+	<resultMap type="HashMap" id="getcardsearchINproject_cardMap">
+		<result property="fk_project_idx" column="fk_project_idx" javaType="String" />
+		<result property="fk_list_idx" column="fk_list_idx" javaType="String" />
+		<result property="card_idx" column="card_idx" javaType="String" />
+		<result property="card_title" column="card_title" javaType="String" />
+	</resultMap>
+	<select id="getcardsearchINproject_card" parameterType="HashMap" resultMap="getcardsearchINproject_cardMap">
+		   select fk_project_idx, fk_list_idx, card_idx, card_title   
+		   from ins_card A, ins_list B
+		   where A.fk_list_idx = B.list_idx 
+		      and card_title like '%' || #{cardsearchINproject} || '%'
+		      and fk_project_idx = #{fk_project_idx} 
+		      and fk_list_idx = #{fk_list_idx}
+		      and card_delete_status = 1
+		      and list_delete_status = 1
+	</select> 
+	 
+	
+	
 	
 </mapper>
  
