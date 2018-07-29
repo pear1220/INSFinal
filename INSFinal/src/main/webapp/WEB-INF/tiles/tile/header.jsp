@@ -14,20 +14,28 @@
 		background-color: #e6f2ff;
 	}
 	
+	/* #project_dropdown{
+		overflow-x: hidden;
+	    overflow-y: auto;
+	    height: 700px;
+	}  */            
+	
 	.teamname {
 		font-size: 15pt;
 		font-weight: bold;
 	}
 	
 	#drop1 {
-		margin-left: 10.5%;
+		margin-left: 9%;
 		width: 500px;
+		background-color: white;
 	}
 	
 	
 	#drop2{
-		margin-left: 10.5%;
+		margin-left: 9%;
 		width: 500px;
+		background-color: white;
 	}
 	
 	input[id="search_input"] {
@@ -56,30 +64,15 @@
 	} 
 
 	#newMsgList{
-	   width: 300px;
+	
 	   overflow-x: hidden;
 	   overflow-y: auto;
-	   height: 500px;
+	   width: 300px;
+	   max-height: 500px;
+	   background-color: white;
+		
 	}
-
-/*    	input[type="checkbox"] + label {
-        display: inline-block;
-        width: 14px;
-        height: 14px;
-        background-color: #bcbcbc;
-        border-radius: 7px;
-        cursor: pointer;
-      }
-      
-    input[type="checkbox"]:checked + label {
-        background-color: rgba(255, 82, 82, 0.6);  
-      } 
-      
-      input[type="checkbox"] {
-        display: none;
-      }  */
-
-	
+		
 	.header {
 		background: #fff;   
 		background-color: rgba(255, 255, 255, 1); 
@@ -180,6 +173,10 @@
     	float: right;  
     	padding-top: 6%;            
     }
+    
+   	.clickStar {
+    	color: yellow;
+    }
 </style>
 
 
@@ -189,37 +186,25 @@
 <%
 	//==== #177. (웹채팅관련9) ====//
 	// === 서버 IP 주소 알아오기 === //
-	InetAddress inet = InetAddress.getLocalHost();
+	/* InetAddress inet = InetAddress.getLocalHost();
 	String serverIP = inet.getHostAddress();
 	int portnumber = request.getServerPort();
 
-	String serverName = "http://" + serverIP + ":" + portnumber;
+	String serverName = "http://" + serverIP + ":" + portnumber; */
 %>
 
 <script type="text/javascript">
 
-/* $(document).click(function(event){
-	 
-	  if(!$(event.target).closet(".dropSearch").length){
-		  
-		  if($('#drop1').is(":visible")){
-			  $("#drop1").hide();
-		  }
-		  else if($('#drop2').is(":visible")){
-			  $("#drop2").hide();
-		  }
-	  }
-	  
-}); */
-
 	$(document).ready(function(){
 		
+		 /* 프로젝트 버튼 클릭시 함수 */
 		 $("#project_button").click(function(){
 			
 			 teamlistButton();
 			
 		}); 
 		 
+		 /* header 의 검색어 입력시 발생 함수 */
 		  $("#search_input").keyup(function(){
 		
 			  if($("#search_input").val().trim() != ""){
@@ -231,8 +216,8 @@
 			 
 		   }); // $("#search_input").keyup()-------------------------------------------------------------------
 		 
-		   /* $("#")
-		    */
+		   
+		  /* header 의 검색의 결과를 보여주는 함수 */ 
 		  function searchTotal(){
 			 
 			  dropShow1(); 
@@ -402,7 +387,7 @@
 									
 								if(json.length < 2){
 									
-									 html += "<br/><a href='#'><span class='result'>"+str+"</span></a>";
+									 html += "<br/><a href='<%= request.getContextPath() %>/project.action?project_name="+entry.project_name+"&projectIDX="+entry.project_idx+"&team_IDX="+entry.fk_team_idx+"'><span class='result'>"+str+"</span></a>";
 									 
 									 $("#project_drop1").html(html);
 									
@@ -410,7 +395,7 @@
 								else{
 									
 									if(entryIndex < 2){
-										html += "<br/><a href='#'><span class='result'>"+str+"</span></a>";
+										html += "<br/><a href='<%= request.getContextPath() %>/project.action?project_name="+entry.project_name+"&projectIDX="+entry.project_idx+"&team_IDX="+entry.fk_team_idx+"'><span class='result'>"+str+"</span></a>";
 										
 									}
 									$("#project_drop1").html(html);
@@ -470,7 +455,7 @@
 								
 									 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: rgb(255, 82, 82); font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+len) + "</span>"; 
 									
-									 html3 += "<br/><a href='#'><span class='result'>"+str+"</span></a>";
+									 html3 += "<br/><a href='<%= request.getContextPath() %>/project.action?project_name="+entry.project_name+"&projectIDX="+entry.project_idx+"&team_IDX="+entry.fk_team_idx+"'><span class='result'>"+str+"</span></a>";
 									 
 								 $("#project_drop2").html(html3);
 									 		 
@@ -531,7 +516,7 @@
 								
 							if(json.length < 2){
 								
-								 html += "<br/><a href='#'><span class='result'>"+str+"</span></a>";
+								 html += "<br/><a href='<%= request.getContextPath() %>/project.action?project_name="+entry.project_name+"&projectIDX="+entry.fk_project_idx+"&team_IDX="+entry.fk_team_idx+"'><span class='result'>"+str+"</span></a>";
 								 
 								 $("#list_drop1").html(html);
 								
@@ -539,7 +524,7 @@
 							else{
 								
 								if(entryIndex < 2){
-									html += "<br/><a href='#'><span class='result'>"+str+"</span></a>";
+									html += "<br/><a href='<%= request.getContextPath() %>/project.action?project_name="+entry.project_name+"&projectIDX="+entry.fk_project_idx+"&team_IDX="+entry.fk_team_idx+"'><span class='result'>"+str+"</span></a>";
 									
 								}
 								$("#list_drop1").html(html);
@@ -598,7 +583,7 @@
 							
 								 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: rgb(255, 82, 82); font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+len) + "</span>"; 
 								
-								 html4 += "<br/><a href='#'><span class='result'>"+str+"</span></a>";
+								 html4 += "<br/><a href='<%= request.getContextPath() %>/project.action?project_name="+entry.project_name+"&projectIDX="+entry.fk_project_idx+"&team_IDX="+entry.fk_team_idx+"'><span class='result'>"+str+"</span></a>";
 								 
 							 $("#list_drop2").html(html4);
 								 		 
@@ -660,7 +645,7 @@
 								
 							if(json.length < 2){
 								
-								 html += "<br/><a href='#'><span class='result'>"+str+"</span></a>";
+								 html += "<br/><a href='<%= request.getContextPath() %>/project.action?project_name="+entry.project_name+"&projectIDX="+entry.project_idx+"&team_IDX="+entry.fk_team_idx+"'><span class='result'>"+str+"</span></a>";
 								 
 								 $("#card_drop1").html(html);
 								
@@ -668,7 +653,7 @@
 							else{
 								
 								if(entryIndex < 2){
-									html += "<br/><a href='#'><span class='result'>"+str+"</span></a>";
+									html += "<br/><a href='<%= request.getContextPath() %>/project.action?project_name="+entry.project_name+"&projectIDX="+entry.project_idx+"&team_IDX="+entry.fk_team_idx+"'><span class='result'>"+str+"</span></a>";
 									
 								}
 								$("#card_drop1").html(html);
@@ -728,7 +713,7 @@
 							
 								 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: rgb(255, 82, 82); font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+len) + "</span>"; 
 								
-								 html5 += "<br/><a href='#'><span class='result'>"+str+"</span></a>";
+								 html5 += "<br/><a href='<%= request.getContextPath() %>/project.action?project_name="+entry.project_name+"&projectIDX="+entry.project_idx+"&team_IDX="+entry.fk_team_idx+"'><span class='result'>"+str+"</span></a>";
 								 
 							 $("#card_drop2").html(html5);
 								 		 
@@ -802,7 +787,7 @@
 								
 							if(json.length < 2){
 								
-								html += "<br/><img src='<%=request.getContextPath()%>/resources/img/avatar1.jpg' class='avatar'/>";
+								html += "<br/><img alt='Avatar2' class='avatar2' src='<%= request.getContextPath() %>/resources/files/${sessionScope.loginuser.server_filename}'>";
 								
 								if( (entry.userid.trim()).indexOf($("#search_input").val()) != -1 ){
 									html += "<a href='#'><span class='result'>"+str+"("+entry.nickname+")"+"--"+entry.name+"</span></a>";
@@ -821,7 +806,7 @@
 								
 								if(entryIndex < 2){
 									
-									html += "<br/><img src='<%=request.getContextPath()%>/resources/img/avatar1.jpg' style='float: left;' class='avatar'/>";
+									html += "<br/><img alt='Avatar2' class='avatar2' src='<%= request.getContextPath() %>/resources/files/${sessionScope.loginuser.server_filename}'>";
 									
 									if( (entry.userid.trim()).indexOf($("#search_input").val()) != -1 ){
 										html += "<a href='#'><span class='result'>"+str+"("+entry.nickname+")"+"--"+entry.name+"</span></a>";
@@ -904,7 +889,7 @@
 							
 								 str += "<span class='first' style='color: gray;'>" + word.substr(0,index) + "</span>" + "<span class='second' style='color: rgb(255, 82, 82); font-weight: bold;'>" +word.substr(index, len)+"</span>"+"<span class='third' style='color: gray;'>" + word.substr(index+len) + "</span>"; 
 								
-								 html += "<br/><img src='<%=request.getContextPath()%>/resources/img/avatar1.jpg' style='float: left;' class='avatar'/>";
+								 html += "<br/><img alt='Avatar2' class='avatar2' src='<%= request.getContextPath() %>/resources/files/${sessionScope.loginuser.server_filename}'>";
 								 
 								 if( (entry.userid.trim()).indexOf($("#search_input").val()) != -1 ){
 										html2 += "<a href='#'><span class='result'><span class='userid'>"+str+"</span>("+entry.nickname+")"+"--"+entry.name+"</span></a>";
@@ -1041,7 +1026,7 @@
 					
 					$.each(json, function(entryIndex, entry){
 												
-						html += "<li><span id='team_name' style='padding-left: 10px;'><a href='#' style='color: rgb(255, 82, 82, 0.8); font-size: 13pt; font-weight: bold;'>"+entry.team_name+"<span style='float: right; padding-right: 10px;'>"+entry.admin_userid+"</span></a></span></li>";
+						html += "<li><span id='team_name' style='padding-left: 10px;'><a href='#' style='color: rgb(255, 82, 82, 0.8); font-size: 13pt; font-weight: bold;'>"+entry.team_name+"<span style='float: right; padding-right: 12px; color: rgb(255, 82, 82, 0.8);'>  admin-"+entry.admin_userid+"</span></a></li>";
 															
 						html += "<li id='teamlist"+entryIndex+"'></li>";
 					
@@ -1061,22 +1046,26 @@
 														      
 									$.each(json, function(entryIndex2, entry){
 																				        
-										html2 += "<div class='projectList_div1' id='projectList_div"+entryIndex+"'>";       
+										html2 += "<div class='projectList_div1' id='projectList_div"+entryIndex+"'>";
+										html2 += "<a href='<%= request.getContextPath() %>/project.action?project_name="+entry.project_name+"&projectIDX="+entry.project_idx+"&team_IDX="+entry.fk_team_idx+"'>";
 										html2 += "<img class='projectList_img' src='<%= request.getContextPath() %>/resources/images/"+entry.project_image_name+"' >";
+										html2 += "</a>";
 										html2 += "<div class='projectList_div2'>";
 										
+										html2 += "<a href='<%= request.getContextPath() %>/project.action?project_name="+entry.project_name+"&projectIDX="+entry.project_idx+"&team_IDX="+entry.fk_team_idx+"'>";
 										html2 += "<div class='projectList_div3'>";
 										html2 += "<ul class='projectList_ul'><li style='padding-top: 7%;'><span style='color: rgba(0, 0, 0, 0.7); font-weight: bold; float: left;'>"+entry.project_name+"</span></li></ul>";
 										html2 += "</div>";
+										html2 += "</a>";
 										html2 += "<div class='projectList_div4' id='projectList_div4"+entry.project_idx+"'>"
 										
 										if(entry.project_favorite_status == 1){
 											
 											/* html2 += "<a class='clickA' id='clickA"+entry.project_idx+"' value onclick='updateFavoriteStatus("+entry.project_idx+");return false;' href='javascript:void(0);'>"; */
 											
-											html2 += "<a class='clickA' id='clickA"+entry.project_idx+"' >";
+											html2 += "<a class='clickS' id='clickA"+entry.project_idx+"' >";
 											
-											html2 += "<i class='fa fa-star'></i>";
+											html2 += "<i class='fa fa-star clickStar'></i>";
 											
 											html2 += "</a>";
 
@@ -1122,36 +1111,6 @@
 				$(".dropdown").show(html);
 				
 				
-				<%-- $(".clickA").click(function()){
-					
-					var form_data = {"project_idx": $("#clickA")}
-					
-					ajax({
-							
-						url: "<%= request.getContextPath() %>/clickA.action",
-						type: "POST",
-						dataType: "json",
-						data: form_data,
-						success: function(json){
-							
-							var n = json[0].n;
-							
-							if(n==1){
-								$("#clickA"+project_idx).fadeOut();	
-							}
-							
-							
-						},
-						error: function(request, status, error){
-							alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
-						}
-						
-						
-					}); 
-					
-					
-				}--%>
-				
 			},
 			error: function(request, status, error){
 				alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
@@ -1162,53 +1121,15 @@
 		
 	}
 	
-/* 		 
-	function updateFavoriteStatus(project_idx){
-	
-		alert("ajax 확인용");
+
+	$(document).on("click", ".clickS", function(event){
 		
-		event.preventDefault();	 
-			 
-		var form_data = {"project_idx" : project_idx}
-		
-		ajax({
-					
-			url: "clickA.action",
-			type: "POST",
-			dataType: "JSON",
-			data: form_data,
-			success: function(json){
-			
-				alert("성공했다용");
-				
-				var n = json[0].n;
-								
-				if(n == 1){
-					$("#projectList_div4"+project_idx).hide();
-				}
-				
-			},
-			error: function(request, status, error){
-				alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
-			}
-			
-		});
-			 
-	} */
-	
-	$(document).on("click", ".clickA", function(event){
-		var project_idx = $(this).next().val();
 		event.preventDefault();
 		
-		/* var $target = $(event.target);
-		//var project_idx = $target.next().next().val();
-				
-	//	var project_idx = $(this).val(); */
-		 
+		var project_idx = $(this).next().val();
+					 
 		var form_data = {"project_idx" : project_idx}
-		
-		alert("실행 확인" + project_idx);
-		
+				
 		$.ajax({
 					
 			url: "<%= request.getContextPath()%>/clickA.action",
@@ -1217,14 +1138,14 @@
 			data: form_data,
 			success: function(json){   
 			
-				alert("성공했다용");
+				//alert("성공했다용");
 				
 				var n = json.n;
 								
 				if(n == 1){
 					$("#projectList_div4"+project_idx).hide();
 					
-					alert("실행확인>>>>>>>>>>>>>>>");
+					//alert("실행확인>>>>>>>>>>>>>>>");
 					
 					teamlistButton();
 				}
@@ -1255,27 +1176,25 @@
 			url: "<%= request.getContextPath() %>/personalAlarm.action",
 			type: "get",
 			dataType: "JSON",
-			success: function(json){
+			success: function(json){          
 				
 				var html = "";
-				
-				/* html += "<ul class='dropdown-menu extended inbox' id='newMsgList'>"; */
-				
-				html += "<div class='notify-arrow notify-arrow-blue'></div>"; 
-				
-				html += "<li style='width: 300px;'>";
-				html += "<p class='blue'>You have "+json[0].newmsg+" new messages </p>";
-				html += "</li>"; 
-				
-				html += "<div class='wrap' style='border: 0px solid yellow; width: 300px;'>";
-				
-				
-				
-				
+								
+				html += "<div class='notify-arrow notify-arrow-blue'></div>";
 				
 				if(json.length > 0){
+						
+					
+					html += "<li style='width: 300px;'>";
+					html += "<p class='blue'>You have "+json[0].newmsg+" new messages </p>";
+					html += "</li>"; 
+					
+					html += "<div class='wrap' style='border: 0px solid yellow; width: 300px;'>";
+					
 					
 					 $.each(json, function(entryIndex, entry){
+						 
+						 	
 							
 							/* html += "<span style='color: gray; font-weight: bold; font-size: 15pt;'><p>"*/
 							/* html += entry.record_userid + "</p></span>" ; */ 
@@ -1288,7 +1207,7 @@
 							
 							/* html += "<input type='checkbox' id='select'"+entryIndex+ "class='custom_checkbox'>";
 							html += "<label for='select'"+entryIndex+">"; */
-							html += "<span class='profile-ava'><img id='newMsg_img' src='<%= request.getContextPath() %>/resources/img/avatar1.jpg'></span>&nbsp;&nbsp;"
+							html += "<span class='profile-ava'><img alt='Avatar2' class='avatar2' src='<%= request.getContextPath() %>/resources/files/${sessionScope.loginuser.server_filename}'></span>&nbsp;&nbsp;"
 							html += "<span style='color: gray; font-weight: bold; font-size: 12pt; color: rgba(255, 82, 82, 0.7);'>"+ entry.record_userid + "</span><br/>" ;
 							html += "<span style='color: gray; font-weight: lighter;'>" + entry.record_dml_status + "</span><br/>";
 							html += "<span style='color: gray; font-weight: lighter; font-size: 7pt;'>on CARD "+entry.card_title+" on LIST "+entry.list_name;
@@ -1302,27 +1221,30 @@
 							
 						});
 						
-
-					
-					/* $.each(json, function(entryIndex, entry){
 						
-						html += "<li id='checkbox"+entry.project_record_idx+"' >
-						html += "<input type='checkbox' name='current_proudct' class='custom_checkbox' value='"+entry.project_record_idx+"' onclick='goHide();'/>";
-	  					html += "<label for='select"+entryIndex+"'>";
-	  					html += "</label><br/>";
-						html += "</li>";
 						
-					}); */
-					 
-					
-					
-					html += "</div>";
-					
-					$("#newMsgList").html(html);
+						
 					
 				}
+				else{
+					
+										
+					html += "<li style='width: 300px;'>";
+					html += "<p class='blue'>You have 0 new messages </p>";
+					html += "</li>"; 
+					
+					html += "<div class='wrap2' style='border: 0px solid yellow; width: 300px;'>";
+															
+					html += "<br/><br/><li style='text-align: center;'><span style='color: gray; font-weight: bold;'>최근 활동한 기록이 없습니다.</span></li><br/><br/>";
+
+								
+								            
+				}         
 			
-			
+				html += "</div>";
+				
+				
+				$("#newMsgList").html(html); 
 				
 				
 			},
@@ -1635,7 +1557,7 @@
 						<!-- user login dropdown start-->
 						<li class="dropdown"><a data-toggle="dropdown"
 							class="dropdown-toggle" href="#"> <span class="profile-ava">
-									<img alt="" src="img/avatar1_small.jpg">
+									<!-- <img alt="" src="img/avatar1_small.jpg"> -->
 							</span> <span class="username">${sessionScope.loginuser.userid}</span> <b
 								class="caret"></b>
 						</a>
@@ -1647,8 +1569,7 @@
 										Log Out</a></li>
 							</ul></li>
 
-						<li><img src="<%=request.getContextPath()%>/resources/img/avatar1.jpg"
-							alt="Avatar" class="avatar" /></li>
+						<li><img alt="Avatar2" class="avatar2" src="<%= request.getContextPath() %>/resources/files/${sessionScope.loginuser.server_filename}"></li>
 						<!-- user login dropdown end -->
 						<!-- task notificatoin start -->
 						<!--           <li id="task_notificatoin_bar" class="dropdown">

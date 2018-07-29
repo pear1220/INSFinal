@@ -13,9 +13,9 @@ public interface InterMinjaeDAO {
 
 	List<ProjectVO> getSearch_project(HashMap<String, String> map); // header : 검색을 위해 projectList 를 얻음
 	
-	List<ListVO> getSearch_list(HashMap<String, String> map); // header : 검색을 위해 listList 를 얻음
+	List<HashMap<String, String>> getSearch_list(HashMap<String, String> map); // header : 검색을 위해 listList 를 얻음
 	
-	List<CardVO> getSearch_card(HashMap<String, String> map); // header : 검색을 위해 cardList 를 얻음
+	List<HashMap<String, String>> getSearch_card(HashMap<String, String> map); // header : 검색을 위해 cardList 를 얻음
 
 	List<HashMap<String, String>> getSearch_member(String search_input); // header : 검색을 위해 memberList 를 얻음
 
@@ -29,7 +29,7 @@ public interface InterMinjaeDAO {
 	
 	int adminProjectNextPerson2(String project_member_idxMin);  // 프로젝트의 관리자일 경우 프로젝트를 탈퇴 할 때 다음 사람에게 권한을 위임함.
 
-	List<HashMap<String, String>> getAdminList(); // 삭제하기 위해 adminList를 갖고옴
+	String getAdmin(String fk_project_idx); // 삭제하기 위해 adminList를 갖고옴
 
 	int deleteProject(String fk_project_idx); // ins_project 테이블에서의 project_delete_status = 0 
 

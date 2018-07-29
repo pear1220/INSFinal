@@ -61,17 +61,17 @@ public class MinjaeService implements InterMinjaeServie {
 	}
 	
 	@Override
-	public List<ListVO> getSearch_list(HashMap<String, String> map) {
+	public List<HashMap<String, String>> getSearch_list(HashMap<String, String> map) {
 		
-		List<ListVO> listList = dao.getSearch_list(map);
+		List<HashMap<String, String>> listList = dao.getSearch_list(map);
 		
 		return listList;
 	}
 
 	@Override
-	public List<CardVO> getSearch_card(HashMap<String, String> map) {
+	public List<HashMap<String, String>> getSearch_card(HashMap<String, String> map) {
 		
-		List<CardVO> cardList = dao.getSearch_card(map);
+		List<HashMap<String, String>> cardList = dao.getSearch_card(map);
 		
 		return cardList;
 	}
@@ -123,11 +123,11 @@ public class MinjaeService implements InterMinjaeServie {
 
 	// 삭제하기 위해 adminList를 갖고옴
 	@Override
-	public List<HashMap<String, String>> getAdminList() {
+	public String getAdmin(String fk_project_idx) {
 		
-		List<HashMap<String, String>> adminList = dao.getAdminList();
+		String admin= dao.getAdmin(fk_project_idx);
 		
-		return adminList;
+		return admin;
 	}
 
 	@Override

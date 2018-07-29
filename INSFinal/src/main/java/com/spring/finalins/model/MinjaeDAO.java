@@ -53,17 +53,17 @@ public class MinjaeDAO implements InterMinjaeDAO {
 	}
 	
 	@Override
-	public List<ListVO> getSearch_list(HashMap<String, String> map) {
+	public List<HashMap<String, String>> getSearch_list(HashMap<String, String> map) {
 		
-		List<ListVO> listList = sqlsession.selectList("mj.getSearch_list", map);
+		List<HashMap<String, String>> listList = sqlsession.selectList("mj.getSearch_list", map);
 		
 		return listList;
 	}
 	
 	@Override
-	public List<CardVO> getSearch_card(HashMap<String, String> map) {
+	public List<HashMap<String, String>> getSearch_card(HashMap<String, String> map) {
 		
-		List<CardVO> cardList = sqlsession.selectList("mj.getSearch_card", map);
+		List<HashMap<String, String>> cardList = sqlsession.selectList("mj.getSearch_card", map);
 		
 		return cardList;
 	}
@@ -120,11 +120,11 @@ public class MinjaeDAO implements InterMinjaeDAO {
 	
 	 // 삭제하기 위해 adminList를 갖고옴
 	@Override
-	public List<HashMap<String, String>> getAdminList() {
+	public String getAdmin(String fk_project_idx) {
 		
-		List<HashMap<String, String>> adminList = sqlsession.selectList("mj.getAdminList");
+		String admin = sqlsession.selectOne("mj.getAdminList", fk_project_idx);
 		
-		return adminList;
+		return admin;
 	}
 
 	@Override

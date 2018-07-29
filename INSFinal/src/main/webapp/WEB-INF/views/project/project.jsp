@@ -16,7 +16,7 @@
 		var star_empty = "<i class='fa fa-star-o'></i>";
 	
 		
-	    if(${projectInfo.project_favorite} == 0) { //초기화면에서 즐겨찾기 노출
+	    if(${projectInfo.project_favorite == 0}) { //초기화면에서 즐겨찾기 노출
 	    	$(".clickA").html(star_empty);
 	    }
 	    else {
@@ -163,16 +163,10 @@
 					  
 				  }
 				   
-				  
-				// alert("실행성공이다");
 			  }
 			  
 			  if($("#listsearchINproject").val().trim() == ""){
 				 
-				 	/* $(".list-wrapper").show(); */
-				 	// return;
-				 	//abortRequest();
-				 	alert("널");
 				 	projectINlistRe();
 				 	
 			  } 
@@ -243,21 +237,6 @@
 		document.getElementById("mySideactivity").style.width = "400px";
 		
 		selVal();
-		// sel2Val();
-		// Activity(); 
-		/* $("#cardEditbtn").click(){
-			Activity();
-		}
-		$("#cardDeletebtn").click(){
-			Activity();
-		}
-		
-		$("#cardAddbtn").click(){
-			Activity();
-		}
-		$("#listCreatebtn").click(){
-			Activity();
-		} */
 		
 	}
 	
@@ -273,17 +252,15 @@
 	
 	function closeNav3() {
 	    document.getElementById("mySideactivity").style.width = "0";
-	    /* document.getElementById("mySidenav").style.width = "400px"; */
 	}
 	
 
 	
 	function leaveProject(){
 		
-		var fk_project_idx = "${projectInfo.project_idx}";
+	//	var fk_project_idx = "${projectInfo.project_idx}";
 		
-		var frm = document.project_idxFrm;
-		frm.fk_project_idx.value = fk_project_idx;// input 의 value 값에 fk_projcet_idx를 받아 입력해야 한다.
+		var frm = document.leaveProjectFrm;
 				
 		frm.method = "GET";
 		frm.action = "<%= request.getContextPath() %>/leaveProject.action";
@@ -294,10 +271,9 @@
 	
 	function deleteProject(){
 		
-		var fk_project_idx = "${projectInfo.project_idx}";
+		/* var fk_project_idx = "${projectInfo.project_idx}"; */
 		
-		var frm = document.project_idxFrm;
-		frm.fk_project_idx.value = fk_project_idx;// input 의 value 값에 fk_projcet_idx를 받아 입력해야 한다.
+		var frm = document.leaveProjectFrm;
 				
 		frm.method = "GET";
 		frm.action = "<%= request.getContextPath() %>/deleteProject.action";
@@ -308,9 +284,9 @@
 	function Activity(val){
 					
 		// alert("실행 확인용"); 
-		alert("확인용 >>>>> " + val);
+		// alert("확인용 >>>>> " + val);
 		
-		var form_data1 = {fk_project_idx: "${projectInfo.project_idx}", /* $("#fk_project_idx").val() */
+		var form_data1 = {fk_project_idx: "${projectInfo.project_idx}", 
 				          sel1Val: val}
 		
 		
@@ -336,8 +312,7 @@
 						if(entryIndex < 10){ 
 							 
 							html += "<tr>";
-							html += "<td rowspan='3' class='imgtd' style='size: 10px;'><img src='<%=request.getContextPath()%>/resources/img/avatar1.jpg'";
-							html += " alt='Avatar' class='avatar' /></td>";
+							html += "<td rowspan='3' class='imgtd' style='size: 10px;'><img alt='Avatar2' class='avatar2' src='<%= request.getContextPath() %>/resources/files/${sessionScope.loginuser.server_filename}'></td>";
 							html += "<td style='font-weight: bold;'>"+entry.userid+"&nbsp;&nbsp;"+entry.record_dml_status+"</td>";
 							html += "</tr>";
 							html += "<tr>";
@@ -361,7 +336,7 @@
 						
 						html += "<tr style='height: 50px; text-align:center; border: 1px solid red;' >";
 						html += "<td colspan='2' style='padding-top: 15px;'>";
-						html += "<a style='cursor: pointer; color: #00a0df;' id='viewallactivity' href='javascript:void(0);'>view all activity</a></td>"; 
+						html += "<a style='cursor: pointer; color: #00a0df;' id='viewallactivity'>view all activity</a></td>"; 
 						/* html += "<a href='javascript:void(0);' id='clickFUN'>클릭확인</a></td>" */
 						html += "</tr>";
 						
@@ -371,39 +346,7 @@
 					
 					$("#activitylist").html(html);
 					
-					$("#viewallactivity").click(function(){
-						
-						var html2 = "";
-						
-						alert("viewallactivity 성공");
-						
-						openNav3();
-						
-						$.each(json, function(entryIndex, entry){
-														
-							html2 += "<tr>";
-							html2 += "<td rowspan='3' class='imgtd' style='size: 10px;'><img src='<%=request.getContextPath()%>/resources/img/avatar1.jpg'";
-							html2 += " alt='Avatar' class='avatar' /></td>";
-							html2 += "<td style='font-weight: bold;'>"+entry.userid+"&nbsp;&nbsp;"+entry.record_dml_status+"</td>";
-							html2 += "</tr>";
-							html2 += "<tr>";
-							html2 += "<td  style='font-size: 8pt;'>&nbsp;"+entry.project_record_time+"</td>";
-							html2 += "</tr>";
-							html2 += "<tr>";
-							html2 += "<td style='font-size: 8pt; color: #b3b3b3;'>"+entry.card_title+" in "+entry.list_name+"</td>"; 
-							html2 += "</tr>";
-							html2 += "<tr>";
-							html2 += "<td colspan='2' style='border: 1px solid #fed189;'></td>";
-							html2 += "</tr>";
-						
-							
-							$("#projectRecordListMoreTB").html(html2);
-						
-						}); // end of $.each(json)------------------------------------------------------------ 
-					 							
-							$("#activitylistMore").html(html2);
-												
-					});// end of $("#viewallactivity1").click()------------------------------------------------
+					
 					
 				}
 				else{
@@ -424,40 +367,84 @@
 		
 	}
 	
-/* 	$("#listsearchINproject").keyup(function(){
+	
+	$(document).on("click", "#viewallactivity", function(event){
 		
-		  alert("실행성공이다222222222222");
+		// alert("실행 성공");
 		
-		  if($("#listsearchINproject").val().trim() != ""){
-			  searchINproject();
-			  
-			  alert("실행성공이다");
-		  }
-		  else if($("#listsearchINproject").val().trim() == ""){
-			  //
-		  }
-		 
-	   }); // $("#search_input").keyup()-------------------------------------------------------------------
-	  */
+		var val = $("#sel1").val();
+		
+		var form_data1 = {fk_project_idx: "${projectInfo.project_idx}", 
+		          		  sel1Val: val}   
+		
+		$.ajax({
+			url: "<%= request.getContextPath()%>/projectRecordView.action",
+			type: "get",
+			data: form_data1,
+			dataType: "json",
+			success: function(json){
+				
+				// alert("실행 성공");
+				
+				var html = "";
+				
+				// alert("viewallactivity 성공");
+				
+				openNav3();
+				
+				if(json.length > 0){
+					
+					$.each(json, function(entryIndex, entry){
+						
+						html += "<tr>";
+						html += "<td rowspan='3' class='imgtd' style='size: 10px;'><img alt='Avatar2' class='avatar2' src='<%= request.getContextPath() %>/resources/files/${sessionScope.loginuser.server_filename}'></td>";
+						html += "<td style='font-weight: bold;'>"+entry.userid+"&nbsp;&nbsp;"+entry.record_dml_status+"</td>";
+						html += "</tr>";
+						html += "<tr>";
+						html += "<td  style='font-size: 8pt;'>&nbsp;"+entry.project_record_time+"</td>";
+						html += "</tr>";
+						html += "<tr>";
+						html += "<td style='font-size: 8pt; color: #b3b3b3;'>"+entry.card_title+" in "+entry.list_name+"</td>"; 
+						html += "</tr>";
+						html += "<tr>";
+						html += "<td colspan='2' style='border: 1px solid #fed189;'></td>";
+						html += "</tr>";
+					
+						
+						$("#projectRecordListMoreTB").html(html);
+					
+					}); // end of $.each(json)------------------------------------------------------------ 
+				 						
+				}
+					
+					$("#activitylistMore").html(html); 
+				
+			},
+			error: function(request, status, error){
+				alert("code : " + request.status+"\n"+"message : "+request.responseText+"\n"+"error : "+ error); // 어디가 오류인지 알려줌
+		    }
+		});
+		
+			
+	});
+		
+		
+	
+		
+	
+
 	
 	/* 프로젝트 내 리스트를 검색하는 함수 */
 	function searchListINproject(){
 		   
 		var listsearchINproject = $("#listsearchINproject").val();
-		var sel = $("#sel3").val()
+		var sel = $("#sel3").val();
+		
 		/* 리스트 form */
 		var form_data2 = {fk_project_idx: "${projectInfo.project_idx}",
 				          sel3Val : $("#sel3").val(),
 				          listsearchINproject: listsearchINproject}
-		
-		/* if($("#listsearchINproject").val().trim() == ""){
-			 
-		 	projectINlistre();
-		 	
-	  	} */
-
-
-		
+			
 		$.ajax({
 			
 			url: "<%= request.getContextPath() %>/listsearchINproject.action",
@@ -466,7 +453,6 @@
 			dataType: "json",
 			success: function(json){
 				
-				// 우선은 리스트나 카드의 정보를 json 으로 받아서 css 처리를 한다. 
 				var html = "";
 				
 				if($("#sel3").val() == 'list'){
@@ -477,9 +463,8 @@
 					$.each(json, function(entryIndex, entry){
 				
 						/* 카드 form */
-						var project_idx = ${projectInfo.project_idx}; 
-						
-						
+						var project_idx = "${projectInfo.project_idx}"; 
+												
 	
 					  	if(entry.list_delete_status != 0){ 
 					  		
@@ -515,9 +500,7 @@
 				});
 			
 					$(".list-wrapper").html(html);
-
-					
-	/////////////////////////////////////////for 문				
+			
 					
 				
 			    }
@@ -549,7 +532,7 @@
 			dataType: "json",
 			success: function(json){
 				
-				html = "";
+				var html = "";
 				
 				if(json.length > 0){
 					
@@ -578,12 +561,12 @@
 	  function searchCardINproject(){
 		
 			// alert("실행 성공");
-		  
+		    var fk_project_idx = "${projectInfo.project_idx}";
 			var cardsearchINproject = $("#listsearchINproject").val();
-			var sel = $("#sel3").val()
+			var sel = $("#sel3").val();
 			/* 리스트 form */
 			
-			var form_data = {fk_project_idx: "${projectInfo.project_idx}",
+			var form_data = {fk_project_idx: fk_project_idx,
 					          sel3Val : sel,
 					          cardsearchINproject: cardsearchINproject}
 			
@@ -620,10 +603,8 @@
 									html += "<input type='hidden' class='project_listname oldval' value='"+entry.list_name+"' style='background-color:transparent; border:none; font-size: 14pt; color: gray; font-weight: bold;'/>";
 									html += "<div class='card-wrapper' style='max-height:500px;overflow-y:auto; margin-top: 5%;'>";
 									
-									var fk_list_idx = entry.fk_list_idx;
-									alert("fk_list_idx"+ fk_list_idx);
-									 
-						 	        cardinfo2(fk_project_idx, sel, cardsearchINproject, fk_list_idx);
+																	 
+									cardinfo2(fk_project_idx, sel, cardsearchINproject, entry.fk_list_idx);
 						  
 									html += "</div>";
 									html += "<div class='div-addcard'>";
@@ -659,16 +640,13 @@
 	}   
 	
 	function cardinfo2(fk_project_idx, sel, cardsearchINproject, fk_list_idx){
-		alert("시작2222222");
+		// alert("시작2222222");
+		
 		var form_data = {fk_project_idx: fk_project_idx,
 				         sel3Val : sel,
 				         cardsearchINproject: cardsearchINproject,
 				         fk_list_idx : fk_list_idx}
 		
-		alert("fk_project_idx" + fk_project_idx );
-		alert("sel3Val" + sel3Val);
-		alert("cardsearchINproject" + cardsearchINproject);
-		alert("fk_list_idx" + fk_list_idx);
 		
 		$.ajax({
 			
@@ -678,7 +656,7 @@
 			dataType: "json",
 			success: function(json){
 				
-				html = "";
+				var html = "";
 				
 				if(json.length > 0){
 					
@@ -688,9 +666,7 @@
 						html += "<div class='panel-body' onClick='window.open('carddetail.action?projectIDX="+entry.fk_project_idx+"&listIDX="+entry.fk_list_idx+"&cardIDX="+entry.card_idx+"','window_name','width=800,height=710,location=no,status=no,scrollbars=yes');'>"+entry.card_title+"</div>";
 						html += "</div>";
 					});
-					
-					
-						
+											
 				}
 				
 				$(".card-wrapper").html(html);
@@ -718,7 +694,7 @@
 		
 		sel1Val = $("#sel1").val();
 		
-		console.log("버튼확인::::::"+se1Val);
+		// console.log("버튼확인::::::"+se1Val);
 		
 		Activity(sel1Val); 
 				
@@ -757,26 +733,18 @@
 				
 	});
 	
-/* 	function abortRequest() {
-
-		alert("ajax 실행 중단");
-		
-	    httpRequest.abort();
-
-	    document.getElementById("text").innerHTML = "Ajax 요청을 취소했습니다.";
-
-	} */
 	
 	
 function projectINlistRe(){
 		
-		alert("값 : ${projectInfo.project_idx}" );
+		// alert("값 : ${projectInfo.project_idx}" );
 		
 		var form_data = {project_idx : "${projectInfo.project_idx}"}
 				
 		$(".list-wrapper").empty();
 		
 		$.ajax({
+			
 			url: "<%= request.getContextPath()%>/projectRe_list.action",
 			type: "get",
 			dataType: "json",
@@ -872,7 +840,7 @@ function projectINlistRe(){
 					$.each(json, function(entryIndex, entry){
 						
 						html += "<div class='panel panel-default'>";
-						html += "<div class='panel-body' onClick='window.open('carddetail.action?projectIDX="+entry.fk_project_idx+"&listIDX="+entry.card_idx+"&cardIDX="+entry.card_idx+"','window_name','width=800,height=710,location=no,status=no,scrollbars=yes');'>"+entry.card_title+"</div>";
+						html += "<div class='panel-body' onClick=\"window.open('carddetail.action?projectIDX="+entry.fk_project_idx+"&listIDX="+entry.card_idx+"&cardIDX="+entry.card_idx+"','window_name','width=800,height=710,location=no,status=no,scrollbars=yes');\">"+entry.card_title+"</div>";
 						html += "</div>";
 														
 					});
@@ -1128,10 +1096,10 @@ function projectINlistRe(){
 	 	  <span style="font-size: 40pt; font-weight: bold;" onclick="Activity();">&#9776; menu</span>
 	 	  <a href="javascript:void(0)"onclick="closeNav();"><span style="padding-left: 80%; ">&times;</span></a>
 	 	  <span style="cursor:pointer" onclick="openNav2();">Search in PROJECT</span> 
-		  <span style=" cursor: pointer;" onclick="location.href='<%= request.getContextPath()%>/leaveProject.action'" onclick="leaveProject();">Leave PROJECT</span> 
+		  <span style="cursor: pointer;" onclick="leaveProject();">Leave PROJECT</span> 
 		  
 		  
-		  <span style="cursor: pointer;" onclick="location.href='<%= request.getContextPath() %>/deleteProject.action'" onclick="deleteProject();" >Delete PROJECT</span>
+		  <span style="cursor: pointer;" onclick="deleteProject();" >Delete PROJECT</span>
 		 
 		  <hr style="border: solid 1px gray; background-color: gray;"> 
 		  <!-- <span>Activity</span> -->
@@ -1188,7 +1156,7 @@ function projectINlistRe(){
 		  <div class="container" style="border: 0px solid yellow;" >
 			  <form>
 			    <div class="form-group" style="padding-left:18pt; padding-top: 10pt; width: 120px; border: 0px solid yellow;">
-			      <select class="form-control" id="sel3" onclick="searchINproject();">    
+			      <select class="form-control" id="sel3"F>    
 			        <option selected value="list">LIST</option>
 			        <option value="card">CARD</option>
 			      </select>
@@ -1222,12 +1190,16 @@ function projectINlistRe(){
 			
 	
 	  <form name="project_idxFrm">
-	  	<input type="text" name="fk_project_idx" /><%-- value="${project_membervo.fk_project_idx}" --%>
-	  	<input type="text" name="sel1Val" />
+	  	<input type="hidden" name="fk_project_idx" value="${projectInfo.project_idx}"/><%-- value="${project_membervo.fk_project_idx}" --%>
+	  	<input type="hidden" name="sel1Val" />
+	  </form>
+	  
+	  <form name="leaveProjectFrm">
+	  	<input type="hidden" name="fk_project_idx" value="${projectInfo.project_idx}"/><%-- value="${project_membervo.fk_project_idx}" --%>
 	  </form>
 
 	  <div style="float: right;">
-	  		<input type="text" id="sel1" name="sel1" value=""/>	
+	  		<input type="hidden" id="sel1" name="sel1" value=""/>	
 	  </div>
 	
 	
